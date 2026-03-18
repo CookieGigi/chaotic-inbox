@@ -4,6 +4,7 @@ title: '[Epic 2] F-09: New text items receive one-sentence summary after opt-in'
 status: To Do
 assignee: []
 created_date: '2026-03-18 00:10'
+updated_date: '2026-03-18 00:15'
 labels: []
 milestone: m-1
 dependencies: []
@@ -33,3 +34,10 @@ One-sentence summary generated for each new text item after model is ready.
 - [ ] #5 While the summary is generating, the block shows a subtle loading indicator in the summary area
 - [ ] #6 After 3 failed generation attempts, `enrichmentStatus` is set to `failed` and a retry affordance is shown (see F-10)
 <!-- AC:END -->
+
+## Definition of Done
+<!-- DOD:BEGIN -->
+- [ ] #1 Tests pass
+- [ ] #2 Documentation updated
+- [ ] #3 No regressions introduced
+<!-- DOD:END -->
