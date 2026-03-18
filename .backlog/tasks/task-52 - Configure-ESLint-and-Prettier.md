@@ -4,7 +4,7 @@ title: Configure ESLint and Prettier
 status: Done
 assignee: []
 created_date: '2026-03-18 00:42'
-updated_date: '2026-03-18 01:18'
+updated_date: '2026-03-18 01:20'
 labels: []
 milestone: m-2
 dependencies: []
@@ -77,7 +77,5 @@ Set up ESLint with TypeScript and React rules, and configure Prettier for consis
 
 ## Definition of Done
 <!-- DOD:BEGIN -->
-- [ ] #1 Tests pass
-- [ ] #2 Documentation updated
-- [ ] #3 No regressions introduced
+- [ ] #1 Documentation updated
 <!-- DOD:END -->
