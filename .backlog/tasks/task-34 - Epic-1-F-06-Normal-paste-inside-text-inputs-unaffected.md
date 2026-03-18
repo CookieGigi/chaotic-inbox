@@ -4,6 +4,7 @@ title: '[Epic 1] F-06: Normal paste inside text inputs unaffected'
 status: To Do
 assignee: []
 created_date: '2026-03-18 00:10'
+updated_date: '2026-03-18 00:14'
 labels: []
 milestone: m-0
 dependencies: []
@@ -30,3 +31,10 @@ Global listener yields to focused editable elements.
 - [ ] #2 No duplicate block is created in the feed
 - [ ] #3 The global listener yields to focused editable elements
 <!-- AC:END -->
+
+## Definition of Done
+<!-- DOD:BEGIN -->
+- [ ] #1 Tests pass
+- [ ] #2 Documentation updated
+- [ ] #3 No regressions introduced
+<!-- DOD:END -->
