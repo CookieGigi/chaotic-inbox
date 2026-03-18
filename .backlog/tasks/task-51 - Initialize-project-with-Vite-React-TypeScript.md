@@ -4,7 +4,7 @@ title: Initialize project with Vite + React + TypeScript
 status: To Do
 assignee: []
 created_date: '2026-03-18 00:42'
-updated_date: '2026-03-18 01:01'
+updated_date: '2026-03-18 01:06'
 labels: []
 milestone: m-2
 dependencies: []
@@ -23,7 +23,7 @@ Create a new project using Vite's React + TypeScript template. Set up the basic 
 - [x] #2 TypeScript strict mode is enabled in tsconfig.json
 - [x] #3 `pnpm install` completes without errors
 - [x] #4 `pnpm run dev` starts the dev server successfully
-- [ ] #5 Project structure includes src/, public/, and standard Vite React layout
+- [x] #5 Project structure includes src/, public/, and standard Vite React layout
 <!-- AC:END -->
 
 ## Definition of Done
