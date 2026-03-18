@@ -4,6 +4,7 @@ title: '[Epic 1] F-02: See a visual cue while dragging'
 status: To Do
 assignee: []
 created_date: '2026-03-18 00:00'
+updated_date: '2026-03-18 00:14'
 labels: []
 milestone: m-0
 dependencies: []
@@ -29,3 +30,10 @@ Full-screen overlay appears on drag-enter.
 - [ ] #1 Dragging a file over the window triggers a full-screen overlay
 - [ ] #2 The overlay disappears immediately on drop or when the file is dragged away (drag-leave)
 <!-- AC:END -->
+
+## Definition of Done
+<!-- DOD:BEGIN -->
+- [ ] #1 Tests pass
+- [ ] #2 Documentation updated
+- [ ] #3 No regressions introduced
+<!-- DOD:END -->
