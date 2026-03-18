@@ -4,6 +4,7 @@ title: '[Epic 1] F-01: Paste text anywhere in the app'
 status: To Do
 assignee: []
 created_date: '2026-03-17 23:59'
+updated_date: '2026-03-18 00:14'
 labels: []
 milestone: m-0
 dependencies: []
@@ -30,3 +31,10 @@ This is the primary capture flow - paste anywhere without focus requirement.
 - [ ] #2 A new text block appears at the bottom of the feed
 - [ ] #3 The feed scrolls to the new block
 <!-- AC:END -->
+
+## Definition of Done
+<!-- DOD:BEGIN -->
+- [ ] #1 Tests pass
+- [ ] #2 Documentation updated
+- [ ] #3 No regressions introduced
+<!-- DOD:END -->
