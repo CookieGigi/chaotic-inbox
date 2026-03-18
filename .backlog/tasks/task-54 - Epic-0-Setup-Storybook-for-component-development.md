@@ -25,6 +25,6 @@ Set up Storybook for isolated component development and testing. This will provi
 - [x] #1 Storybook is installed and configured
 - [x] #2 Storybook scripts added to package.json
 - [x] #3 Basic configuration files created (.storybook folder)
-- [ ] #4 Example stories created for existing components
+- [x] #4 Example stories created for existing components
 - [x] #5 Storybook runs locally without errors
 <!-- AC:END -->
