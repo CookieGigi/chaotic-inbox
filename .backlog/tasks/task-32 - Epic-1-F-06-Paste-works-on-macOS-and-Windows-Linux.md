@@ -4,6 +4,7 @@ title: '[Epic 1] F-06: Paste works on macOS and Windows/Linux'
 status: To Do
 assignee: []
 created_date: '2026-03-18 00:09'
+updated_date: '2026-03-18 00:14'
 labels: []
 milestone: m-0
 dependencies: []
@@ -30,3 +31,10 @@ Platform-aware keyboard shortcuts.
 - [ ] #2 `Ctrl+V` on Windows and Linux captures the clipboard contents as a new block
 - [ ] #3 Behaviour is otherwise identical across platforms
 <!-- AC:END -->
+
+## Definition of Done
+<!-- DOD:BEGIN -->
+- [ ] #1 Tests pass
+- [ ] #2 Documentation updated
+- [ ] #3 No regressions introduced
+<!-- DOD:END -->
