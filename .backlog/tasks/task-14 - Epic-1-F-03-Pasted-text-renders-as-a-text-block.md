@@ -4,8 +4,9 @@ title: '[Epic 1] F-03: Pasted text renders as a text block'
 status: To Do
 assignee: []
 created_date: '2026-03-18 00:00'
-updated_date: '2026-03-18 00:14'
-labels: []
+updated_date: '2026-03-18 00:25'
+labels:
+  - phase-2
 milestone: m-0
 dependencies: []
 references:
