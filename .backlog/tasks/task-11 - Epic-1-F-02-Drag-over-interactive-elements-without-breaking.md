@@ -4,6 +4,7 @@ title: '[Epic 1] F-02: Drag over interactive elements without breaking'
 status: To Do
 assignee: []
 created_date: '2026-03-18 00:00'
+updated_date: '2026-03-18 00:14'
 labels: []
 milestone: m-0
 dependencies: []
@@ -30,3 +31,10 @@ The drop overlay stays active even over inputs and buttons.
 - [ ] #2 Dropping a file while hovering over an interactive element captures the file normally
 - [ ] #3 The interactive element does not receive the drop event (no browser default behaviour)
 <!-- AC:END -->
+
+## Definition of Done
+<!-- DOD:BEGIN -->
+- [ ] #1 Tests pass
+- [ ] #2 Documentation updated
+- [ ] #3 No regressions introduced
+<!-- DOD:END -->
