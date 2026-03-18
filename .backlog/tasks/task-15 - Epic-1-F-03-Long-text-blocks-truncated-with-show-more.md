@@ -4,6 +4,7 @@ title: '[Epic 1] F-03: Long text blocks truncated with show more'
 status: To Do
 assignee: []
 created_date: '2026-03-18 00:01'
+updated_date: '2026-03-18 00:14'
 labels: []
 milestone: m-0
 dependencies: []
@@ -33,3 +34,10 @@ Truncate at 5 lines with expand/collapse affordance.
 - [ ] #5 The raw full text is always stored in full, regardless of UI truncation
 - [ ] #6 The 5-line threshold is fixed and not user-configurable
 <!-- AC:END -->
+
+## Definition of Done
+<!-- DOD:BEGIN -->
+- [ ] #1 Tests pass
+- [ ] #2 Documentation updated
+- [ ] #3 No regressions introduced
+<!-- DOD:END -->
