@@ -19,7 +19,7 @@ Create a new project using Vite's React + TypeScript template. Set up the basic 
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 Project initializes successfully with manual init
+- [x] #1 Project initializes successfully with manual init
 - [ ] #2 TypeScript strict mode is enabled in tsconfig.json
 - [ ] #3 `pnpm install` completes without errors
 - [ ] #4 `pnpm run dev` starts the dev server successfully
