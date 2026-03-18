@@ -1,7 +1,7 @@
 ---
 id: TASK-54
 title: '[Epic 0] Setup Storybook for component development'
-status: To Do
+status: Done
 assignee: []
 created_date: '2026-03-18 16:34'
 updated_date: '2026-03-18 16:54'
