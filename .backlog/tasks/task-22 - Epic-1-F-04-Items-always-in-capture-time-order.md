@@ -4,6 +4,7 @@ title: '[Epic 1] F-04: Items always in capture-time order'
 status: To Do
 assignee: []
 created_date: '2026-03-18 00:01'
+updated_date: '2026-03-18 00:14'
 labels: []
 milestone: m-0
 dependencies: []
@@ -30,3 +31,10 @@ Strict chronological ordering with no sorting options.
 - [ ] #2 No sort control or reorder mechanism is present
 - [ ] #3 The order cannot be changed by any user action
 <!-- AC:END -->
+
+## Definition of Done
+<!-- DOD:BEGIN -->
+- [ ] #1 Tests pass
+- [ ] #2 Documentation updated
+- [ ] #3 No regressions introduced
+<!-- DOD:END -->
