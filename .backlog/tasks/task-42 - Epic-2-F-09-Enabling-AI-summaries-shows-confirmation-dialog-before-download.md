@@ -4,6 +4,7 @@ title: '[Epic 2] F-09: Enabling AI summaries shows confirmation dialog before do
 status: To Do
 assignee: []
 created_date: '2026-03-18 00:10'
+updated_date: '2026-03-18 00:14'
 labels: []
 milestone: m-1
 dependencies: []
@@ -33,3 +34,10 @@ Confirmation dialog explains model size (~2 GB) and on-device processing.
 - [ ] #5 Choosing "Cancel" leaves the toggle off and initiates no download
 - [ ] #6 Choosing "Download and enable" closes the dialog and begins the background download
 <!-- AC:END -->
+
+## Definition of Done
+<!-- DOD:BEGIN -->
+- [ ] #1 Tests pass
+- [ ] #2 Documentation updated
+- [ ] #3 No regressions introduced
+<!-- DOD:END -->
