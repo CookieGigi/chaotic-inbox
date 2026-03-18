@@ -4,6 +4,7 @@ title: '[Epic 1] F-02: Dragging URL or text from browser is ignored'
 status: To Do
 assignee: []
 created_date: '2026-03-18 00:00'
+updated_date: '2026-03-18 00:14'
 labels: []
 milestone: m-0
 dependencies: []
@@ -31,3 +32,10 @@ Only file drags should trigger the capture flow.
 - [ ] #3 No drop overlay is shown for non-file drag types
 - [ ] #4 The event is silently ignored with no feedback
 <!-- AC:END -->
+
+## Definition of Done
+<!-- DOD:BEGIN -->
+- [ ] #1 Tests pass
+- [ ] #2 Documentation updated
+- [ ] #3 No regressions introduced
+<!-- DOD:END -->
