@@ -4,6 +4,7 @@ title: '[Epic 2] F-09: Items captured before opt-in not retroactively summarised
 status: To Do
 assignee: []
 created_date: '2026-03-18 00:11'
+updated_date: '2026-03-18 00:15'
 labels: []
 milestone: m-1
 dependencies: []
@@ -30,3 +31,10 @@ Only new items captured after model is ready receive summaries.
 - [ ] #2 Pre-existing text and file blocks show no summary area and no empty placeholder
 - [ ] #3 Only items captured after the model is ready receive summaries
 <!-- AC:END -->
+
+## Definition of Done
+<!-- DOD:BEGIN -->
+- [ ] #1 Tests pass
+- [ ] #2 Documentation updated
+- [ ] #3 No regressions introduced
+<!-- DOD:END -->
