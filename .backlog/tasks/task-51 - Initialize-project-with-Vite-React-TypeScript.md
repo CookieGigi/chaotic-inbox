@@ -66,5 +66,5 @@ pnpm dev      # Start dev server on http://localhost:5173
 
 ## Definition of Done
 <!-- DOD:BEGIN -->
-- [ ] #1 Documentation updated
+- [x] #1 Documentation updated
 <!-- DOD:END -->
