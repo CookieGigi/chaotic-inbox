@@ -4,6 +4,7 @@ title: '[Epic 2] F-09: Supported file items receive one-sentence summary after o
 status: To Do
 assignee: []
 created_date: '2026-03-18 00:10'
+updated_date: '2026-03-18 00:15'
 labels: []
 milestone: m-1
 dependencies: []
@@ -30,3 +31,10 @@ PDF, markdown, and plain text files get summaries; other file types are skipped.
 - [ ] #2 Summary behaviour, display, and failure handling are identical to US-09-04
 - [ ] #3 File types not in the supported list (zip, binary, unknown) are silently skipped — `enrichmentStatus: skipped`, no placeholder shown
 <!-- AC:END -->
+
+## Definition of Done
+<!-- DOD:BEGIN -->
+- [ ] #1 Tests pass
+- [ ] #2 Documentation updated
+- [ ] #3 No regressions introduced
+<!-- DOD:END -->
