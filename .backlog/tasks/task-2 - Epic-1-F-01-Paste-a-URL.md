@@ -4,6 +4,7 @@ title: '[Epic 1] F-01: Paste a URL'
 status: To Do
 assignee: []
 created_date: '2026-03-17 23:59'
+updated_date: '2026-03-18 00:14'
 labels: []
 milestone: m-0
 dependencies: []
@@ -29,3 +30,10 @@ URL detection happens at capture time and determines the block type.
 - [ ] #1 Text starting with `http://` or `https://` is saved as type `url`, not `text`
 - [ ] #2 The block renders the hostname as a muted label with the full URL as body
 <!-- AC:END -->
+
+## Definition of Done
+<!-- DOD:BEGIN -->
+- [ ] #1 Tests pass
+- [ ] #2 Documentation updated
+- [ ] #3 No regressions introduced
+<!-- DOD:END -->
