@@ -4,6 +4,7 @@ title: '[Epic 1] F-03: Pasted image renders inline'
 status: To Do
 assignee: []
 created_date: '2026-03-18 00:01'
+updated_date: '2026-03-18 00:14'
 labels: []
 milestone: m-0
 dependencies: []
@@ -30,3 +31,10 @@ Images render inline within the feed column.
 - [ ] #2 The image is constrained to the feed column width
 - [ ] #3 No file icon or filename is shown — only the image itself
 <!-- AC:END -->
+
+## Definition of Done
+<!-- DOD:BEGIN -->
+- [ ] #1 Tests pass
+- [ ] #2 Documentation updated
+- [ ] #3 No regressions introduced
+<!-- DOD:END -->
