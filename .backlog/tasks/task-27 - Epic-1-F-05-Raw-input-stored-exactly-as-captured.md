@@ -4,6 +4,7 @@ title: '[Epic 1] F-05: Raw input stored exactly as captured'
 status: To Do
 assignee: []
 created_date: '2026-03-18 00:02'
+updated_date: '2026-03-18 00:14'
 labels: []
 milestone: m-0
 dependencies: []
@@ -30,3 +31,10 @@ No transformation or truncation of stored data.
 - [ ] #2 The stored `raw` field for file items is byte-for-byte identical to the original file
 - [ ] #3 No truncation, normalisation, or transformation is applied to the stored payload
 <!-- AC:END -->
+
+## Definition of Done
+<!-- DOD:BEGIN -->
+- [ ] #1 Tests pass
+- [ ] #2 Documentation updated
+- [ ] #3 No regressions introduced
+<!-- DOD:END -->
