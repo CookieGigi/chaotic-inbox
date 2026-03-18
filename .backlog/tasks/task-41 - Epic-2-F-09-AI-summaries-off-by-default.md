@@ -4,6 +4,7 @@ title: '[Epic 2] F-09: AI summaries off by default'
 status: To Do
 assignee: []
 created_date: '2026-03-18 00:10'
+updated_date: '2026-03-18 00:14'
 labels: []
 milestone: m-1
 dependencies: []
@@ -30,3 +31,10 @@ AI summaries require explicit opt-in. No model download before user enables.
 - [ ] #2 No model download is initiated at any point before the user enables the setting
 - [ ] #3 Text and file blocks show no summary placeholder or empty summary area when the setting is off
 <!-- AC:END -->
+
+## Definition of Done
+<!-- DOD:BEGIN -->
+- [ ] #1 Tests pass
+- [ ] #2 Documentation updated
+- [ ] #3 No regressions introduced
+<!-- DOD:END -->
