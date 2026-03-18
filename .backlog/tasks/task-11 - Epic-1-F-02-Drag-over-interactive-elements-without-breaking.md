@@ -4,8 +4,9 @@ title: '[Epic 1] F-02: Drag over interactive elements without breaking'
 status: To Do
 assignee: []
 created_date: '2026-03-18 00:00'
-updated_date: '2026-03-18 00:14'
-labels: []
+updated_date: '2026-03-18 00:25'
+labels:
+  - phase-3b
 milestone: m-0
 dependencies: []
 references:
