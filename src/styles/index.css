@@ -1,0 +1,6 @@
+/**
+ * Main styles entry point
+ * Imports all design tokens and global styles
+ */
+
+@import './tokens.css';

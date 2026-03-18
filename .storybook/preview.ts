@@ -1,4 +1,6 @@
 import type { Preview } from '@storybook/react-vite'
+import { themes } from 'storybook/theming'
+import '../src/styles/index.css'
 
 const preview: Preview = {
   parameters: {
@@ -14,6 +16,26 @@ const preview: Preview = {
       // 'error' - fail CI on a11y violations
       // 'off' - skip a11y checks entirely
       test: 'todo',
+    },
+
+    // Story canvas background - dark mode matching design system
+    backgrounds: {
+      default: 'dark',
+      values: [
+        {
+          name: 'dark',
+          value: '#181926', // --color-bg from design system
+        },
+        {
+          name: 'surface',
+          value: '#1e2030', // --color-surface
+        },
+      ],
+    },
+
+    // Docs dark theme
+    docs: {
+      theme: themes.dark,
     },
   },
 }
