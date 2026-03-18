@@ -4,6 +4,7 @@ title: '[Epic 1] F-01: Paste doesn''t interfere with typing'
 status: To Do
 assignee: []
 created_date: '2026-03-17 23:59'
+updated_date: '2026-03-18 00:14'
 labels: []
 milestone: m-0
 dependencies: []
@@ -29,3 +30,10 @@ The global paste listener must yield to focused editable elements.
 - [ ] #1 Pasting inside an `<input>` or `<textarea>` pastes into that field only
 - [ ] #2 No duplicate block is created in the feed
 <!-- AC:END -->
+
+## Definition of Done
+<!-- DOD:BEGIN -->
+- [ ] #1 Tests pass
+- [ ] #2 Documentation updated
+- [ ] #3 No regressions introduced
+<!-- DOD:END -->
