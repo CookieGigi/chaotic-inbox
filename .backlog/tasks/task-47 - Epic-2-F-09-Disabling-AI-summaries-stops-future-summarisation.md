@@ -4,6 +4,7 @@ title: '[Epic 2] F-09: Disabling AI summaries stops future summarisation'
 status: To Do
 assignee: []
 created_date: '2026-03-18 00:11'
+updated_date: '2026-03-18 00:15'
 labels: []
 milestone: m-1
 dependencies: []
@@ -31,3 +32,10 @@ Toggle off stops new summaries; existing summaries remain visible.
 - [ ] #3 The model is not deleted from cache when the setting is turned off — re-enabling does not require a re-download
 - [ ] #4 No confirmation dialog is shown when disabling
 <!-- AC:END -->
+
+## Definition of Done
+<!-- DOD:BEGIN -->
+- [ ] #1 Tests pass
+- [ ] #2 Documentation updated
+- [ ] #3 No regressions introduced
+<!-- DOD:END -->
