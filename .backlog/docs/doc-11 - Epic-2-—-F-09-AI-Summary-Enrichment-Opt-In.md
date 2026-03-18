@@ -3,14 +3,14 @@ id: doc-11
 title: 'Epic 2 — F-09: AI Summary Enrichment (Opt-In)'
 type: other
 created_date: '2026-03-17 23:58'
+updated_date: '2026-03-18 23:05'
 ---
-
 # Epic 2 — Enrichment: F-09 — AI Summary Enrichment (Opt-In)
 
 **Priority:** P1  
 **Status:** Draft  
-**Version:** 0.1.0  
-**Last updated:** 2026-03-16
+**Version:** 0.2.0  
+**Last updated:** 2026-03-19
 
 ---
 
@@ -24,7 +24,7 @@ Users who opt in to AI summaries get a one-sentence summary added to `text` and 
 
 - AI summaries are disabled by default
 - A settings toggle labelled "AI summaries (runs on device)" enables the feature
-- On first enable, the user is shown a one-time confirmation dialog explaining the model download size (~1–4 GB depending on model) and that processing happens locally
+- On first enable, the user is shown a one-time confirmation dialog explaining the model download size (~2 GB) and that processing happens locally
 - The user must confirm before the download begins
 - Download progress is shown as a persistent indicator until the model is ready
 - Once downloaded, the model is cached in the browser; subsequent launches do not re-download
@@ -37,7 +37,7 @@ Users who opt in to AI summaries get a one-sentence summary added to `text` and 
 - A one-sentence summary is generated and written to `meta.summary`
 - The block re-renders in place to show the summary in a muted style below the content
 - Items captured before opt-in are not retroactively summarised in this epic
-- After 3 failed generation attempts, `enrichmentStatus` is set to `failed` with a retry affordance
+- After 3 failed generation attempts, `enrichmentStatus.ai` is set to `failed` with a retry affordance
 
 ---
 
@@ -55,13 +55,13 @@ Users who opt in to AI summaries get a one-sentence summary added to `text` and 
 ## Acceptance Criteria
 
 - AI summaries toggle is off by default
-- Enabling the toggle shows a confirmation dialog with download size and on-device processing disclosure
+- Enabling the toggle shows a confirmation dialog with download size (~2 GB) and on-device processing disclosure
 - Declining the dialog leaves the toggle off and triggers no download
 - Confirming the dialog starts the model download with a visible progress indicator
 - After model is ready, new `text` items show a one-sentence summary below their content
 - `raw` field is unchanged after summarisation
 - Items captured before opt-in have no summary and show no empty placeholder
-- Unsupported file types (zip, binary) are skipped silently — `enrichmentStatus: skipped`
+- Unsupported file types (zip, binary) are skipped silently — `enrichmentStatus.ai: 'skipped'`
 - After 3 failed summary attempts → retry affordance shown on block
 
 ---
@@ -69,5 +69,5 @@ Users who opt in to AI summaries get a one-sentence summary added to `text` and 
 ## Dependencies
 
 - Epic 1 F-05 persistence schema
-- F-10 retry UI
+- F-10 per-track enrichment status and retry UI
 - WebLLM integration
