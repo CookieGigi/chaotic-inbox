@@ -4,6 +4,7 @@ title: Setup Tailwind CSS with design system and build example component
 status: To Do
 assignee: []
 created_date: '2026-03-18 23:22'
+updated_date: '2026-03-18 23:24'
 labels:
   - epic-0
   - tailwind
@@ -11,6 +12,9 @@ labels:
   - ui
   - setup
 dependencies: []
+documentation:
+  - .backlog/documents/doc-19 - Design System.md
+  - .backlog/documents/doc-18 - Component Library Best Practices.md
 priority: high
 ---
 
