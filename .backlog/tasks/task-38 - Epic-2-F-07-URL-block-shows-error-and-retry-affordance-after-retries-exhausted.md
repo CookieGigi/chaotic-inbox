@@ -6,6 +6,7 @@ title: >-
 status: To Do
 assignee: []
 created_date: '2026-03-18 00:10'
+updated_date: '2026-03-18 00:14'
 labels: []
 milestone: m-1
 dependencies: []
@@ -35,3 +36,10 @@ Clear error message with retry option after all automatic retries fail.
 - [ ] #5 The raw URL is always visible regardless of error state
 - [ ] #6 The retry counter resets on every manual retry — manual retries are available indefinitely
 <!-- AC:END -->
+
+## Definition of Done
+<!-- DOD:BEGIN -->
+- [ ] #1 Tests pass
+- [ ] #2 Documentation updated
+- [ ] #3 No regressions introduced
+<!-- DOD:END -->
