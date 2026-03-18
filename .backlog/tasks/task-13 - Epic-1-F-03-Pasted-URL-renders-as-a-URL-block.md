@@ -4,6 +4,7 @@ title: '[Epic 1] F-03: Pasted URL renders as a URL block'
 status: To Do
 assignee: []
 created_date: '2026-03-18 00:00'
+updated_date: '2026-03-18 00:14'
 labels: []
 milestone: m-0
 dependencies: []
@@ -30,3 +31,10 @@ URL blocks show hostname as muted label with full URL as body.
 - [ ] #2 The block displays the hostname as a muted label with the full URL as body text
 - [ ] #3 No favicon or link preview is fetched or shown
 <!-- AC:END -->
+
+## Definition of Done
+<!-- DOD:BEGIN -->
+- [ ] #1 Tests pass
+- [ ] #2 Documentation updated
+- [ ] #3 No regressions introduced
+<!-- DOD:END -->
