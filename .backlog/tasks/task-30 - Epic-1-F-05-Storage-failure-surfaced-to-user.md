@@ -4,6 +4,7 @@ title: '[Epic 1] F-05: Storage failure surfaced to user'
 status: To Do
 assignee: []
 created_date: '2026-03-18 00:02'
+updated_date: '2026-03-18 00:14'
 labels: []
 milestone: m-0
 dependencies: []
@@ -31,3 +32,10 @@ Clear error feedback on storage failures with retry option.
 - [ ] #3 The original clipboard content or file is not discarded — the user can retry
 - [ ] #4 No partial or unconfirmed block is ever shown in the feed
 <!-- AC:END -->
+
+## Definition of Done
+<!-- DOD:BEGIN -->
+- [ ] #1 Tests pass
+- [ ] #2 Documentation updated
+- [ ] #3 No regressions introduced
+<!-- DOD:END -->
