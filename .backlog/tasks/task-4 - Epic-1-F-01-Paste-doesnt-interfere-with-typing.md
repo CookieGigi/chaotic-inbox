@@ -4,8 +4,9 @@ title: '[Epic 1] F-01: Paste doesn''t interfere with typing'
 status: To Do
 assignee: []
 created_date: '2026-03-17 23:59'
-updated_date: '2026-03-18 00:14'
-labels: []
+updated_date: '2026-03-18 00:25'
+labels:
+  - phase-3a
 milestone: m-0
 dependencies: []
 references:
