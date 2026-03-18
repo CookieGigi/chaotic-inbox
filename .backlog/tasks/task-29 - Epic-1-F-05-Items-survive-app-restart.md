@@ -4,6 +4,7 @@ title: '[Epic 1] F-05: Items survive app restart'
 status: To Do
 assignee: []
 created_date: '2026-03-18 00:02'
+updated_date: '2026-03-18 00:14'
 labels: []
 milestone: m-0
 dependencies: []
@@ -30,3 +31,10 @@ All persisted items load on app launch.
 - [ ] #2 Items appear in the same capture-time order as when they were saved
 - [ ] #3 No items are missing or corrupted after a normal close-and-reopen cycle
 <!-- AC:END -->
+
+## Definition of Done
+<!-- DOD:BEGIN -->
+- [ ] #1 Tests pass
+- [ ] #2 Documentation updated
+- [ ] #3 No regressions introduced
+<!-- DOD:END -->
