@@ -23,7 +23,7 @@ Set up Storybook for isolated component development and testing. This will provi
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
 - [x] #1 Storybook is installed and configured
-- [ ] #2 Storybook scripts added to package.json
+- [x] #2 Storybook scripts added to package.json
 - [ ] #3 Basic configuration files created (.storybook folder)
 - [ ] #4 Example stories created for existing components
 - [ ] #5 Storybook runs locally without errors
