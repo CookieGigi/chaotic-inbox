@@ -4,6 +4,7 @@ title: '[Epic 1] F-03: Dropped non-image file renders with type-specific icon'
 status: To Do
 assignee: []
 created_date: '2026-03-18 00:01'
+updated_date: '2026-03-18 00:14'
 labels: []
 milestone: m-0
 dependencies: []
@@ -33,3 +34,10 @@ File blocks show type icons from Phosphor Icons library.
 - [ ] #5 Dropping an unknown or binary file → file block with `FileBinary` icon, filename, and file size
 - [ ] #6 No content preview is shown for file blocks
 <!-- AC:END -->
+
+## Definition of Done
+<!-- DOD:BEGIN -->
+- [ ] #1 Tests pass
+- [ ] #2 Documentation updated
+- [ ] #3 No regressions introduced
+<!-- DOD:END -->
