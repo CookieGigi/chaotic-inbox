@@ -4,6 +4,7 @@ title: '[Epic 2] F-09: Model download runs in background with progress indicator
 status: To Do
 assignee: []
 created_date: '2026-03-18 00:10'
+updated_date: '2026-03-18 00:14'
 labels: []
 milestone: m-1
 dependencies: []
@@ -33,3 +34,10 @@ Background download with persistent progress indicator.
 - [ ] #5 When the download completes, the progress indicator is replaced by a confirmation that AI summaries are ready
 - [ ] #6 Summaries are only generated for items captured after the model is ready — not retroactively
 <!-- AC:END -->
+
+## Definition of Done
+<!-- DOD:BEGIN -->
+- [ ] #1 Tests pass
+- [ ] #2 Documentation updated
+- [ ] #3 No regressions introduced
+<!-- DOD:END -->
