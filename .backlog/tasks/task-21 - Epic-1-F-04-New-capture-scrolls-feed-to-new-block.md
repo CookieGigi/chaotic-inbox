@@ -4,6 +4,7 @@ title: '[Epic 1] F-04: New capture scrolls feed to new block'
 status: To Do
 assignee: []
 created_date: '2026-03-18 00:01'
+updated_date: '2026-03-18 00:14'
 labels: []
 milestone: m-0
 dependencies: []
@@ -29,3 +30,10 @@ Auto-scroll confirms successful capture.
 - [ ] #1 After any paste or drop, the feed scrolls to the newly appended block
 - [ ] #2 The scroll happens after the block is rendered, not before
 <!-- AC:END -->
+
+## Definition of Done
+<!-- DOD:BEGIN -->
+- [ ] #1 Tests pass
+- [ ] #2 Documentation updated
+- [ ] #3 No regressions introduced
+<!-- DOD:END -->
