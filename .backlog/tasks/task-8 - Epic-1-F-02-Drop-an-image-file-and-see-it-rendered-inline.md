@@ -4,6 +4,7 @@ title: '[Epic 1] F-02: Drop an image file and see it rendered inline'
 status: To Do
 assignee: []
 created_date: '2026-03-18 00:00'
+updated_date: '2026-03-18 00:14'
 labels: []
 milestone: m-0
 dependencies: []
@@ -29,3 +30,10 @@ Image files (png, jpg, gif, webp) render as image blocks, not file blocks.
 - [ ] #1 Dropping a `.png`, `.jpg`, `.gif`, or `.webp` file produces an image block, not a file block
 - [ ] #2 The image is rendered inline, constrained to the feed column width
 <!-- AC:END -->
+
+## Definition of Done
+<!-- DOD:BEGIN -->
+- [ ] #1 Tests pass
+- [ ] #2 Documentation updated
+- [ ] #3 No regressions introduced
+<!-- DOD:END -->
