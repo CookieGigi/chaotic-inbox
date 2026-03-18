@@ -4,8 +4,9 @@ title: '[Epic 1] F-05: Raw input stored exactly as captured'
 status: To Do
 assignee: []
 created_date: '2026-03-18 00:02'
-updated_date: '2026-03-18 00:14'
-labels: []
+updated_date: '2026-03-18 00:25'
+labels:
+  - phase-1
 milestone: m-0
 dependencies: []
 references:
