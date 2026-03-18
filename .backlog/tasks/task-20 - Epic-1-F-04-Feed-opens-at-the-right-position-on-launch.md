@@ -4,6 +4,7 @@ title: '[Epic 1] F-04: Feed opens at the right position on launch'
 status: To Do
 assignee: []
 created_date: '2026-03-18 00:01'
+updated_date: '2026-03-18 00:14'
 labels: []
 milestone: m-0
 dependencies: []
@@ -30,3 +31,10 @@ Smart positioning based on new items vs. previous session.
 - [ ] #2 On launch, if no new items since the last session → restore the previous scroll position
 - [ ] #3 If there is no previous scroll position (first launch, or no items) → scroll to bottom
 <!-- AC:END -->
+
+## Definition of Done
+<!-- DOD:BEGIN -->
+- [ ] #1 Tests pass
+- [ ] #2 Documentation updated
+- [ ] #3 No regressions introduced
+<!-- DOD:END -->
