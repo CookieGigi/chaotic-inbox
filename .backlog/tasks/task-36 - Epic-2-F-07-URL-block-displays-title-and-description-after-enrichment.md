@@ -4,6 +4,7 @@ title: '[Epic 2] F-07: URL block displays title and description after enrichment
 status: To Do
 assignee: []
 created_date: '2026-03-18 00:10'
+updated_date: '2026-03-18 00:14'
 labels: []
 milestone: m-1
 dependencies: []
@@ -33,3 +34,10 @@ Title and description are displayed alongside the raw URL, never replacing it.
 - [ ] #5 If the proxy returns a title but no description → title is shown, description area is absent (no empty placeholder)
 - [ ] #6 If the proxy returns neither title nor description → block renders the raw URL only, with no empty metadata area
 <!-- AC:END -->
+
+## Definition of Done
+<!-- DOD:BEGIN -->
+- [ ] #1 Tests pass
+- [ ] #2 Documentation updated
+- [ ] #3 No regressions introduced
+<!-- DOD:END -->
