@@ -4,6 +4,7 @@ title: '[Epic 1] F-04: Each block shows a timestamp'
 status: To Do
 assignee: []
 created_date: '2026-03-18 00:01'
+updated_date: '2026-03-18 00:14'
 labels: []
 milestone: m-0
 dependencies: []
@@ -29,3 +30,10 @@ Timestamp formatting varies by age: Today, This year, Older.
 - [ ] #1 Every block displays a timestamp in a muted style
 - [ ] #2 Timestamp formatting follows the rules: Today=`HH:MM`, This year=`Mon DD · HH:MM`, Older=`YYYY Mon DD · HH:MM`
 <!-- AC:END -->
+
+## Definition of Done
+<!-- DOD:BEGIN -->
+- [ ] #1 Tests pass
+- [ ] #2 Documentation updated
+- [ ] #3 No regressions introduced
+<!-- DOD:END -->
