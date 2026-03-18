@@ -18,15 +18,19 @@ priority: medium
 ## Description
 
 <!-- SECTION:DESCRIPTION:BEGIN -->
+
 **As a** user,
 **I want** to see the download progress without being blocked from using the app,
 **so that** I can keep capturing while the model downloads.
 
 Background download with persistent progress indicator.
+
 <!-- SECTION:DESCRIPTION:END -->
 
 ## Acceptance Criteria
+
 <!-- AC:BEGIN -->
+
 - [ ] #1 After confirming, the model download begins in the background
 - [ ] #2 A persistent progress indicator is visible (e.g. in a status bar or settings area) showing download percentage
 - [ ] #3 The feed and all capture interactions remain fully functional during the download
@@ -36,7 +40,9 @@ Background download with persistent progress indicator.
 <!-- AC:END -->
 
 ## Definition of Done
+
 <!-- DOD:BEGIN -->
+
 - [ ] #1 Tests pass
 - [ ] #2 Documentation updated
 - [ ] #3 No regressions introduced

@@ -4,12 +4,13 @@ title: 'Epic 2 — F-09: AI Summary Enrichment (Opt-In)'
 type: other
 created_date: '2026-03-17 23:58'
 ---
+
 # Epic 2 — Enrichment: F-09 — AI Summary Enrichment (Opt-In)
 
 **Priority:** P1  
 **Status:** Draft  
 **Version:** 0.1.0  
-**Last updated:** 2026-03-16  
+**Last updated:** 2026-03-16
 
 ---
 
@@ -42,12 +43,12 @@ Users who opt in to AI summaries get a one-sentence summary added to `text` and 
 
 ## Supported File Types for Summarisation
 
-| Type | Condition |
-|---|---------|
-| `text` | Always (if opted in) |
-| `file` | Only if `mimetype` is `application/pdf`, `text/markdown`, or `text/plain` |
-| `image` | Never |
-| `url` | Never — URL track handles this separately |
+| Type    | Condition                                                                 |
+| ------- | ------------------------------------------------------------------------- |
+| `text`  | Always (if opted in)                                                      |
+| `file`  | Only if `mimetype` is `application/pdf`, `text/markdown`, or `text/plain` |
+| `image` | Never                                                                     |
+| `url`   | Never — URL track handles this separately                                 |
 
 ---
 

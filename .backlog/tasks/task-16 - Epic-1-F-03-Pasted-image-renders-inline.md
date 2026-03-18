@@ -19,22 +19,28 @@ priority: high
 ## Description
 
 <!-- SECTION:DESCRIPTION:BEGIN -->
+
 **As a** user,
 **I want** a screenshot or image pasted from my clipboard to appear inline in the feed
 **so that** I can see the image content immediately without any extra steps.
 
 Images render inline within the feed column.
+
 <!-- SECTION:DESCRIPTION:END -->
 
 ## Acceptance Criteria
+
 <!-- AC:BEGIN -->
+
 - [ ] #1 A clipboard image is rendered as type `image`, inline within the feed column
 - [ ] #2 The image is constrained to the feed column width
 - [ ] #3 No file icon or filename is shown — only the image itself
 <!-- AC:END -->
 
 ## Definition of Done
+
 <!-- DOD:BEGIN -->
+
 - [ ] #1 Tests pass
 - [ ] #2 Documentation updated
 - [ ] #3 No regressions introduced

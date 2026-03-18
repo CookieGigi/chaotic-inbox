@@ -19,22 +19,28 @@ priority: high
 ## Description
 
 <!-- SECTION:DESCRIPTION:BEGIN -->
+
 **As a** user,
 **I want** all my captured items to still be there when I reopen the app
 **so that** the vault is a reliable record I can return to at any time.
 
 All persisted items load on app launch.
+
 <!-- SECTION:DESCRIPTION:END -->
 
 ## Acceptance Criteria
+
 <!-- AC:BEGIN -->
+
 - [ ] #1 All items captured in previous sessions are loaded and rendered in the feed on launch
 - [ ] #2 Items appear in the same capture-time order as when they were saved
 - [ ] #3 No items are missing or corrupted after a normal close-and-reopen cycle
 <!-- AC:END -->
 
 ## Definition of Done
+
 <!-- DOD:BEGIN -->
+
 - [ ] #1 Tests pass
 - [ ] #2 Documentation updated
 - [ ] #3 No regressions introduced

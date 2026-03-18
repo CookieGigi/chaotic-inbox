@@ -4,6 +4,7 @@ title: architecture-storage-layer
 type: other
 created_date: '2026-03-18 00:32'
 ---
+
 # Storage Layer — Technical Architecture
 
 **Epic:** 1 — Capture
@@ -28,34 +29,34 @@ created_date: '2026-03-18 00:32'
 ```ts
 // src/storage/db.ts
 
-import Dexie, { type Table } from 'dexie';
+import Dexie, { type Table } from 'dexie'
 
-export type ItemType = 'text' | 'url' | 'image' | 'file';
+export type ItemType = 'text' | 'url' | 'image' | 'file'
 
 export interface Item {
-  id: string;           // UUID v4
-  type: ItemType;
-  capturedAt: string;   // ISO 8601 — used for feed ordering
-  raw: string | Blob;   // string for text/url, Blob for image/file
-  filename?: string;    // file/image only — original filename if from drop
-  filesize?: number;    // file only — bytes
-  mimetype?: string;    // image/file — MIME type string
+  id: string // UUID v4
+  type: ItemType
+  capturedAt: string // ISO 8601 — used for feed ordering
+  raw: string | Blob // string for text/url, Blob for image/file
+  filename?: string // file/image only — original filename if from drop
+  filesize?: number // file only — bytes
+  mimetype?: string // image/file — MIME type string
 }
 
 export class VaultDB extends Dexie {
-  items!: Table<Item, string>;  // keyed by id
+  items!: Table<Item, string> // keyed by id
 
   constructor() {
-    super('vault');
+    super('vault')
     this.version(1).stores({
       items: 'id, capturedAt, type',
       // capturedAt indexed → cheap ORDER BY for feed
       // type indexed → useful later for filtering (not in Epic 1 scope, but free)
-    });
+    })
   }
 }
 
-export const db = new VaultDB();
+export const db = new VaultDB()
 ```
 
 ### Schema decisions
@@ -74,8 +75,8 @@ A thin service layer sits between capture events and Dexie. The spec requires th
 ```ts
 // src/storage/itemService.ts
 
-import { db, type Item, type ItemType } from './db';
-import { v4 as uuid } from 'uuid';
+import { db, type Item, type ItemType } from './db'
+import { v4 as uuid } from 'uuid'
 
 export async function persistItem(
   payload: string | Blob,
@@ -88,14 +89,14 @@ export async function persistItem(
     capturedAt: new Date().toISOString(),
     raw: payload,
     ...meta,
-  };
+  }
 
-  await db.items.add(item);   // throws on failure — caller handles
-  return item;
+  await db.items.add(item) // throws on failure — caller handles
+  return item
 }
 
 export async function loadAllItems(): Promise<Item[]> {
-  return db.items.orderBy('capturedAt').toArray();
+  return db.items.orderBy('capturedAt').toArray()
 }
 ```
 
@@ -109,17 +110,17 @@ The glue that enforces the write-before-render contract at every call site.
 
 ```ts
 async function handleCapture(payload: string | Blob, type: ItemType, meta?) {
-  let item: Item;
+  let item: Item
 
   try {
-    item = await persistItem(payload, type, meta);  // write first
+    item = await persistItem(payload, type, meta) // write first
   } catch (err) {
-    showStorageError(err);   // surface to user, do NOT append block
-    return;
+    showStorageError(err) // surface to user, do NOT append block
+    return
   }
 
-  appendToFeed(item);        // only reached if write succeeded
-  scrollToBottom();
+  appendToFeed(item) // only reached if write succeeded
+  scrollToBottom()
 }
 ```
 
@@ -129,11 +130,11 @@ The feed state never gets ahead of the storage state.
 
 ## 5. Open Questions
 
-| # | Question | Status |
-|---|----------|--------|
-| 1 | How is `raw: Blob` retrieved and rendered (object URLs, `createObjectURL`)? | → F-03 rendering layer |
-| 2 | Scroll position persistence — separate key in IndexedDB or `localStorage`? | → F-04 |
-| 3 | Storage quota monitoring / error UX detail | → US-05-05, follow-up |
+| #   | Question                                                                    | Status                 |
+| --- | --------------------------------------------------------------------------- | ---------------------- |
+| 1   | How is `raw: Blob` retrieved and rendered (object URLs, `createObjectURL`)? | → F-03 rendering layer |
+| 2   | Scroll position persistence — separate key in IndexedDB or `localStorage`?  | → F-04                 |
+| 3   | Storage quota monitoring / error UX detail                                  | → US-05-05, follow-up  |
 
 ---
 

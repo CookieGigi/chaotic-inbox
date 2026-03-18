@@ -1,6 +1,6 @@
 ---
 id: m-2
-title: "Epic 0 — Tech Stack Bootstrap"
+title: 'Epic 0 — Tech Stack Bootstrap'
 ---
 
 ## Description

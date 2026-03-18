@@ -19,21 +19,27 @@ priority: high
 ## Description
 
 <!-- SECTION:DESCRIPTION:BEGIN -->
+
 **As a** user,
 **I want** the feed to scroll automatically to a newly captured block
 **so that** I get immediate confirmation that my item landed at the bottom.
 
 Auto-scroll confirms successful capture.
+
 <!-- SECTION:DESCRIPTION:END -->
 
 ## Acceptance Criteria
+
 <!-- AC:BEGIN -->
+
 - [ ] #1 After any paste or drop, the feed scrolls to the newly appended block
 - [ ] #2 The scroll happens after the block is rendered, not before
 <!-- AC:END -->
 
 ## Definition of Done
+
 <!-- DOD:BEGIN -->
+
 - [ ] #1 Tests pass
 - [ ] #2 Documentation updated
 - [ ] #3 No regressions introduced

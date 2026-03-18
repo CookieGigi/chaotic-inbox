@@ -4,6 +4,7 @@ title: Heynote — Feature Analysis
 type: other
 created_date: '2026-03-17 23:59'
 ---
+
 # Heynote-Inspired Feed — Feature Analysis
 
 **Context:** Epic 1 — Capture · Draft reference · 2026-03-14

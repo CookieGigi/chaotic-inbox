@@ -19,21 +19,27 @@ priority: high
 ## Description
 
 <!-- SECTION:DESCRIPTION:BEGIN -->
+
 **As a** user,
 **I want** a pasted URL to be recognised and saved as a URL block
 **so that** I can distinguish links from plain text at a glance.
 
 URL detection happens at capture time and determines the block type.
+
 <!-- SECTION:DESCRIPTION:END -->
 
 ## Acceptance Criteria
+
 <!-- AC:BEGIN -->
+
 - [ ] #1 Text starting with `http://` or `https://` is saved as type `url`, not `text`
 - [ ] #2 The block renders the hostname as a muted label with the full URL as body
 <!-- AC:END -->
 
 ## Definition of Done
+
 <!-- DOD:BEGIN -->
+
 - [ ] #1 Tests pass
 - [ ] #2 Documentation updated
 - [ ] #3 No regressions introduced

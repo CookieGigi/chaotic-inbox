@@ -19,22 +19,28 @@ priority: high
 ## Description
 
 <!-- SECTION:DESCRIPTION:BEGIN -->
+
 **As a** user,
 **I want** a dropped non-image file to appear with its filename, size, and a type-specific icon
 **so that** I can identify what I captured at a glance without opening it.
 
 Non-image files show type-specific icons (PDF, zip, binary).
+
 <!-- SECTION:DESCRIPTION:END -->
 
 ## Acceptance Criteria
+
 <!-- AC:BEGIN -->
+
 - [ ] #1 Dropping a `.pdf` → file block with `FilePdf` icon, filename, and file size
 - [ ] #2 Dropping a `.zip` → file block with `FileZip` icon, filename, and file size
 - [ ] #3 Dropping an unknown binary → file block with `FileBinary` icon, filename, and file size
 <!-- AC:END -->
 
 ## Definition of Done
+
 <!-- DOD:BEGIN -->
+
 - [ ] #1 Tests pass
 - [ ] #2 Documentation updated
 - [ ] #3 No regressions introduced

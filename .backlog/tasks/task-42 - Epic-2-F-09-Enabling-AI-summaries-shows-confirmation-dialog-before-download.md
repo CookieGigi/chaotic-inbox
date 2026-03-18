@@ -18,15 +18,19 @@ priority: medium
 ## Description
 
 <!-- SECTION:DESCRIPTION:BEGIN -->
+
 **As a** user,
 **I want** to see a clear explanation of what enabling AI summaries involves before anything is downloaded,
 **so that** I can make an informed decision about the storage and bandwidth cost.
 
 Confirmation dialog explains model size (~2 GB) and on-device processing.
+
 <!-- SECTION:DESCRIPTION:END -->
 
 ## Acceptance Criteria
+
 <!-- AC:BEGIN -->
+
 - [ ] #1 Toggling AI summaries on immediately shows a confirmation dialog before any download begins
 - [ ] #2 The dialog states that a ~2 GB model (Phi-3 mini) will be downloaded
 - [ ] #3 The dialog states that all processing happens on-device — no data is sent to any server
@@ -36,7 +40,9 @@ Confirmation dialog explains model size (~2 GB) and on-device processing.
 <!-- AC:END -->
 
 ## Definition of Done
+
 <!-- DOD:BEGIN -->
+
 - [ ] #1 Tests pass
 - [ ] #2 Documentation updated
 - [ ] #3 No regressions introduced

@@ -19,22 +19,28 @@ priority: high
 ## Description
 
 <!-- SECTION:DESCRIPTION:BEGIN -->
+
 **As a** user,
 **I want** pasted text that includes a URL within a sentence to be treated as plain text, not a URL block
 **so that** notes and prose that happen to mention a link are not misclassified.
 
 Only exact URL matches should trigger URL block type.
+
 <!-- SECTION:DESCRIPTION:END -->
 
 ## Acceptance Criteria
+
 <!-- AC:BEGIN -->
+
 - [ ] #1 Clipboard text where the full string does not start with `http://` or `https://` is saved as type `text`, even if a URL appears within it (e.g. `"for NixOS — https://nixos.wiki/..."`)
 - [ ] #2 The block renders as a text block in body font, not as a URL block
 - [ ] #3 The embedded URL is visible as part of the text content — no special link rendering
 <!-- AC:END -->
 
 ## Definition of Done
+
 <!-- DOD:BEGIN -->
+
 - [ ] #1 Tests pass
 - [ ] #2 Documentation updated
 - [ ] #3 No regressions introduced

@@ -18,15 +18,19 @@ priority: medium
 ## Description
 
 <!-- SECTION:DESCRIPTION:BEGIN -->
+
 **As a** user,
 **I want** a short summary to appear below my text captures once AI summaries are enabled,
 **so that** I can scan the feed and understand each item without reading the full content.
 
 One-sentence summary generated for each new text item after model is ready.
+
 <!-- SECTION:DESCRIPTION:END -->
 
 ## Acceptance Criteria
+
 <!-- AC:BEGIN -->
+
 - [ ] #1 After model is ready, every new `text` item triggers summary generation
 - [ ] #2 The summary is one sentence, displayed below the block content in a muted style
 - [ ] #3 The block updates in place when the summary is ready — no navigation or reload
@@ -36,7 +40,9 @@ One-sentence summary generated for each new text item after model is ready.
 <!-- AC:END -->
 
 ## Definition of Done
+
 <!-- DOD:BEGIN -->
+
 - [ ] #1 Tests pass
 - [ ] #2 Documentation updated
 - [ ] #3 No regressions introduced

@@ -19,21 +19,27 @@ priority: high
 ## Description
 
 <!-- SECTION:DESCRIPTION:BEGIN -->
+
 **As a** user,
 **I want** pasted plain text to render in a readable body font
 **so that** notes and snippets feel natural to read in the feed.
 
 Text blocks use body font for natural reading experience.
+
 <!-- SECTION:DESCRIPTION:END -->
 
 ## Acceptance Criteria
+
 <!-- AC:BEGIN -->
+
 - [ ] #1 Clipboard text that is not a URL is saved and rendered as type `text`
 - [ ] #2 The block uses the body font (not monospace or a code style)
 <!-- AC:END -->
 
 ## Definition of Done
+
 <!-- DOD:BEGIN -->
+
 - [ ] #1 Tests pass
 - [ ] #2 Documentation updated
 - [ ] #3 No regressions introduced

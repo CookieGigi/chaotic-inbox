@@ -4,12 +4,13 @@ title: 'Epic 1 — F-01: Instant Append on Paste'
 type: other
 created_date: '2026-03-17 23:56'
 ---
+
 # Epic 1 — Capture: F-01 — Instant Append on Paste
 
 **Priority:** P0  
 **Status:** Draft  
 **Version:** 0.3.0  
-**Last updated:** 2026-03-14  
+**Last updated:** 2026-03-14
 
 ---
 
@@ -17,7 +18,7 @@ created_date: '2026-03-17 23:56'
 
 The Capture screen is a single, continuous, append-only feed. The user pastes or drops anything — a URL, text, image, or file — and it appears immediately at the bottom of the feed as a discrete block. No decisions, no forms, no friction.
 
-The feed *is* the UI. There is no separate "save" action.
+The feed _is_ the UI. There is no separate "save" action.
 
 ---
 
@@ -30,7 +31,7 @@ When the user presses `Cmd+V` / `Ctrl+V` anywhere in the app — regardless of f
 ## Behaviour
 
 - No focused input required. The global paste listener intercepts the event.
-- The block is persisted to local storage *before* any UI update is rendered.
+- The block is persisted to local storage _before_ any UI update is rendered.
 - The new block appears at the bottom of the feed and the view scrolls to it.
 - No confirmation dialog, modal, or toast is shown on success.
 - If the clipboard is empty or the type is unrecognised, the event is silently ignored.

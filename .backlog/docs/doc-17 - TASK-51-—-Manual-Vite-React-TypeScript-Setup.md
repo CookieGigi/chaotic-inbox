@@ -5,6 +5,7 @@ type: other
 created_date: '2026-03-18 01:09'
 updated_date: '2026-03-18 01:11'
 ---
+
 # TASK-51 — Manual Vite + React + TypeScript Setup
 
 ## Overview
@@ -14,6 +15,7 @@ Minimal manual project setup using Vite with React and TypeScript — no `npm cr
 ## Files Created
 
 ### package.json
+
 ```json
 {
   "name": "my-vite-react-ts",
@@ -39,18 +41,23 @@ Minimal manual project setup using Vite with React and TypeScript — no `npm cr
 ```
 
 ### tsconfig.json
+
 TypeScript configuration with React JSX support.
 
 ### index.html
+
 Entry point with root div and script tag pointing to `/src/main.tsx`.
 
 ### src/main.tsx
+
 React app entry — renders `<App />` into DOM with StrictMode.
 
 ### src/App.tsx
+
 Hello World component.
 
 ### .gitignore
+
 Standard Node.js/Vite exclusions (node_modules, dist, .env, etc.).
 
 ## Setup Commands
@@ -70,6 +77,7 @@ pnpm dev
 ## Outcome
 
 Minimal 4-file setup running on `http://localhost:5173`:
+
 - No vite.config.ts (using defaults)
 - No extra boilerplate
 - Clean, minimal React + TypeScript app

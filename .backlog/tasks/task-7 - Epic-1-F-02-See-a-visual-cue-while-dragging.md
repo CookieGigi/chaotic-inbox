@@ -19,21 +19,27 @@ priority: high
 ## Description
 
 <!-- SECTION:DESCRIPTION:BEGIN -->
+
 **As a** user,
 **I want** to see a clear visual indicator when I drag a file over the app
 **so that** I know the app is ready to accept my drop.
 
 Full-screen overlay appears on drag-enter.
+
 <!-- SECTION:DESCRIPTION:END -->
 
 ## Acceptance Criteria
+
 <!-- AC:BEGIN -->
+
 - [ ] #1 Dragging a file over the window triggers a full-screen overlay
 - [ ] #2 The overlay disappears immediately on drop or when the file is dragged away (drag-leave)
 <!-- AC:END -->
 
 ## Definition of Done
+
 <!-- DOD:BEGIN -->
+
 - [ ] #1 Tests pass
 - [ ] #2 Documentation updated
 - [ ] #3 No regressions introduced

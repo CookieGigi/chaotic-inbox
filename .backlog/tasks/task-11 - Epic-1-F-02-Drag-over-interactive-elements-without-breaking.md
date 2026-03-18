@@ -19,22 +19,28 @@ priority: high
 ## Description
 
 <!-- SECTION:DESCRIPTION:BEGIN -->
+
 **As a** user,
 **I want** the drop target to remain active even when I drag over a text input or other interactive element
 **so that** I can drop files anywhere in the app without hitting dead zones.
 
 The drop overlay stays active even over inputs and buttons.
+
 <!-- SECTION:DESCRIPTION:END -->
 
 ## Acceptance Criteria
+
 <!-- AC:BEGIN -->
+
 - [ ] #1 Dragging a file over an `<input>`, `<textarea>`, or button keeps the full-screen overlay active
 - [ ] #2 Dropping a file while hovering over an interactive element captures the file normally
 - [ ] #3 The interactive element does not receive the drop event (no browser default behaviour)
 <!-- AC:END -->
 
 ## Definition of Done
+
 <!-- DOD:BEGIN -->
+
 - [ ] #1 Tests pass
 - [ ] #2 Documentation updated
 - [ ] #3 No regressions introduced

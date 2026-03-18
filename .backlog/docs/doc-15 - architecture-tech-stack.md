@@ -4,6 +4,7 @@ title: architecture-tech-stack
 type: other
 created_date: '2026-03-18 00:31'
 ---
+
 # Tech Stack — Technical Architecture
 
 **Epic:** 1 — Capture  
@@ -104,13 +105,13 @@ Zustand was considered. It is a better fit if the state shape grows complex acro
 
 ```ts
 type FeedState = {
-  items: Item[];
-  scrollPosition: number;
-};
+  items: Item[]
+  scrollPosition: number
+}
 
 type FeedAction =
   | { type: 'ITEM_APPENDED'; item: Item }
-  | { type: 'SCROLL_POSITION_SAVED'; position: number };
+  | { type: 'SCROLL_POSITION_SAVED'; position: number }
 ```
 
 ---
@@ -127,11 +128,11 @@ Dexie ships a `fake-indexeddb` adapter for test environments. Storage layer test
 
 ### 2.10 Tooling
 
-| Tool | Choice | Notes |
-|------|--------|-------|
-| Package manager | **pnpm** | Fast installs, strict dependency resolution, disk-efficient via content-addressable store |
-| Linting | **ESLint** | Standard React + TypeScript ruleset |
-| Formatting | **Prettier** | Non-negotiable for a shared codebase; single opinionated config |
+| Tool            | Choice       | Notes                                                                                     |
+| --------------- | ------------ | ----------------------------------------------------------------------------------------- |
+| Package manager | **pnpm**     | Fast installs, strict dependency resolution, disk-efficient via content-addressable store |
+| Linting         | **ESLint**   | Standard React + TypeScript ruleset                                                       |
+| Formatting      | **Prettier** | Non-negotiable for a shared codebase; single opinionated config                           |
 
 ---
 
@@ -139,41 +140,41 @@ Dexie ships a `fake-indexeddb` adapter for test environments. Storage layer test
 
 The following were considered and deferred or rejected for Epic 1:
 
-| Item | Status | Reason |
-|------|--------|--------|
-| Remote sync / backend | Deferred | Out of Epic 1 scope |
-| Component library (Radix, shadcn/ui) | Deferred | Custom feed UI; revisit in annotations epic |
-| Zustand / Redux | Deferred | State is too simple to justify; revisit at Epic 2 |
-| React Query / SWR | Rejected | No server state in this epic |
-| Storybook | Deferred | Not worth the setup cost for 5 block types |
-| Service Worker / PWA | Deferred | Local-first via IndexedDB is sufficient; offline PWA is a later concern |
+| Item                                 | Status   | Reason                                                                  |
+| ------------------------------------ | -------- | ----------------------------------------------------------------------- |
+| Remote sync / backend                | Deferred | Out of Epic 1 scope                                                     |
+| Component library (Radix, shadcn/ui) | Deferred | Custom feed UI; revisit in annotations epic                             |
+| Zustand / Redux                      | Deferred | State is too simple to justify; revisit at Epic 2                       |
+| React Query / SWR                    | Rejected | No server state in this epic                                            |
+| Storybook                            | Deferred | Not worth the setup cost for 5 block types                              |
+| Service Worker / PWA                 | Deferred | Local-first via IndexedDB is sufficient; offline PWA is a later concern |
 
 ---
 
 ## 4. Dependency Reference
 
-| Package | Version | Role |
-|---------|---------|------|
-| `react` | 19 | UI framework |
-| `react-dom` | 19 | DOM renderer |
-| `vite` | 6 | Build tool |
-| `typescript` | 5 | Language |
-| `tailwindcss` | 4 | Styling |
-| `dexie` | 4 | IndexedDB ORM |
-| `uuid` | 11 | UUID v4 generation |
-| `@phosphor-icons/react` | latest | File-type and UI icons |
-| `vitest` | latest | Test runner |
-| `@testing-library/react` | latest | Component testing |
-| `fake-indexeddb` | latest | In-memory IndexedDB for tests |
-| `eslint` | latest | Linting |
-| `prettier` | latest | Formatting |
+| Package                  | Version | Role                          |
+| ------------------------ | ------- | ----------------------------- |
+| `react`                  | 19      | UI framework                  |
+| `react-dom`              | 19      | DOM renderer                  |
+| `vite`                   | 6       | Build tool                    |
+| `typescript`             | 5       | Language                      |
+| `tailwindcss`            | 4       | Styling                       |
+| `dexie`                  | 4       | IndexedDB ORM                 |
+| `uuid`                   | 11      | UUID v4 generation            |
+| `@phosphor-icons/react`  | latest  | File-type and UI icons        |
+| `vitest`                 | latest  | Test runner                   |
+| `@testing-library/react` | latest  | Component testing             |
+| `fake-indexeddb`         | latest  | In-memory IndexedDB for tests |
+| `eslint`                 | latest  | Linting                       |
+| `prettier`               | latest  | Formatting                    |
 
 ---
 
 ## 5. Related Documents
 
-| Document | Notes |
-|----------|-------|
-| [architecture-storage-layer.md](backlog://doc/doc-16) | Storage schema, Dexie setup, write service, capture handler pattern |
-| [epic-1-feature-spec-1.md](./specs/epic-1-feature-spec-1.md) | Feature definitions and acceptance criteria |
-| [epic-1-f05-user-stories.md](./specs/epic-1-f05-user-stories.md) | Persistence user stories — primary driver of storage decisions |
+| Document                                                         | Notes                                                               |
+| ---------------------------------------------------------------- | ------------------------------------------------------------------- |
+| [architecture-storage-layer.md](backlog://doc/doc-16)            | Storage schema, Dexie setup, write service, capture handler pattern |
+| [epic-1-feature-spec-1.md](./specs/epic-1-feature-spec-1.md)     | Feature definitions and acceptance criteria                         |
+| [epic-1-f05-user-stories.md](./specs/epic-1-f05-user-stories.md) | Persistence user stories — primary driver of storage decisions      |

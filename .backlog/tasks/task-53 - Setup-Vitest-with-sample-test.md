@@ -13,11 +13,15 @@ priority: high
 ## Description
 
 <!-- SECTION:DESCRIPTION:BEGIN -->
+
 Configure Vitest as the test runner and create a sample test to verify the setup works. Include a simple component render test using React Testing Library.
+
 <!-- SECTION:DESCRIPTION:END -->
 
 ## Acceptance Criteria
+
 <!-- AC:BEGIN -->
+
 - [ ] #1 Vitest installed and configured with Vite plugin
 - [ ] #2 @testing-library/react and @testing-library/jest-dom installed
 - [ ] #3 Sample test file exists and passes (`App.test.tsx` or similar)
@@ -26,7 +30,9 @@ Configure Vitest as the test runner and create a sample test to verify the setup
 <!-- AC:END -->
 
 ## Definition of Done
+
 <!-- DOD:BEGIN -->
+
 - [ ] #1 Tests pass
 - [ ] #2 Documentation updated
 - [ ] #3 No regressions introduced

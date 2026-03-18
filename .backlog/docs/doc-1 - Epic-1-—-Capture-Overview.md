@@ -4,11 +4,12 @@ title: Epic 1 — Capture Overview
 type: other
 created_date: '2026-03-17 23:56'
 ---
+
 # Epic 1 — Capture
 
 **Status:** Draft  
 **Version:** 0.3.0  
-**Last updated:** 2026-03-14  
+**Last updated:** 2026-03-14
 
 ---
 
@@ -73,10 +74,10 @@ Order and meaning come later.
 
 ## Decisions Log (from Feature Spec)
 
-| # | Question | Decision |
-|---|----------|----------|
-| 1 | Text block font | Body font (readable/natural feel) |
-| 2 | File block icons | Type-specific (PDF, zip, image, etc.) |
-| 3 | Truncation threshold configurable? | No — fixed at 5 lines for now; may become configurable in a later epic |
-| 4 | Annotation entry point | To be designed in the annotations epic |
-| 5 | Icon library | [Phosphor Icons](https://phosphoricons.com) (MIT) — chosen for native file-type icon coverage (`FilePdf`, `FileZip`, `FileMd`, `FileText`, `FileBinary`) and multi-framework SVG support |
+| #   | Question                           | Decision                                                                                                                                                                                 |
+| --- | ---------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | Text block font                    | Body font (readable/natural feel)                                                                                                                                                        |
+| 2   | File block icons                   | Type-specific (PDF, zip, image, etc.)                                                                                                                                                    |
+| 3   | Truncation threshold configurable? | No — fixed at 5 lines for now; may become configurable in a later epic                                                                                                                   |
+| 4   | Annotation entry point             | To be designed in the annotations epic                                                                                                                                                   |
+| 5   | Icon library                       | [Phosphor Icons](https://phosphoricons.com) (MIT) — chosen for native file-type icon coverage (`FilePdf`, `FileZip`, `FileMd`, `FileText`, `FileBinary`) and multi-framework SVG support |

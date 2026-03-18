@@ -4,11 +4,12 @@ title: Epic 2 — Enrichment Overview
 type: other
 created_date: '2026-03-17 23:58'
 ---
+
 # Epic 2 — Enrichment
 
 **Status:** Draft  
 **Version:** 0.1.0  
-**Last updated:** 2026-03-16  
+**Last updated:** 2026-03-16
 
 ---
 
@@ -25,13 +26,13 @@ There are two independent enrichment tracks:
 
 ## Design Constraints
 
-| Constraint | Rationale |
-|---|------|
-| Raw input is never modified | Inherited from Epic 1 — `raw` is sacred |
-| Capture latency is unaffected | Enrichment is always async and post-persist |
-| Enrichment failure degrades gracefully | The item exists regardless; enrichment is additive |
-| AI summaries require explicit user opt-in | WebLLM requires a 1–4 GB model download; this must never be a surprise |
-| Feed renders without enrichment data | Blocks display raw content until enrichment lands; then update in place |
+| Constraint                                | Rationale                                                               |
+| ----------------------------------------- | ----------------------------------------------------------------------- |
+| Raw input is never modified               | Inherited from Epic 1 — `raw` is sacred                                 |
+| Capture latency is unaffected             | Enrichment is always async and post-persist                             |
+| Enrichment failure degrades gracefully    | The item exists regardless; enrichment is additive                      |
+| AI summaries require explicit user opt-in | WebLLM requires a 1–4 GB model download; this must never be a surprise  |
+| Feed renders without enrichment data      | Blocks display raw content until enrichment lands; then update in place |
 
 ---
 
@@ -46,18 +47,18 @@ There are two independent enrichment tracks:
 
 ## Decisions Log
 
-| # | Question | Decision |
-|---|----------|----------|
-| 1 | URL metadata fetching strategy | Minimal edge proxy (Cloudflare Worker) — direct fetch fails on CORS for most pages |
-| 2 | AI summary engine | WebLLM — runs fully in-browser, no data leaves the device |
-| 3 | Model download trigger | Explicit user opt-in — user enables AI summaries knowingly; download never happens silently |
-| 4 | Enrichment tracks | Two independent tracks: URL metadata (always-on) and AI summaries (opt-in). Each track is independently enabled/disabled |
-| 5 | Retry strategy | Transient failures get up to 3 automatic retries with exponential backoff; after that, status is set to `failed` and a retry affordance is shown on the block |
-| 6 | Enrichment data location | New optional `meta` field on the existing `Item` record — no new table needed at this stage |
-| 7 | WebLLM model | Phi-3 mini (~2 GB) — smaller download, fast enough for single-sentence summaries |
-| 8 | Proxy host | Cloudflare Worker — free tier (100k req/day), no cold starts, zero ops overhead |
-| 9 | Retry error display | Clear error message describing the failure reason + retries remaining (e.g. "Could not reach page — 2 retries left") |
-| 10 | Model download UX | Background download with a persistent progress indicator — does not block the UI |
+| #   | Question                       | Decision                                                                                                                                                      |
+| --- | ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | URL metadata fetching strategy | Minimal edge proxy (Cloudflare Worker) — direct fetch fails on CORS for most pages                                                                            |
+| 2   | AI summary engine              | WebLLM — runs fully in-browser, no data leaves the device                                                                                                     |
+| 3   | Model download trigger         | Explicit user opt-in — user enables AI summaries knowingly; download never happens silently                                                                   |
+| 4   | Enrichment tracks              | Two independent tracks: URL metadata (always-on) and AI summaries (opt-in). Each track is independently enabled/disabled                                      |
+| 5   | Retry strategy                 | Transient failures get up to 3 automatic retries with exponential backoff; after that, status is set to `failed` and a retry affordance is shown on the block |
+| 6   | Enrichment data location       | New optional `meta` field on the existing `Item` record — no new table needed at this stage                                                                   |
+| 7   | WebLLM model                   | Phi-3 mini (~2 GB) — smaller download, fast enough for single-sentence summaries                                                                              |
+| 8   | Proxy host                     | Cloudflare Worker — free tier (100k req/day), no cold starts, zero ops overhead                                                                               |
+| 9   | Retry error display            | Clear error message describing the failure reason + retries remaining (e.g. "Could not reach page — 2 retries left")                                          |
+| 10  | Model download UX              | Background download with a persistent progress indicator — does not block the UI                                                                              |
 
 ---
 
@@ -68,27 +69,27 @@ Enrichment data is appended to the existing `Item` record. Epic 1 fields are unc
 ```ts
 interface Item {
   // — Epic 1 fields, unchanged —
-  id: string;
-  type: 'text' | 'url' | 'image' | 'file';
-  capturedAt: string;
-  raw: string | Blob;
-  filename?: string;
-  filesize?: number;
-  mimetype?: string;
+  id: string
+  type: 'text' | 'url' | 'image' | 'file'
+  capturedAt: string
+  raw: string | Blob
+  filename?: string
+  filesize?: number
+  mimetype?: string
 
   // — Epic 2 additions —
-  enrichmentStatus?: 'pending' | 'running' | 'done' | 'failed' | 'skipped';
-  enrichmentRetries?: number;
+  enrichmentStatus?: 'pending' | 'running' | 'done' | 'failed' | 'skipped'
+  enrichmentRetries?: number
   meta?: {
     // URL track
-    title?: string;
-    description?: string;
+    title?: string
+    description?: string
     // Image track
-    width?: number;
-    height?: number;
+    width?: number
+    height?: number
     // AI summary track
-    summary?: string;
-  };
+    summary?: string
+  }
 }
 ```
 

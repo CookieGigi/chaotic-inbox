@@ -19,15 +19,19 @@ priority: high
 ## Description
 
 <!-- SECTION:DESCRIPTION:BEGIN -->
+
 **As a** user,
 **I want** dragging a link or selected text from a browser tab to have no effect on the feed
 **so that** accidental drags from the browser don't create unexpected blocks.
 
 Only file drags should trigger the capture flow.
+
 <!-- SECTION:DESCRIPTION:END -->
 
 ## Acceptance Criteria
+
 <!-- AC:BEGIN -->
+
 - [ ] #1 Dragging a link from a browser tab onto the app → no block is created
 - [ ] #2 Dragging selected text from a browser onto the app → no block is created
 - [ ] #3 No drop overlay is shown for non-file drag types
@@ -35,7 +39,9 @@ Only file drags should trigger the capture flow.
 <!-- AC:END -->
 
 ## Definition of Done
+
 <!-- DOD:BEGIN -->
+
 - [ ] #1 Tests pass
 - [ ] #2 Documentation updated
 - [ ] #3 No regressions introduced

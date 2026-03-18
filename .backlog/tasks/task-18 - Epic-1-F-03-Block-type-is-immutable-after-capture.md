@@ -19,22 +19,28 @@ priority: high
 ## Description
 
 <!-- SECTION:DESCRIPTION:BEGIN -->
+
 **As a** user,
 **I want** the type assigned to a block at capture time to remain fixed
 **so that** I can trust the feed reflects exactly what I captured and when.
 
 Type is determined once at capture and never changes.
+
 <!-- SECTION:DESCRIPTION:END -->
 
 ## Acceptance Criteria
+
 <!-- AC:BEGIN -->
+
 - [ ] #1 Block type is determined once at capture time and stored on the item record
 - [ ] #2 No mechanism exists to change the type of an existing block
 - [ ] #3 Raw input is stored in full, unmodified, regardless of how it is rendered
 <!-- AC:END -->
 
 ## Definition of Done
+
 <!-- DOD:BEGIN -->
+
 - [ ] #1 Tests pass
 - [ ] #2 Documentation updated
 - [ ] #3 No regressions introduced

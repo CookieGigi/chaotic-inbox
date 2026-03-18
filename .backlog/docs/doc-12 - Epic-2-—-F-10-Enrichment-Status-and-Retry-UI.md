@@ -4,12 +4,13 @@ title: 'Epic 2 — F-10: Enrichment Status and Retry UI'
 type: other
 created_date: '2026-03-17 23:59'
 ---
+
 # Epic 2 — Enrichment: F-10 — Enrichment Status and Retry UI
 
 **Priority:** P0  
 **Status:** Draft  
 **Version:** 0.1.0  
-**Last updated:** 2026-03-16  
+**Last updated:** 2026-03-16
 
 ---
 

@@ -4,12 +4,13 @@ title: 'Epic 1 — F-04: Chronological Feed'
 type: other
 created_date: '2026-03-17 23:57'
 ---
+
 # Epic 1 — Capture: F-04 — Chronological Feed (Newest at Bottom)
 
 **Priority:** P0  
 **Status:** Draft  
 **Version:** 0.3.0  
-**Last updated:** 2026-03-14  
+**Last updated:** 2026-03-14
 
 ---
 
@@ -30,11 +31,11 @@ The feed is ordered strictly by capture time, ascending — oldest at the top, n
 
 ## Timestamp Formatting
 
-| Age | Format |
-|-----|--------|
-| Today | "14:32" |
-| This year | "Mar 12 · 09:01" |
-| Older | "2025 Mar 3 · 09:01" |
+| Age       | Format               |
+| --------- | -------------------- |
+| Today     | "14:32"              |
+| This year | "Mar 12 · 09:01"     |
+| Older     | "2025 Mar 3 · 09:01" |
 
 ---
 

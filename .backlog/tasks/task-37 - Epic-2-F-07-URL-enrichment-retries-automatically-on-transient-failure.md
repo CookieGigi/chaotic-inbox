@@ -18,15 +18,19 @@ priority: high
 ## Description
 
 <!-- SECTION:DESCRIPTION:BEGIN -->
+
 **As a** user,
 **I want** the app to retry a failed URL enrichment automatically,
 **so that** a brief network blip doesn't permanently leave a block unenriched.
 
 Up to 3 automatic retries with exponential backoff.
+
 <!-- SECTION:DESCRIPTION:END -->
 
 ## Acceptance Criteria
+
 <!-- AC:BEGIN -->
+
 - [ ] #1 On fetch failure, the enrichment is retried up to 3 times with exponential backoff
 - [ ] #2 The loading indicator remains visible during retries
 - [ ] #3 The retry count is not surfaced to the user during automatic retries — only the loading state is shown
@@ -34,7 +38,9 @@ Up to 3 automatic retries with exponential backoff.
 <!-- AC:END -->
 
 ## Definition of Done
+
 <!-- DOD:BEGIN -->
+
 - [ ] #1 Tests pass
 - [ ] #2 Documentation updated
 - [ ] #3 No regressions introduced

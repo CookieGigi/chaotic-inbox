@@ -1,6 +1,6 @@
 ---
 id: m-1
-title: "Epic 2 — Enrichment"
+title: 'Epic 2 — Enrichment'
 ---
 
 ## Description

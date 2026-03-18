@@ -19,22 +19,28 @@ priority: high
 ## Description
 
 <!-- SECTION:DESCRIPTION:BEGIN -->
+
 **As a** user,
 **I want** each item to carry a stable identifier and an accurate timestamp
 **so that** the feed can be ordered reliably and individual items can be referenced unambiguously.
 
 UUID v4 for ID, ISO 8601 for timestamp.
+
 <!-- SECTION:DESCRIPTION:END -->
 
 ## Acceptance Criteria
+
 <!-- AC:BEGIN -->
+
 - [ ] #1 Every stored item has an `id` field containing a UUID v4
 - [ ] #2 Every stored item has a `capturedAt` field containing an ISO 8601 timestamp set at the moment of capture
 - [ ] #3 No two items share the same `id`
 <!-- AC:END -->
 
 ## Definition of Done
+
 <!-- DOD:BEGIN -->
+
 - [ ] #1 Tests pass
 - [ ] #2 Documentation updated
 - [ ] #3 No regressions introduced

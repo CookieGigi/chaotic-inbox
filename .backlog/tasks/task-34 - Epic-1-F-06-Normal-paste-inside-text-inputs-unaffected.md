@@ -19,22 +19,28 @@ priority: medium
 ## Description
 
 <!-- SECTION:DESCRIPTION:BEGIN -->
+
 **As a** user,
 **I want** pasting into any text input or editable field inside the app to behave normally
 **so that** the global listener never double-captures or interferes with in-app text editing.
 
 Global listener yields to focused editable elements.
+
 <!-- SECTION:DESCRIPTION:END -->
 
 ## Acceptance Criteria
+
 <!-- AC:BEGIN -->
+
 - [ ] #1 Pasting inside an `<input>`, `<textarea>`, or `contenteditable` element pastes into that field only
 - [ ] #2 No duplicate block is created in the feed
 - [ ] #3 The global listener yields to focused editable elements
 <!-- AC:END -->
 
 ## Definition of Done
+
 <!-- DOD:BEGIN -->
+
 - [ ] #1 Tests pass
 - [ ] #2 Documentation updated
 - [ ] #3 No regressions introduced

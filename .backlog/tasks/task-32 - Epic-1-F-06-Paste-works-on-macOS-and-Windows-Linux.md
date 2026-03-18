@@ -19,22 +19,28 @@ priority: medium
 ## Description
 
 <!-- SECTION:DESCRIPTION:BEGIN -->
+
 **As a** user,
 **I want** the global paste shortcut to work on whichever OS I am running
 **so that** I do not have to think about which modifier key to use.
 
 Platform-aware keyboard shortcuts.
+
 <!-- SECTION:DESCRIPTION:END -->
 
 ## Acceptance Criteria
+
 <!-- AC:BEGIN -->
+
 - [ ] #1 `Cmd+V` on macOS captures the clipboard contents as a new block
 - [ ] #2 `Ctrl+V` on Windows and Linux captures the clipboard contents as a new block
 - [ ] #3 Behaviour is otherwise identical across platforms
 <!-- AC:END -->
 
 ## Definition of Done
+
 <!-- DOD:BEGIN -->
+
 - [ ] #1 Tests pass
 - [ ] #2 Documentation updated
 - [ ] #3 No regressions introduced

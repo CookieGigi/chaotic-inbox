@@ -18,15 +18,19 @@ priority: medium
 ## Description
 
 <!-- SECTION:DESCRIPTION:BEGIN -->
+
 **As a** user,
 **I want** the natural dimensions of a captured image to be stored automatically,
 **so that** the app has accurate size data without me doing anything.
 
 Dimensions are read from the rendered `<img>` element — no network request.
+
 <!-- SECTION:DESCRIPTION:END -->
 
 ## Acceptance Criteria
+
 <!-- AC:BEGIN -->
+
 - [ ] #1 After an image block renders in the feed, `meta.width` and `meta.height` are written to the item record
 - [ ] #2 Dimensions reflect the image's natural size, not its display size in the feed
 - [ ] #3 No network request is made — dimensions are read from the rendered `<img>` element
@@ -35,7 +39,9 @@ Dimensions are read from the rendered `<img>` element — no network request.
 <!-- AC:END -->
 
 ## Definition of Done
+
 <!-- DOD:BEGIN -->
+
 - [ ] #1 Tests pass
 - [ ] #2 Documentation updated
 - [ ] #3 No regressions introduced

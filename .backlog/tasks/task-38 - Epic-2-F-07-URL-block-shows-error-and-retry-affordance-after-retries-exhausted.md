@@ -20,15 +20,19 @@ priority: high
 ## Description
 
 <!-- SECTION:DESCRIPTION:BEGIN -->
+
 **As a** user,
 **I want** to see what went wrong and be able to retry manually when URL enrichment fails permanently,
 **so that** I'm never left with a silently broken block.
 
 Clear error message with retry option after all automatic retries fail.
+
 <!-- SECTION:DESCRIPTION:END -->
 
 ## Acceptance Criteria
+
 <!-- AC:BEGIN -->
+
 - [ ] #1 After 3 failed automatic attempts, the loading indicator is replaced by an error message describing the failure reason (e.g. "Could not reach page", "Proxy error", "Page did not respond")
 - [ ] #2 The error message includes the number of retries remaining on the next manual attempt (e.g. "Could not reach page — 3 retries left")
 - [ ] #3 A "Retry" affordance is shown alongside the error message
@@ -38,7 +42,9 @@ Clear error message with retry option after all automatic retries fail.
 <!-- AC:END -->
 
 ## Definition of Done
+
 <!-- DOD:BEGIN -->
+
 - [ ] #1 Tests pass
 - [ ] #2 Documentation updated
 - [ ] #3 No regressions introduced

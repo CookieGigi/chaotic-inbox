@@ -18,15 +18,19 @@ priority: high
 ## Description
 
 <!-- SECTION:DESCRIPTION:BEGIN -->
+
 **As a** user,
 **I want** to be able to retry a failed enrichment with a single tap,
 **so that** I don't have to re-capture an item just because a network request failed.
 
 Retry resets counter and re-queues enrichment — available indefinitely.
+
 <!-- SECTION:DESCRIPTION:END -->
 
 ## Acceptance Criteria
+
 <!-- AC:BEGIN -->
+
 - [ ] #1 Every block with `enrichmentStatus: failed` has a "Retry" affordance
 - [ ] #2 Tapping "Retry" sets `enrichmentStatus` back to `pending`, resets the retry counter to 3, and re-queues the enrichment
 - [ ] #3 The loading indicator replaces the error message immediately on tap
@@ -35,7 +39,9 @@ Retry resets counter and re-queues enrichment — available indefinitely.
 <!-- AC:END -->
 
 ## Definition of Done
+
 <!-- DOD:BEGIN -->
+
 - [ ] #1 Tests pass
 - [ ] #2 Documentation updated
 - [ ] #3 No regressions introduced

@@ -4,12 +4,13 @@ title: 'Epic 1 — F-03: Block Types and Rendering'
 type: other
 created_date: '2026-03-17 23:57'
 ---
+
 # Epic 1 — Capture: F-03 — Block Types and Rendering
 
 **Priority:** P0  
 **Status:** Draft  
 **Version:** 0.3.0  
-**Last updated:** 2026-03-14  
+**Last updated:** 2026-03-14
 
 ---
 
@@ -21,12 +22,12 @@ Each captured item is rendered as a typed block. The block type is inferred from
 
 ## Block Types
 
-| Type | Detection Rule | Rendering |
-|------|---------------|-----------|
-| `url` | Clipboard text matching a URL pattern (`http://` / `https://`) | Hostname shown as muted label, full URL as body text. No favicon or link preview. |
-| `text` | Clipboard text that is not a URL | Body font. Truncated at 5 lines with "show more" affordance. "Show less" to collapse. |
-| `image` | Clipboard image or dropped image file (png, jpg, gif, webp) | Rendered inline, constrained to feed column width. |
-| `file` | Any dropped non-image file | Type-specific icon + filename + file size. No content preview. |
+| Type    | Detection Rule                                                 | Rendering                                                                             |
+| ------- | -------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| `url`   | Clipboard text matching a URL pattern (`http://` / `https://`) | Hostname shown as muted label, full URL as body text. No favicon or link preview.     |
+| `text`  | Clipboard text that is not a URL                               | Body font. Truncated at 5 lines with "show more" affordance. "Show less" to collapse. |
+| `image` | Clipboard image or dropped image file (png, jpg, gif, webp)    | Rendered inline, constrained to feed column width.                                    |
+| `file`  | Any dropped non-image file                                     | Type-specific icon + filename + file size. No content preview.                        |
 
 ---
 
@@ -34,13 +35,13 @@ Each captured item is rendered as a typed block. The block type is inferred from
 
 Provided by [Phosphor Icons](https://phosphoricons.com) (MIT):
 
-| File type | Phosphor icon |
-|-----------|--------------|
-| PDF | `FilePdf` |
-| zip / archive | `FileZip` |
-| Markdown | `FileMd` |
-| Plain text | `FileText` |
-| Binary / unknown | `FileBinary` |
+| File type        | Phosphor icon |
+| ---------------- | ------------- |
+| PDF              | `FilePdf`     |
+| zip / archive    | `FileZip`     |
+| Markdown         | `FileMd`      |
+| Plain text       | `FileText`    |
+| Binary / unknown | `FileBinary`  |
 
 ---
 

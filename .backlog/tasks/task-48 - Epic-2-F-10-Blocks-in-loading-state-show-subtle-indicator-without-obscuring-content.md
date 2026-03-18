@@ -20,22 +20,28 @@ priority: high
 ## Description
 
 <!-- SECTION:DESCRIPTION:BEGIN -->
+
 **As a** user,
 **I want** to see that enrichment is in progress without it interfering with my content,
 **so that** the feed remains readable while the background work happens.
 
 Loading indicator in metadata area only — raw content never obscured.
+
 <!-- SECTION:DESCRIPTION:END -->
 
 ## Acceptance Criteria
+
 <!-- AC:BEGIN -->
+
 - [ ] #1 Blocks with `enrichmentStatus: pending` or `running` show a loading indicator in the metadata area only
 - [ ] #2 The raw content of the block (URL, text, image, file) is never hidden or obscured by the loading indicator
 - [ ] #3 The loading indicator is visually subtle — it does not compete with the block content
 <!-- AC:END -->
 
 ## Definition of Done
+
 <!-- DOD:BEGIN -->
+
 - [ ] #1 Tests pass
 - [ ] #2 Documentation updated
 - [ ] #3 No regressions introduced

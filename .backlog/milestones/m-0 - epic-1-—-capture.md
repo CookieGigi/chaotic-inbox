@@ -1,6 +1,6 @@
 ---
 id: m-0
-title: "Epic 1 — Capture"
+title: 'Epic 1 — Capture'
 ---
 
 ## Description

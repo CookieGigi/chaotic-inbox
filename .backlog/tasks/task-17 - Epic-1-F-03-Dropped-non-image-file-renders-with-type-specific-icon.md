@@ -19,15 +19,19 @@ priority: high
 ## Description
 
 <!-- SECTION:DESCRIPTION:BEGIN -->
+
 **As a** user,
 **I want** a dropped file to show its filename, size, and a recognisable icon
 **so that** I can identify what I captured at a glance without opening it.
 
 File blocks show type icons from Phosphor Icons library.
+
 <!-- SECTION:DESCRIPTION:END -->
 
 ## Acceptance Criteria
+
 <!-- AC:BEGIN -->
+
 - [ ] #1 Dropping a `.pdf` → file block with `FilePdf` icon, filename, and file size
 - [ ] #2 Dropping a `.zip` or archive → file block with `FileZip` icon, filename, and file size
 - [ ] #3 Dropping a `.md` → file block with `FileMd` icon, filename, and file size
@@ -37,7 +41,9 @@ File blocks show type icons from Phosphor Icons library.
 <!-- AC:END -->
 
 ## Definition of Done
+
 <!-- DOD:BEGIN -->
+
 - [ ] #1 Tests pass
 - [ ] #2 Documentation updated
 - [ ] #3 No regressions introduced

@@ -19,15 +19,19 @@ priority: high
 ## Description
 
 <!-- SECTION:DESCRIPTION:BEGIN -->
+
 **As a** user,
 **I want** long text blocks to be collapsed by default
 **so that** the feed stays scannable and I'm not overwhelmed by a wall of text.
 
 Truncate at 5 lines with expand/collapse affordance.
+
 <!-- SECTION:DESCRIPTION:END -->
 
 ## Acceptance Criteria
+
 <!-- AC:BEGIN -->
+
 - [ ] #1 Text blocks longer than 5 lines are truncated at 5 lines on initial render
 - [ ] #2 A "show more" affordance is visible below the truncated content
 - [ ] #3 Tapping "show more" expands the full text in place — no navigation or modal
@@ -37,7 +41,9 @@ Truncate at 5 lines with expand/collapse affordance.
 <!-- AC:END -->
 
 ## Definition of Done
+
 <!-- DOD:BEGIN -->
+
 - [ ] #1 Tests pass
 - [ ] #2 Documentation updated
 - [ ] #3 No regressions introduced

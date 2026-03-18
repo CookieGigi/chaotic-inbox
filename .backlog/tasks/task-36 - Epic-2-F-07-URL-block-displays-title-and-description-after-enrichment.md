@@ -18,15 +18,19 @@ priority: high
 ## Description
 
 <!-- SECTION:DESCRIPTION:BEGIN -->
+
 **As a** user,
 **I want** the title and description of a pasted URL to appear on its block,
 **so that** I can identify the page at a glance without opening it.
 
 Title and description are displayed alongside the raw URL, never replacing it.
+
 <!-- SECTION:DESCRIPTION:END -->
 
 ## Acceptance Criteria
+
 <!-- AC:BEGIN -->
+
 - [ ] #1 On enrichment success, `meta.title` is displayed prominently on the block
 - [ ] #2 `meta.description` is displayed below the title in a muted style
 - [ ] #3 The raw URL remains visible — title and description are shown alongside it, not instead of it
@@ -36,7 +40,9 @@ Title and description are displayed alongside the raw URL, never replacing it.
 <!-- AC:END -->
 
 ## Definition of Done
+
 <!-- DOD:BEGIN -->
+
 - [ ] #1 Tests pass
 - [ ] #2 Documentation updated
 - [ ] #3 No regressions introduced

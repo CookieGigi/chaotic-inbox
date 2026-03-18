@@ -4,12 +4,13 @@ title: 'Epic 2 — F-07: URL Metadata Enrichment'
 type: other
 created_date: '2026-03-17 23:58'
 ---
+
 # Epic 2 — Enrichment: F-07 — URL Metadata Enrichment
 
 **Priority:** P0  
 **Status:** Draft  
 **Version:** 0.1.0  
-**Last updated:** 2026-03-16  
+**Last updated:** 2026-03-16
 
 ---
 

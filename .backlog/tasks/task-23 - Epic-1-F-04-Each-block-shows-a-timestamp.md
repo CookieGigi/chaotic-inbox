@@ -19,21 +19,27 @@ priority: high
 ## Description
 
 <!-- SECTION:DESCRIPTION:BEGIN -->
+
 **As a** user,
 **I want** to see when each item was captured
 **so that** I can place it in context without relying on memory.
 
 Timestamp formatting varies by age: Today, This year, Older.
+
 <!-- SECTION:DESCRIPTION:END -->
 
 ## Acceptance Criteria
+
 <!-- AC:BEGIN -->
+
 - [ ] #1 Every block displays a timestamp in a muted style
 - [ ] #2 Timestamp formatting follows the rules: Today=`HH:MM`, This year=`Mon DD · HH:MM`, Older=`YYYY Mon DD · HH:MM`
 <!-- AC:END -->
 
 ## Definition of Done
+
 <!-- DOD:BEGIN -->
+
 - [ ] #1 Tests pass
 - [ ] #2 Documentation updated
 - [ ] #3 No regressions introduced

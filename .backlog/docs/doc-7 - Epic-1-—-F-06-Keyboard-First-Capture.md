@@ -4,12 +4,13 @@ title: 'Epic 1 — F-06: Keyboard-First Capture'
 type: other
 created_date: '2026-03-17 23:57'
 ---
+
 # Epic 1 — Capture: F-06 — Keyboard-First Capture
 
 **Priority:** P1  
 **Status:** Draft  
 **Version:** 0.3.0  
-**Last updated:** 2026-03-14  
+**Last updated:** 2026-03-14
 
 ---
 
