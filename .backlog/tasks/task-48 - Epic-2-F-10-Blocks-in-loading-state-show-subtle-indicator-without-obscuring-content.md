@@ -11,9 +11,9 @@ labels: []
 milestone: m-1
 dependencies: []
 references:
-  - specs/epic-2-enrichment-user-stories-1.md
+  - ./specs/epic-2-enrichment-user-stories-1.md
 documentation:
-  - doc-12
+  - backlog://doc/doc-12
 priority: high
 ---
 
@@ -40,3 +40,8 @@ Loading indicator in metadata area only — raw content never obscured.
 - [ ] #2 Documentation updated
 - [ ] #3 No regressions introduced
 <!-- DOD:END -->
+
+## Related Links
+
+- [Spec: specs/epic-2-enrichment-user-stories-1.md](./specs/epic-2-enrichment-user-stories-1.md)
+- [Doc: doc-12](backlog://doc/doc-12)

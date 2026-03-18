@@ -10,9 +10,9 @@ labels:
 milestone: m-0
 dependencies: []
 references:
-  - specs/epic-1-f05-user-stories.md
+  - ./specs/epic-1-f05-user-stories.md
 documentation:
-  - doc-6
+  - backlog://doc/doc-6
 priority: high
 ---
 
@@ -39,3 +39,8 @@ UUID v4 for ID, ISO 8601 for timestamp.
 - [ ] #2 Documentation updated
 - [ ] #3 No regressions introduced
 <!-- DOD:END -->
+
+## Related Links
+
+- [Spec: specs/epic-1-f05-user-stories.md](./specs/epic-1-f05-user-stories.md)
+- [Doc: doc-6](backlog://doc/doc-6)

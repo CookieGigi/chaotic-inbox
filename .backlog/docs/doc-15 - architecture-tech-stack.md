@@ -48,7 +48,7 @@ Next.js and Remix were considered and rejected: both impose server-oriented abst
 
 **Decision:** TypeScript (strict mode)
 
-The storage schema, block type union, and capture handler pattern are already specified in TypeScript in `architecture-storage-layer.md`. The entire codebase will be TypeScript. Strict mode is enabled from day one to catch nullability and type narrowing issues early — especially important around the `raw: string | Blob` field.
+The storage schema, block type union, and capture handler pattern are already specified in TypeScript in [architecture-storage-layer.md](backlog://doc/doc-16). The entire codebase will be TypeScript. Strict mode is enabled from day one to catch nullability and type narrowing issues early — especially important around the `raw: string | Blob` field.
 
 ---
 
@@ -66,7 +66,7 @@ No component library (Radix, shadcn/ui, etc.) is adopted at this stage. The feed
 
 **Decision:** Dexie 4 (IndexedDB wrapper)
 
-Already decided in `architecture-storage-layer.md`. Retained here for completeness.
+Already decided in [architecture-storage-layer.md](backlog://doc/doc-16). Retained here for completeness.
 
 Dexie provides transactional writes (required by US-05-01), native `Blob` / `ArrayBuffer` storage (required for image and file capture), substantially larger quota than `localStorage`, and first-class TypeScript generics.
 
@@ -174,6 +174,6 @@ The following were considered and deferred or rejected for Epic 1:
 
 | Document | Notes |
 |----------|-------|
-| `architecture-storage-layer.md` | Storage schema, Dexie setup, write service, capture handler pattern |
-| `epic-1-feature-spec-1-1.md` | Feature definitions and acceptance criteria |
-| `epic-1-f05-user-stories-1.md` | Persistence user stories — primary driver of storage decisions |
+| [architecture-storage-layer.md](backlog://doc/doc-16) | Storage schema, Dexie setup, write service, capture handler pattern |
+| [epic-1-feature-spec-1.md](./specs/epic-1-feature-spec-1.md) | Feature definitions and acceptance criteria |
+| [epic-1-f05-user-stories.md](./specs/epic-1-f05-user-stories.md) | Persistence user stories — primary driver of storage decisions |

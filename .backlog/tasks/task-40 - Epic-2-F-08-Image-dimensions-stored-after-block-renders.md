@@ -9,9 +9,9 @@ labels: []
 milestone: m-1
 dependencies: []
 references:
-  - specs/epic-2-enrichment-user-stories-1.md
+  - ./specs/epic-2-enrichment-user-stories-1.md
 documentation:
-  - doc-10
+  - backlog://doc/doc-10
 priority: medium
 ---
 
@@ -40,3 +40,8 @@ Dimensions are read from the rendered `<img>` element — no network request.
 - [ ] #2 Documentation updated
 - [ ] #3 No regressions introduced
 <!-- DOD:END -->
+
+## Related Links
+
+- [Spec: specs/epic-2-enrichment-user-stories-1.md](./specs/epic-2-enrichment-user-stories-1.md)
+- [Doc: doc-10](backlog://doc/doc-10)

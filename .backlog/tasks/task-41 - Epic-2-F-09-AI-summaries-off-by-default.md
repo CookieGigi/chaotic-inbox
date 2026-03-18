@@ -9,9 +9,9 @@ labels: []
 milestone: m-1
 dependencies: []
 references:
-  - specs/epic-2-enrichment-user-stories-1.md
+  - ./specs/epic-2-enrichment-user-stories-1.md
 documentation:
-  - doc-11
+  - backlog://doc/doc-11
 priority: medium
 ---
 
@@ -38,3 +38,8 @@ AI summaries require explicit opt-in. No model download before user enables.
 - [ ] #2 Documentation updated
 - [ ] #3 No regressions introduced
 <!-- DOD:END -->
+
+## Related Links
+
+- [Spec: specs/epic-2-enrichment-user-stories-1.md](./specs/epic-2-enrichment-user-stories-1.md)
+- [Doc: doc-11](backlog://doc/doc-11)

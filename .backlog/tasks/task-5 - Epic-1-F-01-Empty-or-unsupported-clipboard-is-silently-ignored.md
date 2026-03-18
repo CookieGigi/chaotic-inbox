@@ -10,9 +10,9 @@ labels:
 milestone: m-0
 dependencies: []
 references:
-  - specs/epic-1-f01-user-stories.md
+  - ./specs/epic-1-f01-user-stories.md
 documentation:
-  - doc-2
+  - backlog://doc/doc-2
 priority: high
 ---
 
@@ -40,3 +40,8 @@ Silently ignore invalid paste attempts without any feedback.
 - [ ] #2 Documentation updated
 - [ ] #3 No regressions introduced
 <!-- DOD:END -->
+
+## Related Links
+
+- [Spec: specs/epic-1-f01-user-stories.md](./specs/epic-1-f01-user-stories.md)
+- [Doc: doc-2](backlog://doc/doc-2)

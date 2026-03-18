@@ -10,9 +10,9 @@ labels:
 milestone: m-0
 dependencies: []
 references:
-  - specs/epic-1-f03-user-stories.md
+  - ./specs/epic-1-f03-user-stories.md
 documentation:
-  - doc-4
+  - backlog://doc/doc-4
 priority: high
 ---
 
@@ -39,3 +39,8 @@ URL blocks show hostname as muted label with full URL as body.
 - [ ] #2 Documentation updated
 - [ ] #3 No regressions introduced
 <!-- DOD:END -->
+
+## Related Links
+
+- [Spec: specs/epic-1-f03-user-stories.md](./specs/epic-1-f03-user-stories.md)
+- [Doc: doc-4](backlog://doc/doc-4)

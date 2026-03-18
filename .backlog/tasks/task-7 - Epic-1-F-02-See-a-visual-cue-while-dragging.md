@@ -10,9 +10,9 @@ labels:
 milestone: m-0
 dependencies: []
 references:
-  - specs/epic-1-f02-user-stories.md
+  - ./specs/epic-1-f02-user-stories.md
 documentation:
-  - doc-3
+  - backlog://doc/doc-3
 priority: high
 ---
 
@@ -38,3 +38,8 @@ Full-screen overlay appears on drag-enter.
 - [ ] #2 Documentation updated
 - [ ] #3 No regressions introduced
 <!-- DOD:END -->
+
+## Related Links
+
+- [Spec: specs/epic-1-f02-user-stories.md](./specs/epic-1-f02-user-stories.md)
+- [Doc: doc-3](backlog://doc/doc-3)

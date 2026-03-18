@@ -9,9 +9,9 @@ labels: []
 milestone: m-1
 dependencies: []
 references:
-  - specs/epic-2-enrichment-user-stories-1.md
+  - ./specs/epic-2-enrichment-user-stories-1.md
 documentation:
-  - doc-9
+  - backlog://doc/doc-9
 priority: high
 ---
 
@@ -39,3 +39,8 @@ Loading indicator appears below the raw URL — the URL itself is always visible
 - [ ] #2 Documentation updated
 - [ ] #3 No regressions introduced
 <!-- DOD:END -->
+
+## Related Links
+
+- [Spec: specs/epic-2-enrichment-user-stories-1.md](./specs/epic-2-enrichment-user-stories-1.md)
+- [Doc: doc-9](backlog://doc/doc-9)
