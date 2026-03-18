@@ -4,6 +4,7 @@ title: '[Epic 2] F-07: URL block shows loading state during metadata fetch'
 status: To Do
 assignee: []
 created_date: '2026-03-18 00:10'
+updated_date: '2026-03-18 00:14'
 labels: []
 milestone: m-1
 dependencies: []
@@ -31,3 +32,10 @@ Loading indicator appears below the raw URL — the URL itself is always visible
 - [ ] #3 The raw URL is never hidden or replaced during loading
 - [ ] #4 The loading indicator is removed as soon as enrichment completes (success or failure)
 <!-- AC:END -->
+
+## Definition of Done
+<!-- DOD:BEGIN -->
+- [ ] #1 Tests pass
+- [ ] #2 Documentation updated
+- [ ] #3 No regressions introduced
+<!-- DOD:END -->
