@@ -28,7 +28,5 @@ Create a new project using Vite's React + TypeScript template. Set up the basic 
 
 ## Definition of Done
 <!-- DOD:BEGIN -->
-- [ ] #1 Tests pass
-- [ ] #2 Documentation updated
-- [ ] #3 No regressions introduced
+- [ ] #1 Documentation updated
 <!-- DOD:END -->
