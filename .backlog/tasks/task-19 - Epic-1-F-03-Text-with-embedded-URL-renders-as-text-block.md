@@ -4,6 +4,7 @@ title: '[Epic 1] F-03: Text with embedded URL renders as text block'
 status: To Do
 assignee: []
 created_date: '2026-03-18 00:01'
+updated_date: '2026-03-18 00:14'
 labels: []
 milestone: m-0
 dependencies: []
@@ -30,3 +31,10 @@ Only exact URL matches should trigger URL block type.
 - [ ] #2 The block renders as a text block in body font, not as a URL block
 - [ ] #3 The embedded URL is visible as part of the text content — no special link rendering
 <!-- AC:END -->
+
+## Definition of Done
+<!-- DOD:BEGIN -->
+- [ ] #1 Tests pass
+- [ ] #2 Documentation updated
+- [ ] #3 No regressions introduced
+<!-- DOD:END -->
