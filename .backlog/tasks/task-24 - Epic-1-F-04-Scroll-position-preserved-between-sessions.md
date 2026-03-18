@@ -4,6 +4,7 @@ title: '[Epic 1] F-04: Scroll position preserved between sessions'
 status: To Do
 assignee: []
 created_date: '2026-03-18 00:01'
+updated_date: '2026-03-18 00:14'
 labels: []
 milestone: m-0
 dependencies: []
@@ -30,3 +31,10 @@ Save and restore scroll position in local storage.
 - [ ] #2 On launch with no new items, the saved scroll position is restored
 - [ ] #3 If new items exist since the last session, scroll position is superseded — the feed scrolls to the bottom instead
 <!-- AC:END -->
+
+## Definition of Done
+<!-- DOD:BEGIN -->
+- [ ] #1 Tests pass
+- [ ] #2 Documentation updated
+- [ ] #3 No regressions introduced
+<!-- DOD:END -->
