@@ -4,6 +4,7 @@ title: '[Epic 1] F-04: Empty feed shows prompt on first launch'
 status: To Do
 assignee: []
 created_date: '2026-03-18 00:01'
+updated_date: '2026-03-18 00:14'
 labels: []
 milestone: m-0
 dependencies: []
@@ -31,3 +32,10 @@ Empty state communicates the capture gesture.
 - [ ] #3 The empty state disappears immediately when the first item is captured
 - [ ] #4 No empty state is shown if items exist but are scrolled out of view
 <!-- AC:END -->
+
+## Definition of Done
+<!-- DOD:BEGIN -->
+- [ ] #1 Tests pass
+- [ ] #2 Documentation updated
+- [ ] #3 No regressions introduced
+<!-- DOD:END -->
