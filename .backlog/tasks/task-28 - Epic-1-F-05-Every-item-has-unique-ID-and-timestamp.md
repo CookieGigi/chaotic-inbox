@@ -4,6 +4,7 @@ title: '[Epic 1] F-05: Every item has unique ID and timestamp'
 status: To Do
 assignee: []
 created_date: '2026-03-18 00:02'
+updated_date: '2026-03-18 00:14'
 labels: []
 milestone: m-0
 dependencies: []
@@ -30,3 +31,10 @@ UUID v4 for ID, ISO 8601 for timestamp.
 - [ ] #2 Every stored item has a `capturedAt` field containing an ISO 8601 timestamp set at the moment of capture
 - [ ] #3 No two items share the same `id`
 <!-- AC:END -->
+
+## Definition of Done
+<!-- DOD:BEGIN -->
+- [ ] #1 Tests pass
+- [ ] #2 Documentation updated
+- [ ] #3 No regressions introduced
+<!-- DOD:END -->
