@@ -1,0 +1,32 @@
+---
+id: TASK-11
+title: '[Epic 1] F-02: Drag over interactive elements without breaking'
+status: To Do
+assignee: []
+created_date: '2026-03-18 00:00'
+labels: []
+milestone: m-0
+dependencies: []
+references:
+  - specs/epic-1-f02-user-stories.md
+documentation:
+  - doc-3
+priority: high
+---
+
+## Description
+
+<!-- SECTION:DESCRIPTION:BEGIN -->
+**As a** user,
+**I want** the drop target to remain active even when I drag over a text input or other interactive element
+**so that** I can drop files anywhere in the app without hitting dead zones.
+
+The drop overlay stays active even over inputs and buttons.
+<!-- SECTION:DESCRIPTION:END -->
+
+## Acceptance Criteria
+<!-- AC:BEGIN -->
+- [ ] #1 Dragging a file over an `<input>`, `<textarea>`, or button keeps the full-screen overlay active
+- [ ] #2 Dropping a file while hovering over an interactive element captures the file normally
+- [ ] #3 The interactive element does not receive the drop event (no browser default behaviour)
+<!-- AC:END -->
