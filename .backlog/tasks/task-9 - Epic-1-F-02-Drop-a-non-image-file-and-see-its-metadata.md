@@ -4,6 +4,7 @@ title: '[Epic 1] F-02: Drop a non-image file and see its metadata'
 status: To Do
 assignee: []
 created_date: '2026-03-18 00:00'
+updated_date: '2026-03-18 00:14'
 labels: []
 milestone: m-0
 dependencies: []
@@ -30,3 +31,10 @@ Non-image files show type-specific icons (PDF, zip, binary).
 - [ ] #2 Dropping a `.zip` → file block with `FileZip` icon, filename, and file size
 - [ ] #3 Dropping an unknown binary → file block with `FileBinary` icon, filename, and file size
 <!-- AC:END -->
+
+## Definition of Done
+<!-- DOD:BEGIN -->
+- [ ] #1 Tests pass
+- [ ] #2 Documentation updated
+- [ ] #3 No regressions introduced
+<!-- DOD:END -->
