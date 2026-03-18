@@ -4,6 +4,7 @@ title: '[Epic 2] F-10: Tapping retry re-queues enrichment'
 status: To Do
 assignee: []
 created_date: '2026-03-18 00:11'
+updated_date: '2026-03-18 00:15'
 labels: []
 milestone: m-1
 dependencies: []
@@ -32,3 +33,10 @@ Retry resets counter and re-queues enrichment — available indefinitely.
 - [ ] #4 Manual retries are available indefinitely — there is no cap on how many times the user can manually retry
 - [ ] #5 Retry is available for all enrichment types: URL metadata, AI summaries
 <!-- AC:END -->
+
+## Definition of Done
+<!-- DOD:BEGIN -->
+- [ ] #1 Tests pass
+- [ ] #2 Documentation updated
+- [ ] #3 No regressions introduced
+<!-- DOD:END -->
