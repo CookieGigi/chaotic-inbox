@@ -4,6 +4,7 @@ title: '[Epic 1] F-02: Drop a file anywhere on the app window'
 status: To Do
 assignee: []
 created_date: '2026-03-18 00:00'
+updated_date: '2026-03-18 00:14'
 labels: []
 milestone: m-0
 dependencies: []
@@ -30,3 +31,10 @@ The entire app window acts as the drop target.
 - [ ] #2 A dropped file is captured and appended as a block at the bottom of the feed
 - [ ] #3 The feed scrolls to the new block
 <!-- AC:END -->
+
+## Definition of Done
+<!-- DOD:BEGIN -->
+- [ ] #1 Tests pass
+- [ ] #2 Documentation updated
+- [ ] #3 No regressions introduced
+<!-- DOD:END -->
