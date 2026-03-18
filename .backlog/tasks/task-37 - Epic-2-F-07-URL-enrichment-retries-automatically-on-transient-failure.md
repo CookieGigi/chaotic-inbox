@@ -4,6 +4,7 @@ title: '[Epic 2] F-07: URL enrichment retries automatically on transient failure
 status: To Do
 assignee: []
 created_date: '2026-03-18 00:10'
+updated_date: '2026-03-18 00:14'
 labels: []
 milestone: m-1
 dependencies: []
@@ -31,3 +32,10 @@ Up to 3 automatic retries with exponential backoff.
 - [ ] #3 The retry count is not surfaced to the user during automatic retries — only the loading state is shown
 - [ ] #4 After 3 failed attempts, automatic retries stop and `enrichmentStatus` is set to `failed`
 <!-- AC:END -->
+
+## Definition of Done
+<!-- DOD:BEGIN -->
+- [ ] #1 Tests pass
+- [ ] #2 Documentation updated
+- [ ] #3 No regressions introduced
+<!-- DOD:END -->
