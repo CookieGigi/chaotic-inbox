@@ -6,6 +6,7 @@ title: >-
 status: To Do
 assignee: []
 created_date: '2026-03-18 00:11'
+updated_date: '2026-03-18 00:15'
 labels: []
 milestone: m-1
 dependencies: []
@@ -34,3 +35,10 @@ Human-readable error message with retry count in metadata area.
 - [ ] #4 Blocks with `enrichmentStatus: done` show no status indicator
 - [ ] #5 Blocks with `enrichmentStatus: skipped` show no status indicator and no empty metadata placeholder
 <!-- AC:END -->
+
+## Definition of Done
+<!-- DOD:BEGIN -->
+- [ ] #1 Tests pass
+- [ ] #2 Documentation updated
+- [ ] #3 No regressions introduced
+<!-- DOD:END -->
