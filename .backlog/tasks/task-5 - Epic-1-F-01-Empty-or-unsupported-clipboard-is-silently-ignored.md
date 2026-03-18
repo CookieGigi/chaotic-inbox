@@ -4,6 +4,7 @@ title: '[Epic 1] F-01: Empty or unsupported clipboard is silently ignored'
 status: To Do
 assignee: []
 created_date: '2026-03-17 23:59'
+updated_date: '2026-03-18 00:14'
 labels: []
 milestone: m-0
 dependencies: []
@@ -31,3 +32,10 @@ Silently ignore invalid paste attempts without any feedback.
 - [ ] #3 The feed remains unchanged and scrolled to its current position
 - [ ] #4 No toast, alert, or visual feedback of any kind is shown
 <!-- AC:END -->
+
+## Definition of Done
+<!-- DOD:BEGIN -->
+- [ ] #1 Tests pass
+- [ ] #2 Documentation updated
+- [ ] #3 No regressions introduced
+<!-- DOD:END -->
