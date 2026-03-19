@@ -16,14 +16,39 @@ type Story = StoryObj<typeof meta>
 export const Default: Story = {
   args: {
     title: 'Example Item',
-    content: 'This is a template component example.',
+    children: 'This is a template component example.',
   },
 }
 
-export const LongContent: Story = {
+export const WithComplexContent: Story = {
   args: {
-    title: 'Long Content Example',
-    content:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    title: 'Complex Content Example',
+    children: (
+      <div>
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
+          eiusmod tempor incididunt ut labore et dolore magna aliqua.
+        </p>
+        <button type="button" onClick={() => alert('Clicked!')}>
+          Action Button
+        </button>
+      </div>
+    ),
+  },
+}
+
+export const WithNestedComponents: Story = {
+  args: {
+    title: 'Nested Components',
+    children: (
+      <>
+        <p>This demonstrates composition pattern with nested elements:</p>
+        <ul>
+          <li>Item 1</li>
+          <li>Item 2</li>
+          <li>Item 3</li>
+        </ul>
+      </>
+    ),
   },
 }

@@ -5,6 +5,7 @@ type: other
 created_date: '2026-03-17 23:58'
 updated_date: '2026-03-18 23:05'
 ---
+
 # Epic 2 — Enrichment: F-09 — AI Summary Enrichment (Opt-In)
 
 **Priority:** P1  

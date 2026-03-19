@@ -4,6 +4,7 @@ title: Component Library Best Practices
 type: other
 created_date: '2026-03-18 23:16'
 ---
+
 # Component Library — Best Practices for This Project
 
 ---
@@ -12,18 +13,18 @@ created_date: '2026-03-18 23:16'
 
 From the spec, your UI surface is narrow but non-trivial. The components that need to exist are:
 
-| Component | Variants / states |
-|---|---|
-| `Block` (container) | text, url, image, file |
-| `TextBlock` | collapsed (≤5 lines) / expanded |
-| `UrlBlock` | loading / enriched / failed |
-| `ImageBlock` | — |
-| `FileBlock` | pdf, zip, md, txt, binary |
-| `Timestamp` | today / this year / older |
-| `Feed` | empty / populated |
-| `DropOverlay` | visible / hidden |
-| `StorageErrorBanner` | — |
-| `ShowMore / ShowLess` | — |
+| Component             | Variants / states               |
+| --------------------- | ------------------------------- |
+| `Block` (container)   | text, url, image, file          |
+| `TextBlock`           | collapsed (≤5 lines) / expanded |
+| `UrlBlock`            | loading / enriched / failed     |
+| `ImageBlock`          | —                               |
+| `FileBlock`           | pdf, zip, md, txt, binary       |
+| `Timestamp`           | today / this year / older       |
+| `Feed`                | empty / populated               |
+| `DropOverlay`         | visible / hidden                |
+| `StorageErrorBanner`  | —                               |
+| `ShowMore / ShowLess` | —                               |
 
 That's roughly 10–12 distinct components. Small enough to build from scratch; complex enough to benefit from structure.
 
@@ -65,10 +66,10 @@ Yes, a template is worth it. Here's the pattern to follow consistently:
 ```tsx
 // TextBlock.tsx
 
-import type { Item } from '@/storage/db';
+import type { Item } from '@/storage/db'
 
 interface TextBlockProps {
-  item: Item;
+  item: Item
 }
 
 export function TextBlock({ item }: TextBlockProps) {

@@ -5,6 +5,7 @@ type: other
 created_date: '2026-03-17 23:58'
 updated_date: '2026-03-18 23:04'
 ---
+
 # Epic 2 — Enrichment
 
 **Status:** Draft  
@@ -26,14 +27,14 @@ There are two independent enrichment tracks:
 
 ## Design Constraints
 
-| Constraint                                | Rationale                                                               |
-| ----------------------------------------- | ----------------------------------------------------------------------- |
-| Raw input is never modified               | Inherited from Epic 1 — `raw` is sacred                                 |
-| Capture latency is unaffected             | Enrichment is always async and post-persist                             |
-| Enrichment failure degrades gracefully    | The item exists regardless; enrichment is additive                      |
-| AI summaries require explicit user opt-in | WebLLM requires a ~2 GB model download; this must never be a surprise   |
-| Feed renders without enrichment data      | Blocks display raw content until enrichment lands; then update in place |
-| URL enrichment requires network call      | Edge proxy call for metadata breaks pure local-first; acceptable trade-off for utility |
+| Constraint                                | Rationale                                                                                             |
+| ----------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| Raw input is never modified               | Inherited from Epic 1 — `raw` is sacred                                                               |
+| Capture latency is unaffected             | Enrichment is always async and post-persist                                                           |
+| Enrichment failure degrades gracefully    | The item exists regardless; enrichment is additive                                                    |
+| AI summaries require explicit user opt-in | WebLLM requires a ~2 GB model download; this must never be a surprise                                 |
+| Feed renders without enrichment data      | Blocks display raw content until enrichment lands; then update in place                               |
+| URL enrichment requires network call      | Edge proxy call for metadata breaks pure local-first; acceptable trade-off for utility                |
 | Backward compatibility                    | Items captured before Epic 2 (no enrichment fields) render identically to items with `skipped` status |
 
 ---
@@ -54,7 +55,7 @@ There are two independent enrichment tracks:
 | 1   | URL metadata fetching strategy | Minimal edge proxy (Cloudflare Worker) — direct fetch fails on CORS for most pages                                                                            |
 | 2   | AI summary engine              | WebLLM — runs fully in-browser, no data leaves the device                                                                                                     |
 | 3   | Model download trigger         | Explicit user opt-in — user enables AI summaries knowingly; download never happens silently                                                                   |
-| 4   | Enrichment tracks              | Two independent tracks: URL metadata (on by default, user can disable) and AI summaries (opt-in). Each track is independently enabled/disabled               |
+| 4   | Enrichment tracks              | Two independent tracks: URL metadata (on by default, user can disable) and AI summaries (opt-in). Each track is independently enabled/disabled                |
 | 5   | Retry strategy                 | Transient failures get up to 3 automatic retries with exponential backoff; after that, status is set to `failed` and a retry affordance is shown on the block |
 | 6   | Enrichment data location       | New optional `meta` field on the existing `Item` record — no new table needed at this stage                                                                   |
 | 7   | WebLLM model                   | Phi-3 mini (~2 GB) — manageable download size, fast enough for single-sentence summaries                                                                      |
@@ -104,6 +105,7 @@ interface Item {
 ```
 
 **Notes:**
+
 - `raw` is never written to after initial capture. `type` is never changed.
 - Items captured before Epic 2 will have `enrichmentStatus` undefined — these render identically to items with all tracks set to `skipped`
 - A track status of `undefined` is equivalent to `skipped` for rendering purposes

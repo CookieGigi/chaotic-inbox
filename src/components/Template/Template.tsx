@@ -1,13 +1,15 @@
+import type { ReactNode, ReactElement } from 'react'
+
 interface TemplateProps {
   title: string
-  content: string
+  children: ReactNode
 }
 
-export function Template({ title, content }: TemplateProps) {
+export function Template({ title, children }: TemplateProps): ReactElement {
   return (
     <div className="template">
       <h3>{title}</h3>
-      <p>{content}</p>
+      <div className="template-content">{children}</div>
     </div>
   )
 }

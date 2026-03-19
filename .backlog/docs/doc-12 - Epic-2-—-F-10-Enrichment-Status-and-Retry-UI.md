@@ -5,6 +5,7 @@ type: other
 created_date: '2026-03-17 23:59'
 updated_date: '2026-03-18 23:05'
 ---
+
 # Epic 2 — Enrichment: F-10 — Enrichment Status and Retry UI
 
 **Priority:** P0  
@@ -24,14 +25,14 @@ Blocks reflect their enrichment status visually per enrichment track. Users can 
 
 Each enrichment track (`url`, `image`, `ai`) has its own independent status:
 
-| Status    | Meaning                                                                 |
-| --------- | ----------------------------------------------------------------------- |
-| `pending` | Item is queued for enrichment for this track                            |
-| `running` | Enrichment is actively in progress for this track                       |
-| `done`    | Enrichment completed successfully for this track                        |
-| `skipped` | This track was not applicable or was disabled                           |
-| `failed`  | Enrichment failed after all retries for this track                      |
-| `undefined` | Equivalent to `skipped` — no enrichment attempted for this track      |
+| Status      | Meaning                                                          |
+| ----------- | ---------------------------------------------------------------- |
+| `pending`   | Item is queued for enrichment for this track                     |
+| `running`   | Enrichment is actively in progress for this track                |
+| `done`      | Enrichment completed successfully for this track                 |
+| `skipped`   | This track was not applicable or was disabled                    |
+| `failed`    | Enrichment failed after all retries for this track               |
+| `undefined` | Equivalent to `skipped` — no enrichment attempted for this track |
 
 ---
 
@@ -61,7 +62,7 @@ The renderer must treat `undefined` status identically to `skipped`:
 Blocks may have enrichment from multiple tracks (e.g., a URL item with `url` track and optionally `ai` track). The UI shows status indicators per-track:
 
 - URL metadata loading → spinner near title/description area
-- AI summary loading → spinner near summary area  
+- AI summary loading → spinner near summary area
 - Each track's retry affordance appears independently
 
 ---
