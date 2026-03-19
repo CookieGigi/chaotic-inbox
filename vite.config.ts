@@ -33,13 +33,32 @@ export default defineConfig({
     },
   },
   test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: ['./src/test/setup.ts'],
+    coverage: {
+      provider: 'v8',
+      reporter: ['html', 'text', 'text-summary'],
+      reportsDirectory: './coverage',
+      include: ['src/**/*'],
+      exclude: [
+        'src/**/*.stories.{ts,tsx}',
+        'src/**/*.d.ts',
+        'src/test/**/*',
+        'src/main.tsx',
+      ],
+      thresholds: {
+        lines: 80,
+        functions: 80,
+        branches: 80,
+        statements: 80,
+      },
+    },
     projects: [
       {
         extends: true,
         test: {
-          globals: true,
-          environment: 'jsdom',
-          setupFiles: ['./src/test/setup.ts'],
+          name: 'unit',
         },
       },
       {
