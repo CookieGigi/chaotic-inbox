@@ -7,11 +7,12 @@ const debug = createDebug('WDYR-Example')
 // This component will trigger WDYR warning because it re-renders
 // even when its props haven't changed (because parent state changes)
 function UnoptimizedCounter({ label }: { label: string }) {
-  debug.log('UnoptimizedCounter rendered')
+  console.log('UnoptimizedCounter rendered')
   return <div className="p-2 border rounded">{label}</div>
 }
 
-// Mark for WDYR tracking
+// Mark for WDYR tracking and set display name
+UnoptimizedCounter.displayName = 'UnoptimizedCounter'
 UnoptimizedCounter.whyDidYouRender = true
 
 // This component is memoized - won't re-render unless props change
@@ -20,10 +21,12 @@ const OptimizedCounter = memo(function OptimizedCounter({
 }: {
   label: string
 }) {
-  debug.log('OptimizedCounter rendered')
+  console.log('OptimizedCounter rendered')
   return <div className="p-2 border rounded bg-green-100">{label}</div>
 })
 
+// Mark for WDYR tracking and set display name
+OptimizedCounter.displayName = 'OptimizedCounter'
 OptimizedCounter.whyDidYouRender = true
 
 export function WDYRExample() {

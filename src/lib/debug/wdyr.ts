@@ -24,10 +24,16 @@ export async function initWhyDidYouRender(
     const React = await import('react')
 
     whyDidYouRender.default(React, {
-      include: options.include || [/^./],
-      exclude: options.exclude || [/^BrowserRouter/, /^Link/, /^Route/],
+      include: options.include || [/.*/],
+      exclude: options.exclude || [
+        /^BrowserRouter/,
+        /^Link/,
+        /^Route/,
+        /^WDYR/,
+      ],
       trackHooks: options.trackHooks ?? true,
       trackAllPureComponents: options.trackAllPureComponents ?? true,
+      logOnDifferentValues: true,
     })
 
     whyDidYouRenderInitialized = true
