@@ -4,6 +4,7 @@ title: Setup logging and error monitoring
 status: To Do
 assignee: []
 created_date: '2026-03-19 00:51'
+updated_date: '2026-03-19 01:01'
 labels:
   - Epic 0
   - Logging
@@ -15,14 +16,14 @@ priority: high
 ## Description
 
 <!-- SECTION:DESCRIPTION:BEGIN -->
-Configure logging system and error monitoring for the application. Consider using Sentry for error tracking and a structured logging library for development/production logs.
+Configure Consola as the logging system for the application. Consola provides elegant console output with log levels, great formatting, and TypeScript support. This is a lightweight solution suitable for development and production logging without the overhead of error monitoring platforms.
 <!-- SECTION:DESCRIPTION:END -->
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 Error monitoring service configured (Sentry or alternative)
-- [ ] #2 Environment-specific log levels set
-- [ ] #3 Unhandled errors are captured and reported
-- [ ] #4 Logs are structured and searchable
-- [ ] #5 Privacy considerations documented
+- [ ] #1 Consola installed and configured
+- [ ] #2 Environment-specific log levels set (debug in dev, info/warn/error in prod)
+- [ ] #3 Logger instance created with consistent configuration
+- [ ] #4 Logs are formatted clearly and readable
+- [ ] #5 Different log levels used appropriately throughout codebase
 <!-- AC:END -->
