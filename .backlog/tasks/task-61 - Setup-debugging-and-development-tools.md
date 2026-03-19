@@ -1,9 +1,10 @@
 ---
 id: TASK-61
 title: Setup debugging and development tools
-status: To Do
+status: In Progress
 assignee: []
 created_date: '2026-03-19 00:52'
+updated_date: '2026-03-19 01:34'
 labels:
   - Epic 0
   - DX
