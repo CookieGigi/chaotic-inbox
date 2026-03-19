@@ -23,8 +23,8 @@
 
   /* Text */
   --color-text: #cad3f5; /* Text - Primary text */
-  --color-text-muted: #6e738d; /* Subtext 0 - Timestamps, labels */
-  --color-text-faint: #5b6078; /* Overlay 0 - Placeholder text */
+  --color-text-muted: #a5adcb; /* Subtext 1 - Timestamps, labels */
+  --color-text-faint: #939ab7; /* Surface 2 - Placeholder text */
 
   /* ============================================
      SEMANTIC / STATUS COLORS
@@ -33,14 +33,14 @@
   --color-error: #ed8796; /* Red - Storage failure, errors */
   --color-success: #a6da95; /* Green - Confirmed writes */
   --color-warning: #eed49f; /* Yellow - Quota warnings */
-  --color-accent: #f5a97f; /* Peach - Interactive, focus, user-configurable */
+  --color-accent: #8bd5ca; /* Teal - Interactive, focus, user-configurable */
 
   /* ============================================
      ACCENT OPTIONS (User-configurable)
      ============================================ */
 
   /* These are reference values - components use --color-accent */
-  --color-accent-peach: #f5a97f; /* Default */
+  --color-accent-peach: #f5a97f;
   --color-accent-lavender: #b7bdf8;
   --color-accent-sapphire: #7dc4e4;
   --color-accent-green: #a6da95;
@@ -127,12 +127,12 @@
   --color-border: #363a4f;
   --color-border-subtle: #494d64;
   --color-text: #cad3f5;
-  --color-text-muted: #6e738d;
-  --color-text-faint: #5b6078;
+  --color-text-muted: #a5adcb;
+  --color-text-faint: #939ab7;
   --color-error: #ed8796;
   --color-success: #a6da95;
   --color-warning: #eed49f;
-  --color-accent: #f5a97f;
+  --color-accent: #8bd5ca;
 
   /* Accent options */
   --color-accent-peach: #f5a97f;

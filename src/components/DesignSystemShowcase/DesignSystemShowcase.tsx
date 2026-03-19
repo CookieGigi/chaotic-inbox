@@ -66,12 +66,12 @@ export function DesignSystemShowcase() {
             />
             <ColorSwatch
               name="--color-text-muted"
-              value="#6e738d"
+              value="#a5adcb"
               usage="Timestamps, labels"
             />
             <ColorSwatch
               name="--color-text-faint"
-              value="#5b6078"
+              value="#939ab7"
               usage="Placeholder text"
             />
           </div>
@@ -93,7 +93,7 @@ export function DesignSystemShowcase() {
             />
             <ColorSwatch
               name="--color-accent"
-              value="#f5a97f"
+              value="#8bd5ca"
               usage="Interactive, focus"
             />
           </div>
@@ -102,12 +102,11 @@ export function DesignSystemShowcase() {
         <div className="color-group">
           <h3 className="group-title">Accent Options</h3>
           <div className="color-grid">
-            <ColorSwatch name="Peach" value="#f5a97f" usage="Default accent" />
+            <ColorSwatch name="Teal" value="#8bd5ca" usage="Default accent" />
             <ColorSwatch name="Lavender" value="#b7bdf8" usage="" />
             <ColorSwatch name="Sapphire" value="#7dc4e4" usage="" />
             <ColorSwatch name="Mauve" value="#c6a0f6" usage="" />
             <ColorSwatch name="Pink" value="#f5bde6" usage="" />
-            <ColorSwatch name="Teal" value="#8bd5ca" usage="" />
             <ColorSwatch name="Sky" value="#91d7e3" usage="" />
           </div>
         </div>
@@ -228,7 +227,7 @@ export function DesignSystemShowcase() {
                 <span className="block-timestamp">5 min ago</span>
               </header>
               <p className="block-content">
-                <a href="#" className="url-link">
+                <a href="/" className="url-link">
                   https://example.com/article
                 </a>
               </p>
