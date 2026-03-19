@@ -22,8 +22,6 @@ Configure debugging tools and development aids including React DevTools, Redux/Z
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
 - [x] #1 React DevTools configured
-- [ ] #2 State management DevTools configured
-- [ ] #3 VS Code launch.json for debugging
-- [x] #4 Source maps properly configured
-- [x] #5 Development-only debugging utilities added
+- [x] #2 Source maps properly configured
+- [x] #3 Development-only debugging utilities added
 <!-- AC:END -->
