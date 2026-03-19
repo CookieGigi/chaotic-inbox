@@ -21,9 +21,7 @@ export default defineConfig({
   },
   plugins: [react(), tailwindcss()],
   build: {
-    sourcemap:
-      process.env.NODE_ENV === 'development' ||
-      process.env.SOURCE_MAP === 'true',
+    sourcemap: process.env.SOURCE_MAP === 'true',
   },
   resolve: {
     alias: {
