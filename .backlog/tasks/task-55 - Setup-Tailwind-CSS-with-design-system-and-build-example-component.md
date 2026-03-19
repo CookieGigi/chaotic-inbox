@@ -29,7 +29,7 @@ Set up Tailwind CSS for the project, configure a design system with proper themi
 - [x] #1 Tailwind CSS is installed and configured with PostCSS
 - [x] #2 Design tokens (colors, typography, spacing) are defined in tailwind.config.js
 - [x] #3 Example component is created following component best practices
-- [ ] #4 Component is accessible (ARIA attributes, keyboard navigation)
+- [x] #4 Component is accessible (ARIA attributes, keyboard navigation)
 - [ ] #5 Component includes Storybook stories for all variants
 - [ ] #6 Component follows composition patterns and is properly typed
 <!-- AC:END -->
