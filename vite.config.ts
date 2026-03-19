@@ -17,8 +17,14 @@ export default defineConfig({
       process.env.NODE_ENV === 'development' ? 5 : 2
     ),
     __APP_ENV__: JSON.stringify(process.env.NODE_ENV),
+    __DEV__: JSON.stringify(process.env.NODE_ENV === 'development'),
   },
   plugins: [react(), tailwindcss()],
+  build: {
+    sourcemap:
+      process.env.NODE_ENV === 'development' ||
+      process.env.SOURCE_MAP === 'true',
+  },
   resolve: {
     alias: {
       '@': path.resolve(currentDir, './src'),
