@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">15% </span>
+                <span class="strong">35% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>3/20</span>
+                <span class='fraction'>7/20</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">3.33% </span>
+                <span class="strong">23.33% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>1/30</span>
+                <span class='fraction'>7/30</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">16.66% </span>
+                <span class="strong">33.33% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>1/6</span>
+                <span class='fraction'>2/6</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">18.75% </span>
+                <span class="strong">43.75% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>3/16</span>
+                <span class='fraction'>7/16</span>
             </div>
         
             
@@ -114,7 +114,13 @@
 <a name='L49'></a><a href='#L49'>49</a>
 <a name='L50'></a><a href='#L50'>50</a>
 <a name='L51'></a><a href='#L51'>51</a>
-<a name='L52'></a><a href='#L52'>52</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L52'></a><a href='#L52'>52</a>
+<a name='L53'></a><a href='#L53'>53</a>
+<a name='L54'></a><a href='#L54'>54</a>
+<a name='L55'></a><a href='#L55'>55</a>
+<a name='L56'></a><a href='#L56'>56</a>
+<a name='L57'></a><a href='#L57'>57</a>
+<a name='L58'></a><a href='#L58'>58</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -125,20 +131,20 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -146,8 +152,14 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -178,11 +190,11 @@ interface WDYROptions {
 &nbsp;
 let whyDidYouRenderInitialized = false
 &nbsp;
-export async function <span class="fstat-no" title="function not covered" >initWhyDidYouRender(</span>
-  options: WDYROptions = <span class="branch-0 cbranch-no" title="branch not covered" >{}</span>
+export async function initWhyDidYouRender(
+  options: WDYROptions = {}
 ): Promise&lt;void&gt; {
-<span class="cstat-no" title="statement not covered" >  if (!__DEV__ || whyDidYouRenderInitialized) {</span>
-<span class="cstat-no" title="statement not covered" >    return</span>
+  <span class="missing-if-branch" title="else path not taken" >E</span>if (!__DEV__ || <span class="branch-1 cbranch-no" title="branch not covered" >whyDidYouRenderInitialized) {</span>
+    return
   }
 &nbsp;
 <span class="cstat-no" title="statement not covered" >  try {</span>
@@ -191,14 +203,20 @@ export async function <span class="fstat-no" title="function not covered" >initW
     const React = <span class="cstat-no" title="statement not covered" >await <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >import(<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >'</span>react')</span></span></span></span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >    whyDidYouRender.default(React, {</span>
-      include: options.include || [/^./],
-      exclude: options.exclude || [/^BrowserRouter/, /^Link/, /^Route/],
-      trackHooks: options.trackHooks ?? true,
-      trackAllPureComponents: options.trackAllPureComponents ?? true,
+      include: options.include || [/.*/],
+      exclude: options.exclude || <span class="branch-1 cbranch-no" title="branch not covered" >[</span>
+        /^BrowserRouter/,
+        /^Link/,
+        /^Route/,
+        /^WDYR/,
+      ],
+      trackHooks: options.trackHooks ?? <span class="branch-1 cbranch-no" title="branch not covered" >true,</span>
+      trackAllPureComponents: options.trackAllPureComponents ?? <span class="branch-1 cbranch-no" title="branch not covered" >true,</span>
+      logOnDifferentValues: true,
     })
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    whyDidYouRenderInitialized = true</span>
-<span class="cstat-no" title="statement not covered" >    console.log('[WDYR] Why Did You Render initialized')</span>
+    whyDidYouRenderInitialized = true
+    console.log('[WDYR] Why Did You Render initialized')
   } catch (error) {
 <span class="cstat-no" title="statement not covered" >    console.warn('[WDYR] Failed to initialize Why Did You Render:', error)</span>
   }
@@ -223,7 +241,7 @@ export function trackComponent&lt;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-03-19T01:54:50.315Z
+                at 2026-03-19T02:08:29.335Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>
