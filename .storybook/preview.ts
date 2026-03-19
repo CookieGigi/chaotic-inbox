@@ -1,10 +1,10 @@
+// Initialize WDYR FIRST before React is imported
+import { initWhyDidYouRender } from '../src/lib'
+initWhyDidYouRender()
+
 import type { Preview } from '@storybook/react-vite'
 import { themes } from 'storybook/theming'
 import '@/styles/index.css'
-import { initWhyDidYouRender } from '../src/lib'
-
-// Initialize Why Did You Render for all stories in development
-initWhyDidYouRender()
 
 const preview: Preview = {
   parameters: {
