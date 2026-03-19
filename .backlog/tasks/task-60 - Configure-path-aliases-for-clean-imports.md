@@ -1,9 +1,10 @@
 ---
 id: TASK-60
 title: Configure path aliases for clean imports
-status: To Do
+status: In Progress
 assignee: []
 created_date: '2026-03-19 00:52'
+updated_date: '2026-03-19 01:05'
 labels:
   - Epic 0
   - DX
