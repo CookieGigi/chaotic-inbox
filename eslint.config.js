@@ -29,7 +29,7 @@ export default tseslint.config(
         'warn',
         { allowConstantExport: true },
       ],
-      'import/no-relative-parent-imports': 'error',
+      'import/no-relative-parent-imports': ['error', { ignore: ['^@'] }],
     },
     settings: {
       'import/resolver': {
