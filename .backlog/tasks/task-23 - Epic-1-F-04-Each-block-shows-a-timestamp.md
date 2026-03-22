@@ -1,7 +1,7 @@
 ---
 id: TASK-23
 title: '[Epic 1] F-04: Each block shows a timestamp'
-status: In Progress
+status: Done
 assignee: []
 created_date: '2026-03-18 00:01'
 updated_date: '2026-03-22 10:09'
