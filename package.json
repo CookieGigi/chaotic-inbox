@@ -22,11 +22,14 @@
   "dependencies": {
     "@tailwindcss/vite": "^4.2.2",
     "consola": "^3.4.2",
+    "dexie": "^4.3.0",
+    "dexie-react-hooks": "^4.2.0",
     "eslint-import-resolver-typescript": "^4.4.4",
     "eslint-plugin-import": "^2.32.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "tailwindcss": "^4.2.2"
+    "tailwindcss": "^4.2.2",
+    "uuid": "^13.0.0"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^5.0.1",
@@ -70,7 +73,7 @@
   },
   "lint-staged": {
     "*.{ts,tsx}": [
-      "tsc --noEmit",
+      "bash -c 'tsc --noEmit'",
       "eslint --fix",
       "prettier --write"
     ],
