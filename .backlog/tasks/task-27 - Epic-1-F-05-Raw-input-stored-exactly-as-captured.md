@@ -4,7 +4,7 @@ title: '[Epic 1] F-05: Raw input stored exactly as captured'
 status: To Do
 assignee: []
 created_date: '2026-03-18 00:02'
-updated_date: '2026-03-22 09:19'
+updated_date: '2026-03-22 09:22'
 labels:
   - phase-1
 milestone: m-0
@@ -57,6 +57,6 @@ Reference the Item & Metadata Model (doc-20) for the raw field storage:
 <!-- DOD:BEGIN -->
 
 - [x] #1 Tests pass
-- [ ] #2 Documentation updated
+- [x] #2 Documentation updated
 - [x] #3 No regressions introduced
 <!-- DOD:END -->
