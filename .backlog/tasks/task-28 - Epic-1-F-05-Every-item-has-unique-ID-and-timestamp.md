@@ -34,7 +34,7 @@ UUID v4 for ID, ISO 8601 for timestamp.
 
 - [x] #1 Every stored item has an `id` field containing a UUID v4
 - [x] #2 Every stored item has a `capturedAt` field containing an ISO 8601 timestamp set at the moment of capture
-- [ ] #3 No two items share the same `id`
+- [x] #3 No two items share the same `id`
 <!-- AC:END -->
 
 ## Definition of Done
