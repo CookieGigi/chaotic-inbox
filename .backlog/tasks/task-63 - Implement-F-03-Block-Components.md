@@ -1,0 +1,53 @@
+---
+id: TASK-63
+title: Implement F-03 Block Components
+status: To Do
+assignee: []
+created_date: '2026-03-22 09:42'
+labels:
+  - phase-2
+  - f-03
+milestone: m-0
+dependencies: []
+references:
+  - F03_IMPLEMENTATION_PLAN.md
+  - 'backlog://doc/doc-4'
+  - 'backlog://doc/doc-19'
+  - 'backlog://doc/doc-18'
+priority: high
+---
+
+## Description
+
+<!-- SECTION:DESCRIPTION:BEGIN -->
+
+Implement the complete block rendering system for F-03 (Block Types and Rendering) per the implementation plan in F03_IMPLEMENTATION_PLAN.md.
+
+This includes:
+
+- Timestamp component (relative time formatting)
+- TextBlock component (CSS-only truncation with show more/less)
+- UrlBlock component (hostname label + full URL)
+- ImageBlock component (inline image rendering)
+- FileBlock component (type-specific icons)
+- Block dispatcher (routes to correct block by type)
+
+All components follow design system tokens, use Phosphor Icons, and include Storybook stories + unit tests.
+
+<!-- SECTION:DESCRIPTION:END -->
+
+## Acceptance Criteria
+
+<!-- AC:BEGIN -->
+
+- [ ] #1 Timestamp component renders relative time correctly (today/this year/older)
+- [ ] #2 TextBlock displays text with 5-line CSS truncation and working show more/less toggle
+- [ ] #3 UrlBlock displays hostname as muted label and full URL
+- [ ] #4 ImageBlock renders inline images constrained to feed width
+- [ ] #5 FileBlock shows correct Phosphor icon for file type + filename + size
+- [ ] #6 Block dispatcher routes items to correct component by type
+- [ ] #7 All components have Storybook stories
+- [ ] #8 All components have unit tests
+- [ ] #9 No lint or type errors
+- [ ] #10 Phosphor Icons dependency installed
+<!-- AC:END -->
