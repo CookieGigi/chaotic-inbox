@@ -4,7 +4,7 @@ title: Implement Timestamp component for F-03
 status: Done
 assignee: []
 created_date: '2026-03-22 09:44'
-updated_date: '2026-03-22 09:49'
+updated_date: '2026-03-22 09:58'
 labels:
   - F-03
   - component
@@ -52,30 +52,24 @@ Create the Timestamp component as the first component in the F-03 block renderin
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
 
-**Timestamp component implemented successfully**
+**Timestamp component updated to TASK-23 spec**
 
-**Files created:**
+**Format now matches TASK-23:**
 
-- `src/components/Timestamp/Timestamp.tsx` - Component with relative time formatting
-- `src/components/Timestamp/Timestamp.stories.tsx` - Storybook stories (Today, ThisYear, Older, Yesterday, LastMonth)
-- `src/components/Timestamp/Timestamp.test.tsx` - Unit tests with 5 test cases
-- `src/components/Timestamp/index.ts` - Public exports
+- Today: `HH:MM`
+- This year: `Mon DD · HH:MM`
+- Older: `YYYY Mon DD · HH:MM`
 
-**Features:**
+**Times displayed in local timezone** (user's browser timezone)
 
-- Uses branded `ISO8601Timestamp` type for type safety
-- Three time formats:
-  - Today: "HH:MM" (e.g., "14:30")
-  - This year: "Mon DD" (e.g., "Mar 22")
-  - Older: "Mon DD, YYYY" (e.g., "Mar 22, 2024")
-- Design tokens applied: `--color-text-muted` and `--text-sm`
-- Full datetime shown on hover via title attribute
+**Tests added (12 total):**
 
-**Test coverage:** 5/5 passing
+- Basic format tests (today, this year, older)
+- Edge cases (yesterday, last year, leap year, new year)
+- Component rendering tests (<time> element, datetime attr, CSS classes)
+- Tooltip verification
+- Today format without date prefix verification
 
-- Today format (HH:MM)
-- This year format (Mon DD)
-- Older format (Mon DD, YYYY)
-- Yesterday edge case
-- Last year edge case
+All tests pass and TypeScript compiles cleanly.
+
 <!-- SECTION:FINAL_SUMMARY:END -->
