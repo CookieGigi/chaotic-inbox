@@ -207,6 +207,72 @@ test('scrolls to top', () => {
 })
 ```
 
+### IndexedDB / Dexie
+
+For testing IndexedDB operations with Dexie, use `fake-indexeddb` to mock the IndexedDB API:
+
+```bash
+npm install -D fake-indexeddb
+```
+
+Import at the top of your test file to auto-polyfill:
+
+```typescript
+import 'fake-indexeddb/auto'
+import { describe, it, expect, beforeEach, afterEach } from 'vitest'
+import { VaultDB } from '@/storage/local_db'
+
+describe('VaultDB', () => {
+  let db: VaultDB
+
+  beforeEach(() => {
+    db = new VaultDB()
+  })
+
+  afterEach(async () => {
+    await db.delete()
+  })
+
+  it('adds and retrieves items', async () => {
+    const item = {
+      id: crypto.randomUUID(),
+      type: 'text' as const,
+      capturedAt: new Date().toISOString(),
+      raw: 'Test content',
+      metadata: { kind: 'plain', wordCount: 2 },
+    }
+
+    await db.items.add(item)
+    const retrieved = await db.items.get(item.id)
+
+    expect(retrieved).toEqual(item)
+  })
+})
+```
+
+**Key points:**
+
+- `fake-indexeddb` provides an in-memory IndexedDB implementation
+- Each test should create a fresh database instance
+- Always clean up with `db.delete()` in `afterEach`
+- Supports all Dexie operations: add, get, put, delete, queries, transactions
+- Blob storage works but may have limitations with very large files (>10MB)
+
+**Testing Blob storage:**
+
+```typescript
+it('stores blob data', async () => {
+  const blob = new Blob(['image data'], { type: 'image/png' })
+  const item = createImageItem(blob, { kind: 'image' })
+
+  await db.items.add(item)
+  const retrieved = await db.items.get(item.id)
+
+  expect(retrieved).toBeDefined()
+  expect(retrieved!.type).toBe('image')
+})
+```
+
 ---
 
 ## Best Practices
