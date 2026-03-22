@@ -4,6 +4,7 @@ title: Implement F-03 Block Components
 status: To Do
 assignee: []
 created_date: '2026-03-22 09:42'
+updated_date: '2026-03-22 10:02'
 labels:
   - phase-2
   - f-03
@@ -40,7 +41,7 @@ All components follow design system tokens, use Phosphor Icons, and include Stor
 
 <!-- AC:BEGIN -->
 
-- [ ] #1 Timestamp component renders relative time correctly (today/this year/older)
+- [x] #1 Timestamp component renders relative time correctly (today/this year/older)
 - [ ] #2 TextBlock displays text with 5-line CSS truncation and working show more/less toggle
 - [ ] #3 UrlBlock displays hostname as muted label and full URL
 - [ ] #4 ImageBlock renders inline images constrained to feed width
