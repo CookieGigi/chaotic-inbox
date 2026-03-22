@@ -58,7 +58,7 @@ export function Timestamp({ value }: TimestampProps) {
   return (
     <time
       dateTime={value}
-      className="text-sm text-text-muted"
+      className="text-sm text-text-muted font-mono"
       title={`${value} (UTC)`}
     >
       {formatTimestamp(value)}
