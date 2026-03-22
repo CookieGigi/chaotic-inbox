@@ -4,7 +4,7 @@ title: '[Epic 1] F-03: Pasted image renders inline'
 status: To Do
 assignee: []
 created_date: '2026-03-18 00:01'
-updated_date: '2026-03-18 00:25'
+updated_date: '2026-03-22 09:03'
 labels:
   - phase-2
 milestone: m-0
@@ -12,7 +12,8 @@ dependencies: []
 references:
   - ./specs/epic-1-f03-user-stories.md
 documentation:
-  - backlog://doc/doc-4
+  - 'backlog://doc/doc-4'
+  - 'backlog://doc/doc-20'
 priority: high
 ---
 
@@ -37,6 +38,20 @@ Images render inline within the feed column.
 - [ ] #3 No file icon or filename is shown — only the image itself
 <!-- AC:END -->
 
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+
+### Implementation Notes
+
+Reference the Item & Metadata Model (doc-20) for Image block handling:
+
+- Use `ImageMetadata` type with `kind: 'image'`, optional `width` and `height`
+- Type guard `isImageItem()` narrows to image type
+- Factory function `createImageItem()` creates image items with correct metadata
+- Raw field stores the Blob; metadata stores dimensions when available
+<!-- SECTION:PLAN:END -->
+
 ## Definition of Done
 
 <!-- DOD:BEGIN -->
@@ -45,8 +60,3 @@ Images render inline within the feed column.
 - [ ] #2 Documentation updated
 - [ ] #3 No regressions introduced
 <!-- DOD:END -->
-
-## Related Links
-
-- [Spec: specs/epic-1-f03-user-stories.md](./specs/epic-1-f03-user-stories.md)
-- [Doc: doc-4](backlog://doc/doc-4)
