@@ -4,7 +4,7 @@ title: '[Epic 1] F-05: Every item has unique ID and timestamp'
 status: To Do
 assignee: []
 created_date: '2026-03-18 00:02'
-updated_date: '2026-03-22 09:16'
+updated_date: '2026-03-22 09:22'
 labels:
   - phase-1
 milestone: m-0
@@ -56,7 +56,7 @@ Reference the Item & Metadata Model (doc-20) for the data structure:
 
 <!-- DOD:BEGIN -->
 
-- [ ] #1 Tests pass
-- [ ] #2 Documentation updated
-- [ ] #3 No regressions introduced
+- [x] #1 Tests pass
+- [x] #2 Documentation updated
+- [x] #3 No regressions introduced
 <!-- DOD:END -->
