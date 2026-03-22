@@ -4,7 +4,7 @@ title: '[Epic 1] F-05: Items survive app restart'
 status: To Do
 assignee: []
 created_date: '2026-03-18 00:02'
-updated_date: '2026-03-18 00:25'
+updated_date: '2026-03-22 09:03'
 labels:
   - phase-5
 milestone: m-0
@@ -12,7 +12,8 @@ dependencies: []
 references:
   - ./specs/epic-1-f05-user-stories.md
 documentation:
-  - backlog://doc/doc-6
+  - 'backlog://doc/doc-6'
+  - 'backlog://doc/doc-20'
 priority: high
 ---
 
@@ -37,6 +38,20 @@ All persisted items load on app launch.
 - [ ] #3 No items are missing or corrupted after a normal close-and-reopen cycle
 <!-- AC:END -->
 
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+
+### Implementation Notes
+
+Reference the Item & Metadata Model (doc-20) for data persistence:
+
+- Items stored with complete RawItem structure survive restarts
+- Storage layer (doc-16) persists the model defined in doc-20
+- UUID and timestamp preserved in storage
+- Metadata dictionary ensures all item data is retained
+<!-- SECTION:PLAN:END -->
+
 ## Definition of Done
 
 <!-- DOD:BEGIN -->
@@ -45,8 +60,3 @@ All persisted items load on app launch.
 - [ ] #2 Documentation updated
 - [ ] #3 No regressions introduced
 <!-- DOD:END -->
-
-## Related Links
-
-- [Spec: specs/epic-1-f05-user-stories.md](./specs/epic-1-f05-user-stories.md)
-- [Doc: doc-6](backlog://doc/doc-6)
