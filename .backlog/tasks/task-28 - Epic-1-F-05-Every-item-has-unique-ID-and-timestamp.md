@@ -1,10 +1,10 @@
 ---
 id: TASK-28
 title: '[Epic 1] F-05: Every item has unique ID and timestamp'
-status: To Do
+status: Done
 assignee: []
 created_date: '2026-03-18 00:02'
-updated_date: '2026-03-22 09:22'
+updated_date: '2026-03-22 09:26'
 labels:
   - phase-1
 milestone: m-0
