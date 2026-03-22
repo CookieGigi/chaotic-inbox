@@ -4,7 +4,7 @@ title: '[Epic 1] F-05: Raw input stored exactly as captured'
 status: To Do
 assignee: []
 created_date: '2026-03-18 00:02'
-updated_date: '2026-03-22 09:16'
+updated_date: '2026-03-22 09:03'
 labels:
   - phase-1
 milestone: m-0
@@ -33,9 +33,9 @@ No transformation or truncation of stored data.
 
 <!-- AC:BEGIN -->
 
-- [x] #1 The stored `raw` field for text and URL items exactly matches the original clipboard string
-- [x] #2 The stored `raw` field for file items is byte-for-byte identical to the original file
-- [x] #3 No truncation, normalisation, or transformation is applied to the stored payload
+- [ ] #1 The stored `raw` field for text and URL items exactly matches the original clipboard string
+- [ ] #2 The stored `raw` field for file items is byte-for-byte identical to the original file
+- [ ] #3 No truncation, normalisation, or transformation is applied to the stored payload
 <!-- AC:END -->
 
 ## Implementation Plan
