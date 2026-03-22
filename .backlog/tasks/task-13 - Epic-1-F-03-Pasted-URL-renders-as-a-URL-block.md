@@ -4,7 +4,7 @@ title: '[Epic 1] F-03: Pasted URL renders as a URL block'
 status: To Do
 assignee: []
 created_date: '2026-03-18 00:00'
-updated_date: '2026-03-18 00:25'
+updated_date: '2026-03-22 09:03'
 labels:
   - phase-2
 milestone: m-0
@@ -12,7 +12,8 @@ dependencies: []
 references:
   - ./specs/epic-1-f03-user-stories.md
 documentation:
-  - backlog://doc/doc-4
+  - 'backlog://doc/doc-4'
+  - 'backlog://doc/doc-20'
 priority: high
 ---
 
@@ -37,6 +38,20 @@ URL blocks show hostname as muted label with full URL as body.
 - [ ] #3 No favicon or link preview is fetched or shown
 <!-- AC:END -->
 
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+
+### Implementation Notes
+
+Reference the Item & Metadata Model (doc-20) for URL block handling:
+
+- Use `UrlMetadata` type with `kind: 'url'`, optional `title` and `favicon`
+- Type guard `isUrlItem()` narrows to URL type
+- Factory function `createUrlItem()` creates URL items with correct metadata
+- Initial capture stores raw URL; enrichment adds title/favicon later
+<!-- SECTION:PLAN:END -->
+
 ## Definition of Done
 
 <!-- DOD:BEGIN -->
@@ -45,8 +60,3 @@ URL blocks show hostname as muted label with full URL as body.
 - [ ] #2 Documentation updated
 - [ ] #3 No regressions introduced
 <!-- DOD:END -->
-
-## Related Links
-
-- [Spec: specs/epic-1-f03-user-stories.md](./specs/epic-1-f03-user-stories.md)
-- [Doc: doc-4](backlog://doc/doc-4)
