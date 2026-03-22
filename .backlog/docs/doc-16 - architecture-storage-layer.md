@@ -3,14 +3,15 @@ id: doc-16
 title: architecture-storage-layer
 type: other
 created_date: '2026-03-18 00:32'
+updated_date: '2026-03-22 08:29'
 ---
 
 # Storage Layer — Technical Architecture
 
 **Epic:** 1 — Capture
 **Status:** Draft
-**Version:** 0.1.0
-**Last updated:** 2026-03-14
+**Version:** 0.2.0
+**Last updated:** 2026-03-22
 **Stack:** React · Browser-only · IndexedDB via Dexie
 
 ---
@@ -30,21 +31,10 @@ created_date: '2026-03-18 00:32'
 // src/storage/db.ts
 
 import Dexie, { type Table } from 'dexie'
-
-export type ItemType = 'text' | 'url' | 'image' | 'file'
-
-export interface Item {
-  id: string // UUID v4
-  type: ItemType
-  capturedAt: string // ISO 8601 — used for feed ordering
-  raw: string | Blob // string for text/url, Blob for image/file
-  filename?: string // file/image only — original filename if from drop
-  filesize?: number // file only — bytes
-  mimetype?: string // image/file — MIME type string
-}
+import type { RawItem } from '@/models/rawItem'
 
 export class VaultDB extends Dexie {
-  items!: Table<Item, string> // keyed by id
+  items!: Table<RawItem, string> // keyed by id
 
   constructor() {
     super('vault')
@@ -63,7 +53,8 @@ export const db = new VaultDB()
 
 - `raw` is typed as `string | Blob` — text and URLs stay as strings (cheap, queryable); binaries go in as `Blob` (no encoding cost, native browser support)
 - `capturedAt` is **indexed** — feed ordering is an `orderBy('capturedAt')` with no full-table scan
-- `filename`, `filesize`, `mimetype` are optional fields on the same table — no separate table needed at this stage
+- `metadata` is a **discriminated union** field containing type-specific properties (filename, size, etc.) — see [Item & Metadata Model](./doc-17)
+- Metadata is NOT indexed since we don't query by filename/filesize
 - Schema version is `1` — Dexie's migration system allows clean evolution in later epics
 
 ---
@@ -75,32 +66,68 @@ A thin service layer sits between capture events and Dexie. The spec requires th
 ```ts
 // src/storage/itemService.ts
 
-import { db, type Item, type ItemType } from './db'
-import { v4 as uuid } from 'uuid'
+import { db } from './db'
+import type { RawItem } from '@/models/rawItem'
+import {
+  createFileItem,
+  createTextItem,
+  createUrlItem,
+  createImageItem,
+} from '@/models/itemFactories'
 
-export async function persistItem(
-  payload: string | Blob,
-  type: ItemType,
-  meta?: { filename?: string; filesize?: number; mimetype?: string }
-): Promise<Item> {
-  const item: Item = {
-    id: uuid(),
-    type,
-    capturedAt: new Date().toISOString(),
-    raw: payload,
-    ...meta,
+export async function persistFile(
+  payload: Blob,
+  metadata: {
+    kind: string
+    filename: string
+    filesize: number
+    mimetype: string
   }
-
-  await db.items.add(item) // throws on failure — caller handles
+): Promise<RawItem> {
+  const item = createFileItem(payload, metadata)
+  await db.items.add(item)
   return item
 }
 
-export async function loadAllItems(): Promise<Item[]> {
+export async function persistText(
+  payload: string,
+  metadata: { kind: string; wordCount?: number }
+): Promise<RawItem> {
+  const item = createTextItem(payload, metadata)
+  await db.items.add(item)
+  return item
+}
+
+export async function persistUrl(
+  payload: string,
+  metadata: { kind: string; title?: string; favicon?: string }
+): Promise<RawItem> {
+  const item = createUrlItem(payload, metadata)
+  await db.items.add(item)
+  return item
+}
+
+export async function persistImage(
+  payload: Blob,
+  metadata: { kind: string; width?: number; height?: number }
+): Promise<RawItem> {
+  const item = createImageItem(payload, metadata)
+  await db.items.add(item)
+  return item
+}
+
+export async function loadAllItems(): Promise<RawItem[]> {
   return db.items.orderBy('capturedAt').toArray()
 }
 ```
 
-**Error handling contract (US-05-05):** `persistItem` throws if the Dexie write fails. The capture handler catches this and surfaces the error to the user — no block is appended to the feed if the write did not complete.
+**Factory pattern benefits:**
+
+- Compile-time type safety — TypeScript ensures correct metadata for each item type
+- Centralized construction logic — ID generation, timestamp creation in one place
+- Discriminated union safety — `type` and `metadata` are always in sync
+
+**Error handling contract (US-05-05):** Factory functions and `db.items.add()` can throw. The capture handler catches this and surfaces the error to the user — no block is appended to the feed if the write did not complete.
 
 ---
 
@@ -109,17 +136,28 @@ export async function loadAllItems(): Promise<Item[]> {
 The glue that enforces the write-before-render contract at every call site.
 
 ```ts
-async function handleCapture(payload: string | Blob, type: ItemType, meta?) {
-  let item: Item
+import { persistFile } from '@/storage/itemService'
+import type { FileSubType } from '@/models/metadata'
+
+async function handleFileDrop(file: File) {
+  // Determine file subtype from extension (caller responsibility)
+  const fileSubType: FileSubType = detectFileType(file.name)
+
+  let item: RawItem
 
   try {
-    item = await persistItem(payload, type, meta) // write first
+    item = await persistFile(file, {
+      kind: fileSubType,
+      filename: file.name,
+      filesize: file.size,
+      mimetype: file.type,
+    })
   } catch (err) {
-    showStorageError(err) // surface to user, do NOT append block
+    showStorageError(err)
     return
   }
 
-  appendToFeed(item) // only reached if write succeeded
+  appendToFeed(item)
   scrollToBottom()
 }
 ```
@@ -128,7 +166,29 @@ The feed state never gets ahead of the storage state.
 
 ---
 
-## 5. Open Questions
+## 5. Type Narrowing (Read Operations)
+
+When reading items from storage, use type guards to safely access type-specific metadata:
+
+```ts
+import { isFileItem, isTextItem } from '@/models/metadata'
+
+function renderItem(item: RawItem) {
+  if (isFileItem(item)) {
+    // TypeScript knows item.metadata has FileMetadata shape
+    console.log(item.metadata.filename)
+    console.log(item.metadata.filesize)
+  } else if (isTextItem(item)) {
+    // TypeScript knows item.metadata has TextMetadata shape
+    console.log(item.metadata.wordCount)
+  }
+  // ... etc
+}
+```
+
+---
+
+## 6. Open Questions
 
 | #   | Question                                                                    | Status                 |
 | --- | --------------------------------------------------------------------------- | ---------------------- |
@@ -138,6 +198,12 @@ The feed state never gets ahead of the storage state.
 
 ---
 
-## 6. Next Step
+## 7. Related Documents
 
-Type detection — the logic that inspects clipboard / drop data and resolves `text | url | image | file` before calling `persistItem`. Feeds directly into F-01 and F-02
+- [Item & Metadata Model](./doc-17) — Complete type definitions, metadata structures, factory functions, and type guards
+
+---
+
+## 8. Next Step
+
+Type detection — the logic that inspects clipboard / drop data and resolves `text | url | image | file` before calling the appropriate persist function. Feeds directly into F-01 and F-02
