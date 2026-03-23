@@ -4,7 +4,7 @@ title: Implement F-03 Block Components
 status: To Do
 assignee: []
 created_date: '2026-03-22 09:42'
-updated_date: '2026-03-23 00:25'
+updated_date: '2026-03-23 00:42'
 labels:
   - phase-2
   - f-03
@@ -52,3 +52,37 @@ All components follow design system tokens, use Phosphor Icons, and include Stor
 - [x] #9 No lint or type errors
 - [x] #10 Phosphor Icons dependency installed
 <!-- AC:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+
+## TextBlock Implementation Notes
+
+### Architecture Decision
+
+TextBlock only renders content + show more/less toggle. Header (type icon, timestamp) and block wrapper structure are handled by the Block dispatcher component (AC #6).
+
+### Design System Compliance
+
+- Text: `--text-base`, `--color-text`
+
+- Toggle: `--text-sm`, `--color-accent` (no underline)
+
+- Icon: CaretDown/CaretUp, `regular` weight, 16px
+
+- Focus ring: 2px solid accent, 2px offset
+
+- No animation per design system motion guidelines
+
+### Truncation Strategy
+
+Hybrid approach for accurate line detection:
+
+1. `scrollHeight` measurement - detects visually wrapped text
+
+2. Newline counting fallback - handles edge cases in tests
+
+Both methods ensure toggle appears correctly at any viewport width.
+
+<!-- SECTION:NOTES:END -->
