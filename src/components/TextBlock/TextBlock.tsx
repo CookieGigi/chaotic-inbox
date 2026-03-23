@@ -46,11 +46,12 @@ export function TextBlock({ content }: TextBlockProps) {
   }, [content])
 
   return (
-    <div className="flex flex-col gap-2">
+    <>
+      {/* Content */}
       <p
         ref={textRef}
         data-testid="text-block-content"
-        className={`text-base text-text whitespace-pre-wrap break-words overflow-hidden transition-all duration-200 ${
+        className={`text-base text-text whitespace-pre-wrap break-words overflow-hidden ${
           !isExpanded ? 'line-clamp-5' : ''
         }`}
         style={{
@@ -60,26 +61,27 @@ export function TextBlock({ content }: TextBlockProps) {
         {content}
       </p>
 
+      {/* Footer - show more/less */}
       {needsTruncation && (
         <button
           type="button"
           onClick={() => setIsExpanded(!isExpanded)}
           aria-expanded={isExpanded}
-          className="flex items-center gap-1 text-sm text-text-muted hover:text-text transition-colors self-start focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg rounded"
+          className="flex items-center gap-1 text-sm text-accent self-start focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg rounded mt-2"
         >
           {isExpanded ? (
             <>
-              <CaretUp size={16} weight="bold" aria-hidden="true" />
+              <CaretUp size={16} weight="regular" aria-hidden="true" />
               <span>Show less</span>
             </>
           ) : (
             <>
-              <CaretDown size={16} weight="bold" aria-hidden="true" />
+              <CaretDown size={16} weight="regular" aria-hidden="true" />
               <span>Show more</span>
             </>
           )}
         </button>
       )}
-    </div>
+    </>
   )
 }
