@@ -1,10 +1,10 @@
 ---
 id: TASK-63
 title: Implement F-03 Block Components
-status: To Do
+status: In Progress
 assignee: []
 created_date: '2026-03-22 09:42'
-updated_date: '2026-03-24 01:09'
+updated_date: '2026-03-24 01:39'
 labels:
   - phase-2
   - f-03
@@ -46,7 +46,7 @@ All components follow design system tokens, use Phosphor Icons, and include Stor
 - [x] #3 UrlBlock displays hostname as muted label and full URL
 - [x] #4 ImageBlock renders inline images constrained to feed width
 - [x] #5 FileBlock shows correct Phosphor icon for file type + filename + size
-- [ ] #6 Block dispatcher routes items to correct component by type
+- [x] #6 Block dispatcher routes items to correct component by type
 - [ ] #7 All components have Storybook stories
 - [ ] #8 All components have unit tests
 - [x] #9 No lint or type errors
@@ -137,4 +137,58 @@ Both methods ensure toggle appears correctly at any viewport width.
 - Decimals only for MB+ (1.5 MB), whole numbers for smaller
 
 - 25 unit tests passing
+
+## Block Component Implementation Notes
+
+### Architecture
+
+The Block component serves as the main dispatcher that:
+
+1. Routes items to correct block component by type (text, url, image, file)
+2. Renders the block header with icon, label (title), and timestamp
+3. Renders the content area with the appropriate block component
+
+### RawItem Title Property
+
+Added optional `title` property to RawItem type:
+
+- **Text**: `undefined` (no title)
+- **Image**: `metadata.alt` (optional, from ImageMetadata)
+- **Url**: `hostname` extracted from URL (required)
+- **File**: `metadata.filename` (required)
+
+Updated ImageMetadata interface to include optional `alt?: string` field.
+
+### Block Header Structure
+
+```
+┌─────────────────────────────────────────┐
+│  [Icon] [Label]        [Timestamp]      │
+│  Article  example.com        10:30      │
+│                                         │
+│  [Content Area]                         │
+│  https://example.com/path               │
+└─────────────────────────────────────────┘
+```
+
+### Icon Mapping
+
+Uses Phosphor Icons per design system:
+
+- Text: `Article`
+- Url: `Link`
+- Image: `Image`
+- File (PDF): `FilePdf`
+- File (Zip): `FileZip`
+- File (Text): `FileText`
+- File (Other): `File`
+
+### Design System Compliance
+
+- Padding: `py-3 px-4` (12px vertical, 16px horizontal)
+- Background: `bg-transparent`
+- Icons: 16px, `text-text-muted`
+- Labels: `text-sm text-text-muted font-mono`
+- Timestamps: Uses `Timestamp` component
+- Block structure: `<article>` element with semantic `<header>`
 <!-- SECTION:NOTES:END -->
