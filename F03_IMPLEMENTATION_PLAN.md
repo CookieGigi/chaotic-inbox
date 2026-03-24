@@ -177,12 +177,12 @@ src/components/
 
 ### Step 3: UrlBlock Component
 
-- [ ] Create `src/components/UrlBlock/` directory
-- [ ] Implement `UrlBlock.tsx`
-  - Use `Link` icon from Phosphor
-  - Extract hostname from URL
-  - Display hostname as muted monospace label
-  - Display full URL as `--text-base-medium`
+- [x] Create `src/components/UrlBlock/` directory
+- [x] Implement `UrlBlock.tsx`
+  - ~~Use `Link` icon from Phosphor~~ (icon handled by parent Block wrapper)
+  - ~~Extract hostname from URL~~ (removed - shows only normalized URL)
+  - Display full URL as clickable link with cursor-pointer
+  - Apply hover:bg-surface/50 for visual feedback
 - [ ] Add Storybook stories
   - Simple URL
   - URL with path

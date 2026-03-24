@@ -5,30 +5,10 @@ import { UrlBlock } from './UrlBlock'
 
 describe('UrlBlock', () => {
   describe('rendering', () => {
-    it('renders hostname as muted label', () => {
-      render(<UrlBlock url="example.com" />)
-
-      expect(screen.getByText('example.com')).toBeInTheDocument()
-    })
-
     it('renders full URL as body text', () => {
       render(<UrlBlock url="example.com" />)
 
       expect(screen.getByText('https://example.com')).toBeInTheDocument()
-    })
-
-    it('renders link icon in hostname label', () => {
-      render(<UrlBlock url="example.com" />)
-
-      const button = screen.getByRole('button')
-      const icon = button.querySelector('svg')
-      expect(icon).toBeInTheDocument()
-    })
-
-    it('strips www from hostname label', () => {
-      render(<UrlBlock url="www.example.com" />)
-
-      expect(screen.getByText('example.com')).toBeInTheDocument()
     })
 
     it('shows full URL with https protocol in body', () => {
@@ -46,14 +26,6 @@ describe('UrlBlock', () => {
       ).toBeInTheDocument()
     })
 
-    it('shows hostname without path in label', () => {
-      render(<UrlBlock url="https://example.com/path/to/page" />)
-
-      // Hostname label should not include path
-      const hostnameLabel = screen.getByText('example.com')
-      expect(hostnameLabel).toBeInTheDocument()
-    })
-
     it('handles empty URL gracefully', () => {
       render(<UrlBlock url="" />)
 
@@ -61,10 +33,10 @@ describe('UrlBlock', () => {
       expect(button).toBeInTheDocument()
     })
 
-    it('displays invalid URL as-is when parsing fails', () => {
+    it('normalizes invalid URL by adding https prefix', () => {
       render(<UrlBlock url="not-a-valid-url" />)
 
-      expect(screen.getByText('not-a-valid-url')).toBeInTheDocument()
+      expect(screen.getByText('https://not-a-valid-url')).toBeInTheDocument()
     })
   })
 
@@ -150,11 +122,14 @@ describe('UrlBlock', () => {
   })
 
   describe('accessibility', () => {
-    it('has aria-label with hostname', () => {
+    it('has aria-label with full URL', () => {
       render(<UrlBlock url="example.com" />)
 
       const button = screen.getByRole('button')
-      expect(button).toHaveAttribute('aria-label', 'Open link: example.com')
+      expect(button).toHaveAttribute(
+        'aria-label',
+        'Open link: https://example.com'
+      )
     })
 
     it('is keyboard accessible', async () => {
@@ -173,30 +148,14 @@ describe('UrlBlock', () => {
       expect(button).toHaveClass('focus-visible:ring-2')
       expect(button).toHaveClass('focus-visible:ring-accent')
     })
-
-    it('icon has aria-hidden attribute', () => {
-      render(<UrlBlock url="example.com" />)
-
-      const icon = screen.getByRole('button').querySelector('svg')
-      expect(icon).toHaveAttribute('aria-hidden', 'true')
-    })
   })
 
   describe('styling', () => {
-    it('hostname label has muted color', () => {
+    it('button has cursor pointer', () => {
       render(<UrlBlock url="example.com" />)
 
-      const hostnameText = screen.getByText('example.com')
-      const hostnameLabel = hostnameText.parentElement
-      expect(hostnameLabel).toHaveClass('text-textSecondary')
-    })
-
-    it('hostname label uses small text size', () => {
-      render(<UrlBlock url="example.com" />)
-
-      const hostnameText = screen.getByText('example.com')
-      const hostnameLabel = hostnameText.parentElement
-      expect(hostnameLabel).toHaveClass('text-sm')
+      const button = screen.getByRole('button')
+      expect(button).toHaveClass('cursor-pointer')
     })
 
     it('full URL body has accent color', () => {
@@ -228,23 +187,9 @@ describe('UrlBlock', () => {
       )
       expect(fullUrl).toHaveClass('break-all')
     })
-
-    it('uses vertical flex column layout', () => {
-      render(<UrlBlock url="example.com" />)
-
-      const button = screen.getByRole('button')
-      expect(button).toHaveClass('flex-col')
-    })
   })
 
   describe('edge cases', () => {
-    it('handles URL with port in hostname label', () => {
-      render(<UrlBlock url="https://example.com:8080/path" />)
-
-      // Hostname includes port
-      expect(screen.getByText('example.com:8080')).toBeInTheDocument()
-    })
-
     it('handles URL with port in full URL body', () => {
       render(<UrlBlock url="https://example.com:8080/path" />)
 
@@ -272,7 +217,6 @@ describe('UrlBlock', () => {
     it('handles subdomain URLs', () => {
       render(<UrlBlock url="blog.example.com" />)
 
-      expect(screen.getByText('blog.example.com')).toBeInTheDocument()
       expect(screen.getByText('https://blog.example.com')).toBeInTheDocument()
     })
 
@@ -282,9 +226,6 @@ describe('UrlBlock', () => {
       )
 
       expect(
-        screen.getByText('deep.nested.subdomain.example.com')
-      ).toBeInTheDocument()
-      expect(
         screen.getByText('https://deep.nested.subdomain.example.com/a/b/c/d')
       ).toBeInTheDocument()
     })
@@ -292,7 +233,6 @@ describe('UrlBlock', () => {
     it('handles URL with both query and hash', () => {
       render(<UrlBlock url="https://example.com/page?id=123#section" />)
 
-      expect(screen.getByText('example.com')).toBeInTheDocument()
       expect(
         screen.getByText('https://example.com/page?id=123#section')
       ).toBeInTheDocument()
