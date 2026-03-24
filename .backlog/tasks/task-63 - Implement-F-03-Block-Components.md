@@ -4,7 +4,7 @@ title: Implement F-03 Block Components
 status: To Do
 assignee: []
 created_date: '2026-03-22 09:42'
-updated_date: '2026-03-24 01:04'
+updated_date: '2026-03-24 01:09'
 labels:
   - phase-2
   - f-03
@@ -47,8 +47,8 @@ All components follow design system tokens, use Phosphor Icons, and include Stor
 - [x] #4 ImageBlock renders inline images constrained to feed width
 - [x] #5 FileBlock shows correct Phosphor icon for file type + filename + size
 - [ ] #6 Block dispatcher routes items to correct component by type
-- [ ] #7 All components have Storybook stories
-- [ ] #8 All components have unit tests
+- [x] #7 All components have Storybook stories
+- [x] #8 All components have unit tests
 - [x] #9 No lint or type errors
 - [x] #10 Phosphor Icons dependency installed
 <!-- AC:END -->
