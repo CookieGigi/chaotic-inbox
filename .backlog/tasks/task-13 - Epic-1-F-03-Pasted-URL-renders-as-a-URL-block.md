@@ -1,10 +1,10 @@
 ---
 id: TASK-13
 title: '[Epic 1] F-03: Pasted URL renders as a URL block'
-status: To Do
+status: In Progress
 assignee: []
 created_date: '2026-03-18 00:00'
-updated_date: '2026-03-22 09:03'
+updated_date: '2026-03-24 00:14'
 labels:
   - phase-2
 milestone: m-0
@@ -34,7 +34,7 @@ URL blocks show hostname as muted label with full URL as body.
 <!-- AC:BEGIN -->
 
 - [ ] #1 Clipboard text matching `http://` or `https://` is saved and rendered as type `url`, not `text`
-- [ ] #2 The block displays the hostname as a muted label with the full URL as body text
+- [x] #2 The block displays the hostname as a muted label with the full URL as body text
 - [ ] #3 No favicon or link preview is fetched or shown
 <!-- AC:END -->
 
