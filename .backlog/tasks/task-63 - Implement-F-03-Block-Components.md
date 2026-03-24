@@ -47,8 +47,8 @@ All components follow design system tokens, use Phosphor Icons, and include Stor
 - [x] #4 ImageBlock renders inline images constrained to feed width
 - [x] #5 FileBlock shows correct Phosphor icon for file type + filename + size
 - [ ] #6 Block dispatcher routes items to correct component by type
-- [x] #7 All components have Storybook stories
-- [x] #8 All components have unit tests
+- [ ] #7 All components have Storybook stories
+- [ ] #8 All components have unit tests
 - [x] #9 No lint or type errors
 - [x] #10 Phosphor Icons dependency installed
 <!-- AC:END -->
