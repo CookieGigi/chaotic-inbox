@@ -4,7 +4,7 @@ title: Implement F-03 Block Components
 status: To Do
 assignee: []
 created_date: '2026-03-22 09:42'
-updated_date: '2026-03-24 01:03'
+updated_date: '2026-03-24 01:04'
 labels:
   - phase-2
   - f-03
@@ -111,4 +111,30 @@ Both methods ensure toggle appears correctly at any viewport width.
 
 - 11 tests covering rendering, design system, and edge cases
 - Tests verify no header/footer (handled by Block wrapper)
+
+## FileBlock Implementation Notes
+
+### Architecture
+
+- FileBlock renders only filename + filesize, no icon (handled by Block wrapper per AC #6)
+
+- Props: `item: RawItem & { type: 'file' }`
+
+### Design System Compliance
+
+- Filename: `--text-base`, `font-medium`, `--color-text`
+
+- File size: `--text-xs`, `--color-text-muted`
+
+- Layout: flex row with gap-2
+
+### File Size Formatting
+
+- Auto-scales: B → KB → MB → GB
+
+- 0 B for empty files
+
+- Decimals only for MB+ (1.5 MB), whole numbers for smaller
+
+- 25 unit tests passing
 <!-- SECTION:NOTES:END -->
