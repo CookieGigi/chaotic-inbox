@@ -16,11 +16,15 @@ priority: high
 ## Description
 
 <!-- SECTION:DESCRIPTION:BEGIN -->
+
 Configure continuous integration pipeline with GitHub Actions to run tests, linting, and type checking on pull requests and main branch pushes.
+
 <!-- SECTION:DESCRIPTION:END -->
 
 ## Acceptance Criteria
+
 <!-- AC:BEGIN -->
+
 - [x] #1 CI workflow runs on PRs and main branch pushes
 - [x] #2 Workflow includes type checking
 - [x] #3 Workflow includes linting
