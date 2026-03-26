@@ -31,6 +31,7 @@ function createFileItem(
       filesize,
       mimetype: 'application/octet-stream',
     },
+    title: filename,
   }
 }
 

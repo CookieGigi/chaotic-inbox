@@ -14,7 +14,7 @@ interface RawItemBase {
 }
 
 export type RawItem =
-  | (RawItemBase & { type: 'file'; metadata: FileMetadata })
-  | (RawItemBase & { type: 'text'; metadata: TextMetadata })
-  | (RawItemBase & { type: 'url'; metadata: UrlMetadata })
-  | (RawItemBase & { type: 'image'; metadata: ImageMetadata })
+  | (RawItemBase & { type: 'file'; metadata: FileMetadata; title?: string })
+  | (RawItemBase & { type: 'text'; metadata: TextMetadata; title?: undefined })
+  | (RawItemBase & { type: 'url'; metadata: UrlMetadata; title?: string })
+  | (RawItemBase & { type: 'image'; metadata: ImageMetadata; title?: string })

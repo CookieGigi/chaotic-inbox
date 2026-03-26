@@ -22,6 +22,7 @@ export interface ImageMetadata {
   kind: 'image'
   width?: number
   height?: number
+  alt?: string
 }
 
 export type Metadata = FileMetadata | TextMetadata | UrlMetadata | ImageMetadata

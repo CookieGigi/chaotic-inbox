@@ -23,6 +23,7 @@ export function createFileItem(
     type: 'file',
     raw,
     metadata,
+    title: metadata.filename,
   }
 }
 
@@ -38,6 +39,15 @@ export function createTextItem(
   }
 }
 
+function extractHostname(url: string): string {
+  try {
+    const urlObj = new URL(url.startsWith('http') ? url : `https://${url}`)
+    return urlObj.hostname
+  } catch {
+    return url
+  }
+}
+
 export function createUrlItem(
   raw: string,
   metadata: UrlMetadata
@@ -47,6 +57,7 @@ export function createUrlItem(
     type: 'url',
     raw,
     metadata,
+    title: extractHostname(raw),
   }
 }
 
