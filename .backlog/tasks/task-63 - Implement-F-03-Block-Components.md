@@ -1,10 +1,10 @@
 ---
 id: TASK-63
 title: Implement F-03 Block Components
-status: In Progress
+status: Done
 assignee: []
 created_date: '2026-03-22 09:42'
-updated_date: '2026-03-24 01:39'
+updated_date: '2026-03-26 21:13'
 labels:
   - phase-2
   - f-03
@@ -138,57 +138,28 @@ Both methods ensure toggle appears correctly at any viewport width.
 
 - 25 unit tests passing
 
-## Block Component Implementation Notes
+Updated rawItem.ts to add optional `title` property per type:
 
-### Architecture
+- Text: undefined (no title)
 
-The Block component serves as the main dispatcher that:
+- Image: metadata.alt (optional)
 
-1. Routes items to correct block component by type (text, url, image, file)
-2. Renders the block header with icon, label (title), and timestamp
-3. Renders the content area with the appropriate block component
+- URL: hostname from URL (optional)
 
-### RawItem Title Property
+- File: metadata.filename (optional)
 
-Added optional `title` property to RawItem type:
+Implemented Block dispatcher component with:
 
-- **Text**: `undefined` (no title)
-- **Image**: `metadata.alt` (optional, from ImageMetadata)
-- **Url**: `hostname` extracted from URL (required)
-- **File**: `metadata.filename` (required)
+- Header with icon, title label, and timestamp
 
-Updated ImageMetadata interface to include optional `alt?: string` field.
+- Content area routing to correct block component
 
-### Block Header Structure
+- Design system compliance (Phosphor icons, spacing, colors)
 
-```
-┌─────────────────────────────────────────┐
-│  [Icon] [Label]        [Timestamp]      │
-│  Article  example.com        10:30      │
-│                                         │
-│  [Content Area]                         │
-│  https://example.com/path               │
-└─────────────────────────────────────────┘
-```
+- 20 unit tests covering AC #6
 
-### Icon Mapping
+- Storybook stories for all block types
 
-Uses Phosphor Icons per design system:
+All 196 tests passing, 0 type errors.
 
-- Text: `Article`
-- Url: `Link`
-- Image: `Image`
-- File (PDF): `FilePdf`
-- File (Zip): `FileZip`
-- File (Text): `FileText`
-- File (Other): `File`
-
-### Design System Compliance
-
-- Padding: `py-3 px-4` (12px vertical, 16px horizontal)
-- Background: `bg-transparent`
-- Icons: 16px, `text-text-muted`
-- Labels: `text-sm text-text-muted font-mono`
-- Timestamps: Uses `Timestamp` component
-- Block structure: `<article>` element with semantic `<header>`
 <!-- SECTION:NOTES:END -->
