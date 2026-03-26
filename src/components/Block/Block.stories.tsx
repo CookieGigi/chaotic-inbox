@@ -1,14 +1,28 @@
+import type { RawItem } from '@/models/rawItem'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { Block } from './Block'
-import type { RawItem } from '@/models/rawItem'
 
 const meta: Meta<typeof Block> = {
   title: 'Components/Block',
   component: Block,
   parameters: {
-    layout: 'centered',
+    layout: 'padded',
   },
   tags: ['autodocs'],
+  decorators: [
+    (Story) => (
+      <div
+        style={{
+          width: 'var(--container-feed)',
+          maxWidth: '100%',
+          backgroundColor: 'var(--color-bg)',
+          padding: 'var(--spacing-6)',
+        }}
+      >
+        <Story />
+      </div>
+    ),
+  ],
 }
 
 export default meta
