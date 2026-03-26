@@ -21,15 +21,12 @@ function formatFileSize(bytes: number): string {
 }
 
 export function FileBlock({ item }: FileBlockProps) {
-  const { filename, filesize } = item.metadata
+  const { filesize } = item.metadata
 
   return (
-    <div className="flex flex-row items-center gap-2">
-      <span className="text-base font-medium text-text truncate">
-        {filename}
-      </span>
-      <span className="text-xs text-textSecondary whitespace-nowrap">
-        {formatFileSize(filesize)}
+    <div className="flex flex-row items-center gap-2 leading-relaxed">
+      <span className="text-sm text-text-muted">
+        Size: {formatFileSize(filesize)}
       </span>
     </div>
   )

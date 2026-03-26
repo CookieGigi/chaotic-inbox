@@ -2,7 +2,7 @@ import './DesignSystemShowcase.css'
 
 /**
  * DesignSystemShowcase
- * A comprehensive showcase of all design tokens from the Vault Design System
+ * A comprehensive showcase of all design tokens from the Chaotic Inbox Design System
  * Based on Catppuccin Macchiato palette
  */
 
@@ -12,7 +12,9 @@ export function DesignSystemShowcase() {
       {/* Header */}
       <header className="showcase-section">
         <h1 className="showcase-title">Design System</h1>
-        <p className="showcase-subtitle">Vault — Catppuccin Macchiato</p>
+        <p className="showcase-subtitle">
+          Chaotic Inbox — Catppuccin Macchiato
+        </p>
       </header>
 
       {/* Color Palette */}
@@ -239,7 +241,7 @@ export function DesignSystemShowcase() {
                 <span className="block-timestamp">10 min ago</span>
               </header>
               <p className="block-content">
-                document.pdf <span className="file-size">2.4 MB</span>
+                <span className="file-size">Size: 2.4 MB</span>
               </p>
             </div>
           </div>

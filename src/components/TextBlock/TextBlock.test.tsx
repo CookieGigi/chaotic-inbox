@@ -30,12 +30,13 @@ describe('TextBlock', () => {
       expect(screen.getByText(shortText)).toBeInTheDocument()
     })
 
-    it('applies body font styling', () => {
+    it('applies body font styling with relaxed line height', () => {
       render(<TextBlock content={shortText} />)
 
       const textElement = screen.getByText(shortText)
       expect(textElement).toHaveClass('text-base')
       expect(textElement).toHaveClass('text-text')
+      expect(textElement).toHaveClass('leading-relaxed')
     })
 
     it('renders in a container with proper structure', () => {

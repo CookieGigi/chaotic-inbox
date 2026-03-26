@@ -121,10 +121,9 @@ describe('Block', () => {
       const item = createFileItem()
       render(<Block item={item} />)
 
-      // FileBlock shows filename and size
-      const filenameElements = screen.getAllByText('document.pdf')
-      expect(filenameElements.length).toBeGreaterThanOrEqual(1)
-      expect(screen.getByText('1 KB')).toBeInTheDocument()
+      // FileBlock shows size only (filename shown in header)
+      expect(screen.getByText(/Size:/)).toBeInTheDocument()
+      expect(screen.getByText(/1 KB/)).toBeInTheDocument()
     })
   })
 
@@ -215,7 +214,7 @@ describe('Block', () => {
       expect(screen.getByText('Test image alt')).toBeInTheDocument()
     })
 
-    it('file blocks show filename as label', () => {
+    it('file blocks show filename as label in header only', () => {
       const item = createFileItem({
         metadata: {
           kind: 'pdf',
@@ -226,10 +225,9 @@ describe('Block', () => {
       })
       render(<Block item={item} />)
 
-      // Filename appears in both header label and FileBlock content
-      expect(screen.getAllByText('document.pdf').length).toBeGreaterThanOrEqual(
-        1
-      )
+      // Filename appears in header label only (not in FileBlock content)
+      const header = screen.getByTestId('block-header')
+      expect(header.textContent).toContain('document.pdf')
     })
   })
 
@@ -260,6 +258,14 @@ describe('Block', () => {
         .querySelector('time')
       expect(timeElement).toHaveClass('text-sm')
       expect(timeElement).toHaveClass('text-text-muted')
+    })
+
+    it('header uses baseline alignment for better text rhythm', () => {
+      const item = createTextItem()
+      render(<Block item={item} />)
+
+      const header = screen.getByTestId('block-header')
+      expect(header).toHaveClass('items-baseline')
     })
   })
 

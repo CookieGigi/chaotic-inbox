@@ -95,12 +95,12 @@ export function Block({ item }: BlockProps) {
 
   return (
     <article
-      className="bg-transparent py-3 px-4 border-b border-border"
+      className="bg-transparent py-3 px-4 border-b border-border hover:border-border-subtle"
       data-testid="block"
     >
       {/* Header */}
       <header
-        className="flex items-center justify-between mb-2"
+        className="flex items-baseline justify-between mb-2"
         data-testid="block-header"
       >
         <div className="flex items-center gap-2 min-w-0 flex-1">

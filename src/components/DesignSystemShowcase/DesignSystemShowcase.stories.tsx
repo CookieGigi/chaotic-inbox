@@ -9,7 +9,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Comprehensive showcase of all design tokens from the Vault Design System based on Catppuccin Macchiato palette.',
+          'Comprehensive showcase of all design tokens from the Chaotic Inbox Design System based on Catppuccin Macchiato palette.',
       },
     },
   },

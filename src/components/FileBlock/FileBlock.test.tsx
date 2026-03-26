@@ -26,32 +26,35 @@ function createFileItem(
 
 describe('FileBlock', () => {
   describe('rendering', () => {
-    it('renders filename from metadata', () => {
+    it('renders file size with "Size: " prefix', () => {
       const item = createFileItem('document.pdf', 1024, 'pdf')
       render(<FileBlock item={item} />)
 
-      expect(screen.getByText('document.pdf')).toBeInTheDocument()
+      expect(screen.getByText(/Size:/)).toBeInTheDocument()
+      expect(screen.getByText(/1 KB/)).toBeInTheDocument()
     })
 
-    it('renders file size in human-readable format', () => {
+    it('does not render filename in content (shown in header only)', () => {
       const item = createFileItem('document.pdf', 1024, 'pdf')
-      render(<FileBlock item={item} />)
+      const { container } = render(<FileBlock item={item} />)
 
-      expect(screen.getByText('1 KB')).toBeInTheDocument()
+      // Filename should not appear in the FileBlock content
+      const fileContent = container.textContent
+      expect(fileContent).not.toContain('document.pdf')
     })
 
     it('renders bytes for small files', () => {
       const item = createFileItem('tiny.txt', 512, 'txt')
       render(<FileBlock item={item} />)
 
-      expect(screen.getByText('512 B')).toBeInTheDocument()
+      expect(screen.getByText(/512 B/)).toBeInTheDocument()
     })
 
     it('renders megabytes for large files', () => {
       const item = createFileItem('large.zip', 5 * 1024 * 1024, 'zip')
       render(<FileBlock item={item} />)
 
-      expect(screen.getByText('5 MB')).toBeInTheDocument()
+      expect(screen.getByText(/5 MB/)).toBeInTheDocument()
     })
 
     it('has no icon (handled by Block wrapper)', () => {
@@ -77,122 +80,81 @@ describe('FileBlock', () => {
   })
 
   describe('design system compliance', () => {
-    it('filename uses base-medium text size', () => {
+    it('uses text-sm size for content', () => {
       const item = createFileItem('document.pdf', 1024, 'pdf')
       render(<FileBlock item={item} />)
 
-      const filename = screen.getByText('document.pdf')
-      expect(filename).toHaveClass('text-base')
+      const sizeElement = screen.getByText(/Size:/)
+      expect(sizeElement).toHaveClass('text-sm')
     })
 
-    it('filename uses medium font weight', () => {
+    it('uses muted text color for content', () => {
       const item = createFileItem('document.pdf', 1024, 'pdf')
       render(<FileBlock item={item} />)
 
-      const filename = screen.getByText('document.pdf')
-      expect(filename).toHaveClass('font-medium')
+      const sizeElement = screen.getByText(/Size:/)
+      expect(sizeElement).toHaveClass('text-text-muted')
     })
 
-    it('filename uses text color', () => {
+    it('uses relaxed line height for better readability', () => {
       const item = createFileItem('document.pdf', 1024, 'pdf')
       render(<FileBlock item={item} />)
 
-      const filename = screen.getByText('document.pdf')
-      expect(filename).toHaveClass('text-text')
-    })
-
-    it('file size uses xs text size', () => {
-      const item = createFileItem('document.pdf', 1024, 'pdf')
-      render(<FileBlock item={item} />)
-
-      const size = screen.getByText('1 KB')
-      expect(size).toHaveClass('text-xs')
-    })
-
-    it('file size uses muted color', () => {
-      const item = createFileItem('document.pdf', 1024, 'pdf')
-      render(<FileBlock item={item} />)
-
-      const size = screen.getByText('1 KB')
-      expect(size).toHaveClass('text-textSecondary')
-    })
-
-    it('uses flex row layout', () => {
-      const item = createFileItem('document.pdf', 1024, 'pdf')
-      render(<FileBlock item={item} />)
-
-      const container = screen.getByText('document.pdf').parentElement
-      expect(container).toHaveClass('flex')
-      expect(container).toHaveClass('flex-row')
-    })
-
-    it('has gap between filename and size', () => {
-      const item = createFileItem('document.pdf', 1024, 'pdf')
-      render(<FileBlock item={item} />)
-
-      const container = screen.getByText('document.pdf').parentElement
-      expect(container).toHaveClass('gap-2')
+      const container = screen.getByText(/Size:/).parentElement
+      expect(container).toHaveClass('leading-relaxed')
     })
   })
 
-  describe('file types', () => {
-    it('renders pdf filename correctly', () => {
+  describe('file size formatting', () => {
+    it('renders pdf file size correctly', () => {
       const item = createFileItem('report.pdf', 2048, 'pdf')
       render(<FileBlock item={item} />)
 
-      expect(screen.getByText('report.pdf')).toBeInTheDocument()
+      expect(screen.getByText(/2 KB/)).toBeInTheDocument()
     })
 
-    it('renders zip filename correctly', () => {
+    it('renders zip file size correctly', () => {
       const item = createFileItem('archive.zip', 10240, 'zip')
       render(<FileBlock item={item} />)
 
-      expect(screen.getByText('archive.zip')).toBeInTheDocument()
+      expect(screen.getByText(/10 KB/)).toBeInTheDocument()
     })
 
-    it('renders txt filename correctly', () => {
+    it('renders txt file size correctly', () => {
       const item = createFileItem('notes.txt', 256, 'txt')
       render(<FileBlock item={item} />)
 
-      expect(screen.getByText('notes.txt')).toBeInTheDocument()
+      expect(screen.getByText(/256 B/)).toBeInTheDocument()
     })
 
     it('renders other file types correctly', () => {
       const item = createFileItem('data.bin', 4096, 'other')
       render(<FileBlock item={item} />)
 
-      expect(screen.getByText('data.bin')).toBeInTheDocument()
+      expect(screen.getByText(/4 KB/)).toBeInTheDocument()
     })
 
-    it('renders docx filename correctly', () => {
+    it('renders docx file size correctly', () => {
       const item = createFileItem('document.docx', 8192, 'docx')
       render(<FileBlock item={item} />)
 
-      expect(screen.getByText('document.docx')).toBeInTheDocument()
+      expect(screen.getByText(/8 KB/)).toBeInTheDocument()
     })
   })
 
   describe('edge cases', () => {
-    it('handles empty filename', () => {
-      const item = createFileItem('', 1024, 'pdf')
-      render(<FileBlock item={item} />)
-
-      // Should still render the size
-      expect(screen.getByText('1 KB')).toBeInTheDocument()
-    })
-
     it('handles zero file size', () => {
       const item = createFileItem('empty.txt', 0, 'txt')
       render(<FileBlock item={item} />)
 
-      expect(screen.getByText('0 B')).toBeInTheDocument()
+      expect(screen.getByText(/0 B/)).toBeInTheDocument()
     })
 
     it('handles very large file sizes', () => {
       const item = createFileItem('huge.iso', 1024 * 1024 * 1024, 'other')
       render(<FileBlock item={item} />)
 
-      expect(screen.getByText('1 GB')).toBeInTheDocument()
+      expect(screen.getByText(/1 GB/)).toBeInTheDocument()
     })
 
     it('handles decimal file sizes', () => {
@@ -202,23 +164,6 @@ describe('FileBlock', () => {
       // Should show 1.5 KB or similar
       const sizeElement = screen.getByText(/KB/)
       expect(sizeElement).toBeInTheDocument()
-    })
-
-    it('handles filenames with special characters', () => {
-      const item = createFileItem('file-with-special_chars.pdf', 1024, 'pdf')
-      render(<FileBlock item={item} />)
-
-      expect(
-        screen.getByText('file-with-special_chars.pdf')
-      ).toBeInTheDocument()
-    })
-
-    it('handles long filenames', () => {
-      const longName = 'a'.repeat(100) + '.pdf'
-      const item = createFileItem(longName, 1024, 'pdf')
-      render(<FileBlock item={item} />)
-
-      expect(screen.getByText(longName)).toBeInTheDocument()
     })
   })
 })

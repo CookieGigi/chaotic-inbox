@@ -23,7 +23,7 @@ export function UrlBlock({ url }: UrlBlockProps) {
       className="flex flex-col items-start text-left cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg rounded p-2 -ml-2 hover:bg-surface/50 transition-colors"
       aria-label={`Open link: ${normalizedUrl}`}
     >
-      <span className="text-base text-accent break-all hover:underline">
+      <span className="text-base text-accent break-all hover:underline leading-relaxed">
         {normalizedUrl}
       </span>
     </button>

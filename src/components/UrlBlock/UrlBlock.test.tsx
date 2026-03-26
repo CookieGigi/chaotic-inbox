@@ -158,7 +158,7 @@ describe('UrlBlock', () => {
       expect(button).toHaveClass('cursor-pointer')
     })
 
-    it('full URL body has accent color', () => {
+    it('full URL body uses accent color', () => {
       render(<UrlBlock url="example.com" />)
 
       const fullUrl = screen.getByText('https://example.com')
@@ -186,6 +186,13 @@ describe('UrlBlock', () => {
         'https://example.com/very/long/path/to/page'
       )
       expect(fullUrl).toHaveClass('break-all')
+    })
+
+    it('has hover background effect', () => {
+      render(<UrlBlock url="example.com" />)
+
+      const button = screen.getByRole('button')
+      expect(button).toHaveClass('hover:bg-surface/50')
     })
   })
 

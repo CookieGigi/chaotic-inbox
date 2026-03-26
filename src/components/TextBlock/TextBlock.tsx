@@ -51,12 +51,9 @@ export function TextBlock({ content }: TextBlockProps) {
       <p
         ref={textRef}
         data-testid="text-block-content"
-        className={`text-base text-text whitespace-pre-wrap break-words overflow-hidden ${
+        className={`text-base text-text whitespace-pre-wrap break-words overflow-hidden leading-relaxed ${
           !isExpanded ? 'line-clamp-5' : ''
         }`}
-        style={{
-          lineHeight: `${LINE_HEIGHT}px`,
-        }}
       >
         {content}
       </p>
