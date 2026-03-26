@@ -3,14 +3,14 @@ id: doc-19
 title: Design System
 type: other
 created_date: '2026-03-18 23:18'
-updated_date: '2026-03-26 22:14'
+updated_date: '2026-03-26 22:59'
 ---
 
 # Design System
 
-**Project:** Vault — Personal Knowledge Capture  
+**Project:** Chaotic Inbox — Personal Knowledge Capture  
 **Status:** Draft  
-**Version:** 0.3.0  
+**Version:** 0.3.1  
 **Last updated:** 2026-03-26
 
 ---
@@ -116,20 +116,22 @@ font-family:
 | -------------------- | ---- | ------ | ----------- | ---------------------------------- |
 | `--text-xs`          | 11px | 400    | 1.4         | Fine print, file size              |
 | `--text-sm`          | 13px | 400    | 1.5         | Timestamps, muted labels, hostname |
-| `--text-base`        | 15px | 400    | 1.6         | Block body text, URL body          |
-| `--text-base-medium` | 15px | 500    | 1.6         | Emphasis                           |
+| `--text-base`        | 15px | 400    | 1.625       | Block body text, URL body          |
+| `--text-base-medium` | 15px | 500    | 1.625       | Emphasis                           |
 | `--text-label`       | 12px | 500    | 1.4         | Block type labels, icon labels     |
+
+Line height 1.625 (leading-relaxed) provides improved readability for longer body text while maintaining tight rhythm for labels and timestamps.
 
 No display sizes in Epic 1. The feed is body text all the way down.
 
 ### 3.3 Usage Rules
 
-- Body text (`text` content): `--text-base`, `--color-text`
-- Timestamps: `--text-sm`, `--color-text-muted`, monospace
+- Body text (`text` content): `--text-base`, `--color-text`, line-height 1.625
+- Timestamps: `--text-sm`, `--color-text-muted`, monospace; baseline-aligned with header label
 - URL hostname label: `--text-sm`, `--color-text-muted`, monospace (passed via `title` metadata)
-- URL body: `--text-base`, `--color-accent`, hover underline
-- File name: `--text-base-medium`, `--color-text`
-- File size: `--text-xs`, `--color-text-muted`
+- URL body: `--text-base`, `--color-accent`, line-height 1.625, hover underline
+- File name: `--text-base-medium`, `--color-text` (header only, not repeated in body)
+- File body content: `--text-sm`, `--color-text-muted`, prefix "Size: " + formatted size
 - "Show more / Show less": `--text-sm`, `--color-accent`
 - Error messages: `--text-sm`, `--color-error`
 - Empty state: `--text-base`, `--color-text-faint`
@@ -185,8 +187,8 @@ Exception: the drag-and-drop overlay uses `--color-overlay` as a full-screen sur
 ```
 ┌─────────────────────────────────────────┐
 │  [type icon / label]        [timestamp] │  ← header row, --text-sm, --color-text-muted
-│                                         │
-│  [content]                              │  ← body, --text-base
+│                                         │     timestamp baseline-aligned with label
+│  [content]                              │  ← body, --text-base, line-height 1.625
 │                                         │
 │  [metadata / show more / error]         │  ← footer row, --text-sm
 └─────────────────────────────────────────┘
@@ -195,14 +197,16 @@ Exception: the drag-and-drop overlay uses `--color-overlay` as a full-screen sur
 
 Padding: `--space-3` top/bottom, `--space-4` left/right.
 
+Header alignment: `align-items: baseline` for better text rhythm — timestamp aligns with label text baseline, not icon center.
+
 ### 6.3 Per-Type Rendering Summary
 
-| Type    | Header icon            | Header label                 | Content                                       | Footer                                       |
-| ------- | ---------------------- | ---------------------------- | --------------------------------------------- | -------------------------------------------- |
-| `text`  | `Article`              | None                         | Body font, truncated at 5 lines               | "Show more" in `--color-accent` if truncated |
-| `url`   | `Link`                 | Hostname in monospace, muted | Full URL in `--color-accent`, hover underline | Empty (or enrichment state in Epic 2)        |
-| `image` | `Image`                | None                         | `<img>` constrained to feed width             | None                                         |
-| `file`  | `File` or subtype icon | Filename                     | —                                             | File size in `--text-xs` muted               |
+| Type    | Header icon            | Header label                 | Content                                                          | Footer                                       |
+| ------- | ---------------------- | ---------------------------- | ---------------------------------------------------------------- | -------------------------------------------- |
+| `text`  | `Article`              | None                         | Body font, truncated at 5 lines, line-height 1.625               | "Show more" in `--color-accent` if truncated |
+| `url`   | `Link`                 | Hostname in monospace, muted | Full URL in `--color-accent`, line-height 1.625, hover underline | Empty (or enrichment state in Epic 2)        |
+| `image` | `Image`                | None                         | `<img>` constrained to feed width                                | None                                         |
+| `file`  | `File` or subtype icon | Filename                     | "Size: " + formatted size, `--text-sm`, `--color-text-muted`     | Empty                                        |
 
 ---
 
@@ -243,15 +247,17 @@ Shown instead of the generic `File` icon when the dropped file type is known.
 
 ## 8. Interactive States
 
-| State                   | Treatment                                                        |
-| ----------------------- | ---------------------------------------------------------------- |
-| Focus ring              | `2px solid --color-accent`, `2px offset`                         |
-| Hover (text affordance) | `--color-accent`, no underline                                   |
-| Hover (URL link)        | `--color-accent` with underline, `bg-surface/50` background      |
-| Hover (block row)       | No hover state — feed is not a list of clickable rows            |
-| Disabled                | `--color-text-faint`, `cursor: not-allowed`                      |
-| Loading                 | Subtle opacity pulse on the metadata area (no spinner in Epic 1) |
-| Error inline            | `--color-error` text, no background highlight                    |
+| State                   | Treatment                                                             |
+| ----------------------- | --------------------------------------------------------------------- |
+| Focus ring              | `2px solid --color-accent`, `2px offset`                              |
+| Hover (text affordance) | `--color-accent`, no underline                                        |
+| Hover (URL link)        | `--color-accent` with underline, `bg-surface/50` background           |
+| Hover (block row)       | Border highlight `border-color: --color-border-subtle` — no animation |
+| Disabled                | `--color-text-faint`, `cursor: not-allowed`                           |
+| Loading                 | Subtle opacity pulse on the metadata area (no spinner in Epic 1)      |
+| Error inline            | `--color-error` text, no background highlight                         |
+
+Block hover state: Subtle border color change to `--color-border-subtle` on the divider line for accessibility. No background color change, no scale, no animation.
 
 ---
 
@@ -278,6 +284,7 @@ Minimal. No animations for their own sake.
 | "Show more" expand | No animation — content reveals immediately       |
 | Overlay appear     | No animation — immediate                         |
 | Loading pulse      | `opacity` pulse, `1.5s` ease-in-out, infinite    |
+| Hover states       | No transitions or animations — immediate change  |
 
 Motion is intentionally restrained to reinforce the "instant, trustworthy" capture feel. Animation would undermine the write-before-render guarantee by making the append feel like a process.
 
@@ -302,3 +309,7 @@ Motion is intentionally restrained to reinforce the "instant, trustworthy" captu
 | 13  | Motion              | Minimal — no decorative animation                                            |
 | 14  | Icon colour         | `--color-text-muted` always — no colour-coded icons in Epic 1                |
 | 15  | URL styling         | Accent colour with hover underline and background, hostname in header label  |
+| 16  | Timestamp alignment | Baseline with header label for better text rhythm                            |
+| 17  | Body line height    | 1.625 (leading-relaxed) for improved readability                             |
+| 18  | Block hover         | Subtle border highlight (`--color-border-subtle`), no animation              |
+| 19  | File block content  | "Size: " prefix + formatted size (filename shown in header only)             |
