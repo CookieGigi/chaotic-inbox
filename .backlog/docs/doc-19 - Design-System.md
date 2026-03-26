@@ -3,14 +3,15 @@ id: doc-19
 title: Design System
 type: other
 created_date: '2026-03-18 23:18'
+updated_date: '2026-03-26 22:14'
 ---
 
 # Design System
 
-**Project:** Vault — Personal Knowledge Capture
-**Status:** Draft
-**Version:** 0.2.0
-**Last updated:** 2026-03-19
+**Project:** Vault — Personal Knowledge Capture  
+**Status:** Draft  
+**Version:** 0.3.0  
+**Last updated:** 2026-03-26
 
 ---
 
@@ -50,7 +51,7 @@ Base: **Catppuccin Macchiato**. Dark-first. Light mode is deferred.
 
 ### 2.3 Accent Customisation
 
-The accent colour is user-configurable. Peach is the default for Epic 1. All accent values reference `--color-accent` — no accent hex appears hardcoded anywhere in component code.
+The accent colour is user-configurable. Teal is the default. All accent values reference `--color-accent` — no accent hex appears hardcoded anywhere in component code.
 
 Swapping the accent at runtime is a single operation:
 
@@ -78,6 +79,7 @@ Every place `--color-accent` is used in the UI. No other use sites are permitted
 | Use case                           | Token                | Notes                         |
 | ---------------------------------- | -------------------- | ----------------------------- |
 | "Show more / Show less" affordance | `--color-accent`     | Text only, no background      |
+| URL click targets                  | `--color-accent`     | Text with hover underline     |
 | Drag-and-drop overlay border       | `--color-accent`     | Dashed, 2px, inset 16px       |
 | Focus rings                        | `--color-accent`     | 2px solid, 2px offset         |
 | Hover on text affordances          | `--color-accent`     | No underline                  |
@@ -114,17 +116,18 @@ font-family:
 | -------------------- | ---- | ------ | ----------- | ---------------------------------- |
 | `--text-xs`          | 11px | 400    | 1.4         | Fine print, file size              |
 | `--text-sm`          | 13px | 400    | 1.5         | Timestamps, muted labels, hostname |
-| `--text-base`        | 15px | 400    | 1.6         | Block body text                    |
-| `--text-base-medium` | 15px | 500    | 1.6         | URL body, emphasis                 |
+| `--text-base`        | 15px | 400    | 1.6         | Block body text, URL body          |
+| `--text-base-medium` | 15px | 500    | 1.6         | Emphasis                           |
 | `--text-label`       | 12px | 500    | 1.4         | Block type labels, icon labels     |
 
 No display sizes in Epic 1. The feed is body text all the way down.
 
 ### 3.3 Usage Rules
 
-- Body text (`text`, `url` content): `--text-base`, `--color-text`
+- Body text (`text` content): `--text-base`, `--color-text`
 - Timestamps: `--text-sm`, `--color-text-muted`, monospace
-- URL hostname label: `--text-sm`, `--color-text-muted`, monospace
+- URL hostname label: `--text-sm`, `--color-text-muted`, monospace (passed via `title` metadata)
+- URL body: `--text-base`, `--color-accent`, hover underline
 - File name: `--text-base-medium`, `--color-text`
 - File size: `--text-xs`, `--color-text-muted`
 - "Show more / Show less": `--text-sm`, `--color-accent`
@@ -194,12 +197,12 @@ Padding: `--space-3` top/bottom, `--space-4` left/right.
 
 ### 6.3 Per-Type Rendering Summary
 
-| Type    | Header icon            | Header label                 | Content                           | Footer                                       |
-| ------- | ---------------------- | ---------------------------- | --------------------------------- | -------------------------------------------- |
-| `text`  | `Article`              | None                         | Body font, truncated at 5 lines   | "Show more" in `--color-accent` if truncated |
-| `url`   | `Link`                 | Hostname in monospace, muted | Full URL in `--text-base-medium`  | Empty (or enrichment state in Epic 2)        |
-| `image` | `Image`                | None                         | `<img>` constrained to feed width | None                                         |
-| `file`  | `File` or subtype icon | Filename                     | —                                 | File size in `--text-xs` muted               |
+| Type    | Header icon            | Header label                 | Content                                       | Footer                                       |
+| ------- | ---------------------- | ---------------------------- | --------------------------------------------- | -------------------------------------------- |
+| `text`  | `Article`              | None                         | Body font, truncated at 5 lines               | "Show more" in `--color-accent` if truncated |
+| `url`   | `Link`                 | Hostname in monospace, muted | Full URL in `--color-accent`, hover underline | Empty (or enrichment state in Epic 2)        |
+| `image` | `Image`                | None                         | `<img>` constrained to feed width             | None                                         |
+| `file`  | `File` or subtype icon | Filename                     | —                                             | File size in `--text-xs` muted               |
 
 ---
 
@@ -244,6 +247,7 @@ Shown instead of the generic `File` icon when the dropped file type is known.
 | ----------------------- | ---------------------------------------------------------------- |
 | Focus ring              | `2px solid --color-accent`, `2px offset`                         |
 | Hover (text affordance) | `--color-accent`, no underline                                   |
+| Hover (URL link)        | `--color-accent` with underline, `bg-surface/50` background      |
 | Hover (block row)       | No hover state — feed is not a list of clickable rows            |
 | Disabled                | `--color-text-faint`, `cursor: not-allowed`                      |
 | Loading                 | Subtle opacity pulse on the metadata area (no spinner in Epic 1) |
@@ -297,3 +301,4 @@ Motion is intentionally restrained to reinforce the "instant, trustworthy" captu
 | 12  | Block background    | Transparent — no card surface                                                |
 | 13  | Motion              | Minimal — no decorative animation                                            |
 | 14  | Icon colour         | `--color-text-muted` always — no colour-coded icons in Epic 1                |
+| 15  | URL styling         | Accent colour with hover underline and background, hostname in header label  |
