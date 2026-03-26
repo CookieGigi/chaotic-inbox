@@ -1,12 +1,3 @@
-import {
-  Article,
-  Link,
-  Image,
-  FilePdf,
-  FileZip,
-  FileText,
-  File,
-} from '@phosphor-icons/react'
 import type { RawItem } from '@/models/rawItem'
 import {
   isTextItem,
@@ -19,49 +10,11 @@ import { TextBlock } from '@/components/TextBlock/TextBlock'
 import { UrlBlock } from '@/components/UrlBlock/UrlBlock'
 import { ImageBlock } from '@/components/ImageBlock/ImageBlock'
 import { FileBlock } from '@/components/FileBlock/FileBlock'
-import type { FileSubType } from '@/models/metadata'
+import { BlockIcon } from './BlockIcon'
+import { BlockTitle } from './BlockTitle'
 
 export interface BlockProps {
   item: RawItem
-}
-
-// Map file subtypes to their respective icons
-const fileIconMap: Record<FileSubType, typeof File> = {
-  pdf: FilePdf,
-  docx: FileText,
-  txt: FileText,
-  zip: FileZip,
-  other: File,
-}
-
-// Render the appropriate icon for a RawItem
-function renderBlockIcon(item: RawItem) {
-  const iconProps = {
-    size: 16,
-    weight: 'regular' as const,
-    className: 'text-text-muted flex-shrink-0',
-    'data-testid': 'block-icon',
-  }
-
-  if (isTextItem(item)) {
-    return <Article {...iconProps} />
-  }
-  if (isUrlItem(item)) {
-    return <Link {...iconProps} />
-  }
-  if (isImageItem(item)) {
-    return <Image {...iconProps} />
-  }
-  if (isFileItem(item)) {
-    const IconComponent = fileIconMap[item.metadata.kind]
-    return <IconComponent {...iconProps} />
-  }
-  return <File {...iconProps} />
-}
-
-// Get the title/label for the block header
-function getBlockTitle(item: RawItem): string | undefined {
-  return item.title
 }
 
 // Render the appropriate content based on type
@@ -91,8 +44,6 @@ function renderBlockContent(item: RawItem) {
 }
 
 export function Block({ item }: BlockProps) {
-  const title = getBlockTitle(item)
-
   return (
     <article
       className="bg-transparent py-3 px-4 border-b border-border hover:border-border-subtle"
@@ -104,15 +55,8 @@ export function Block({ item }: BlockProps) {
         data-testid="block-header"
       >
         <div className="flex items-center gap-2 min-w-0 flex-1">
-          {renderBlockIcon(item)}
-          {title && (
-            <span
-              className="text-sm text-text-muted font-mono truncate"
-              data-testid="block-label"
-            >
-              {title}
-            </span>
-          )}
+          <BlockIcon item={item} />
+          <BlockTitle title={item.title} />
         </div>
         <Timestamp value={item.capturedAt} />
       </header>
