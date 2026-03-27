@@ -3,20 +3,21 @@ id: doc-1
 title: Epic 1 — Capture Overview
 type: other
 created_date: '2026-03-17 23:56'
+updated_date: '2026-03-27 02:48'
 ---
 
 # Epic 1 — Capture
 
 **Status:** Draft  
-**Version:** 0.3.0  
-**Last updated:** 2026-03-14
+**Version:** 0.4.0  
+**Last updated:** 2026-03-27
 
 ---
 
 ## Goal
 
 The user has something they don't want to lose.
-They paste or drop it. It's saved. Done.
+They paste, drop, or type it. It's saved. Done.
 
 The vault is an unorganized, append-only pile of raw inputs.
 Order and meaning come later.
@@ -43,7 +44,7 @@ Order and meaning come later.
 
 ## Core Behaviour
 
-- Paste or drop anything into the app → saved immediately to local storage
+- Paste, drop, or type anything into the app → saved immediately to local storage
 - Sync is local-first; synchronization to remote is eventual and automatic when network is available
 - No decisions required at capture time
 - Raw input is sacred — never modified, never truncated
@@ -69,6 +70,7 @@ Order and meaning come later.
 4. **F-04 — Chronological Feed (Newest at Bottom)** (P0)
 5. **F-05 — Local-First Persistence** (P0)
 6. **F-06 — Keyboard-First Capture** (P1)
+7. **F-07 — Global Typing Capture** (P1) — _NEW: Type anywhere to create text blocks_
 
 ---
 
@@ -81,3 +83,6 @@ Order and meaning come later.
 | 3   | Truncation threshold configurable? | No — fixed at 5 lines for now; may become configurable in a later epic                                                                                                                   |
 | 4   | Annotation entry point             | To be designed in the annotations epic                                                                                                                                                   |
 | 5   | Icon library                       | [Phosphor Icons](https://phosphoricons.com) (MIT) — chosen for native file-type icon coverage (`FilePdf`, `FileZip`, `FileMd`, `FileText`, `FileBinary`) and multi-framework SVG support |
+| 6   | Typing trigger keys                | Only alphanumeric (a-z, A-Z, 0-9) — symbols excluded to prevent accidental triggers                                                                                                      |
+| 7   | Draft persistence                  | Draft is NOT persisted — lost on refresh or cancel                                                                                                                                       |
+| 8   | Draft cancel behavior              | Clicking outside keeps draft visible; only Escape or Ctrl+Enter ends editing                                                                                                             |
