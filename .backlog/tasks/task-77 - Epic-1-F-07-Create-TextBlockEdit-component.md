@@ -4,7 +4,7 @@ title: '[Epic 1] F-07: Create TextBlockEdit component'
 status: Done
 assignee: []
 created_date: '2026-03-27 03:02'
-updated_date: '2026-03-29 05:28'
+updated_date: '2026-03-29 05:38'
 labels:
   - phase-2
   - components
@@ -27,12 +27,12 @@ Create editable TextBlock variant using textarea. Supports multi-line editing wi
 
 <!-- AC:BEGIN -->
 
-- [ ] #1 Uses textarea with transparent background
-- [ ] #2 Auto-expands vertically as user types
-- [ ] #3 Enter creates newline
-- [ ] #4 Ctrl+Enter triggers onSubmit
-- [ ] #5 Escape triggers onCancel
-- [ ] #6 Auto-focuses on mount with cursor at end
+- [x] #1 Uses textarea with transparent background
+- [x] #2 Auto-expands vertically as user types
+- [x] #3 Enter creates newline
+- [x] #4 Ctrl+Enter triggers onSubmit
+- [x] #5 Escape triggers onCancel
+- [x] #6 Auto-focuses on mount with cursor at end
 <!-- AC:END -->
 
 ## Final Summary
