@@ -73,6 +73,12 @@ beforeAll(() => {
   // Mock scrollTo
   window.scrollTo = vi.fn()
 
+  // Mock scrollIntoView on Element prototype
+  Object.defineProperty(window.HTMLElement.prototype, 'scrollIntoView', {
+    writable: true,
+    value: vi.fn(),
+  })
+
   // Mock console methods to reduce noise during tests
   // but still allow errors to show
   const originalConsoleError = console.error
