@@ -4,7 +4,7 @@ title: '[Epic 1] F-07: Implement DraftBlock component with styling'
 status: Done
 assignee: []
 created_date: '2026-03-27 02:59'
-updated_date: '2026-03-29 05:28'
+updated_date: '2026-03-29 05:38'
 labels:
   - phase-2
   - components
@@ -30,12 +30,12 @@ Create a DraftBlock wrapper component that renders TextBlockEdit with draft-spec
 
 <!-- AC:BEGIN -->
 
-- [ ] #1 Renders with --color-draft-bg (30% surface opacity)
-- [ ] #2 Renders with --color-draft-border (50% accent opacity)
-- [ ] #3 Focus state uses full --color-accent border with 2px focus ring
-- [ ] #4 Hint text displays below textarea: Ctrl+Enter to save, Escape to cancel
-- [ ] #5 Uses --text-hint (12px) and --color-draft-hint styling
-- [ ] #6 Block header shows Article icon and current timestamp
+- [x] #1 Renders with --color-draft-bg (30% surface opacity)
+- [x] #2 Renders with --color-draft-border (50% accent opacity)
+- [x] #3 Focus state uses full --color-accent border with 2px focus ring
+- [x] #4 Hint text displays below textarea: Ctrl+Enter to save, Escape to cancel
+- [x] #5 Uses --text-hint (12px) and --color-draft-hint styling
+- [x] #6 Block header shows Article icon and current timestamp
 <!-- AC:END -->
 
 ## Final Summary
