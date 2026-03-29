@@ -7,6 +7,9 @@ settings:
 importers:
   .:
     dependencies:
+      '@phosphor-icons/react':
+        specifier: ^2.1.10
+        version: 2.1.10(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@tailwindcss/vite':
         specifier: ^4.2.2
         version: 4.2.2(vite@8.0.1(jiti@2.6.1)(yaml@2.8.3))
@@ -818,6 +821,16 @@ packages:
       {
         integrity: sha512-k1YNu55DuvAip/MGE1FTsIuU3FUCn6v/ujG9V7Nq5Df/kX2CWb13hhwD0lmJGMGqE+bE1MXvv9SZVnMzEXlWcg==,
       }
+
+  '@phosphor-icons/react@2.1.10':
+    resolution:
+      {
+        integrity: sha512-vt8Tvq8GLjheAZZYa+YG/pW7HDbov8El/MANW8pOAz4eGxrwhnbfrQZq0Cp4q8zBEu8NIhHdnr+r8thnfRSNYA==,
+      }
+    engines: { node: '>=10' }
+    peerDependencies:
+      react: '>= 16.8'
+      react-dom: '>= 16.8'
 
   '@pkgr/core@0.2.9':
     resolution:
@@ -5415,6 +5428,11 @@ snapshots:
   '@neoconfetti/react@1.0.0': {}
 
   '@oxc-project/types@0.120.0': {}
+
+  '@phosphor-icons/react@2.1.10(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
+    dependencies:
+      react: 19.2.4
+      react-dom: 19.2.4(react@19.2.4)
 
   '@pkgr/core@0.2.9': {}
 
