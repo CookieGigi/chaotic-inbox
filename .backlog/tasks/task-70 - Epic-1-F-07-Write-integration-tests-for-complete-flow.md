@@ -1,10 +1,10 @@
 ---
 id: TASK-70
 title: '[Epic 1] F-07: Write integration tests for complete flow'
-status: In Progress
+status: Done
 assignee: []
 created_date: '2026-03-27 02:59'
-updated_date: '2026-03-29 06:09'
+updated_date: '2026-03-29 06:18'
 labels:
   - phase-4
   - testing
@@ -30,9 +30,9 @@ Write end-to-end integration tests for the complete typing capture flow. Tests s
 
 <!-- AC:BEGIN -->
 
-- [ ] #1 E2E test: full flow from typing to persisted block
-- [ ] #2 E2E test: cancel flow removes draft without persistence
-- [ ] #3 E2E test: only one draft exists at a time
-- [ ] #4 E2E test: typing in input does not trigger draft
-- [ ] #5 E2E test: draft appears at bottom of feed
+- [x] #1 E2E test: full flow from typing to persisted block
+- [x] #2 E2E test: cancel flow removes draft without persistence
+- [x] #3 E2E test: only one draft exists at a time
+- [x] #4 E2E test: typing in input does not trigger draft
+- [x] #5 E2E test: draft appears at bottom of feed
 <!-- AC:END -->
