@@ -4,7 +4,7 @@ title: '[Epic 1] F-07: Implement useGlobalTyping hook'
 status: Done
 assignee: []
 created_date: '2026-03-27 02:59'
-updated_date: '2026-03-29 05:28'
+updated_date: '2026-03-29 05:38'
 labels:
   - phase-1
   - hooks
@@ -29,12 +29,12 @@ Create a custom React hook that listens for global keyboard events and detects w
 
 <!-- AC:BEGIN -->
 
-- [ ] #1 Hook detects alphanumeric keys using regex /^[a-zA-Z0-9]$/
-- [ ] #2 Checks document.activeElement to skip focused inputs/textareas/contenteditable
-- [ ] #3 Creates draft item with first character as content
-- [ ] #4 Appends subsequent keystrokes to existing draft textarea
-- [ ] #5 Ignores typing when drag overlay CSS class is present on body
-- [ ] #6 Returns draft item state and setter functions
+- [x] #1 Hook detects alphanumeric keys using regex /^[a-zA-Z0-9]$/
+- [x] #2 Checks document.activeElement to skip focused inputs/textareas/contenteditable
+- [x] #3 Creates draft item with first character as content
+- [x] #4 Appends subsequent keystrokes to existing draft textarea
+- [x] #5 Ignores typing when drag overlay CSS class is present on body
+- [x] #6 Returns draft item state and setter functions
 <!-- AC:END -->
 
 ## Final Summary
