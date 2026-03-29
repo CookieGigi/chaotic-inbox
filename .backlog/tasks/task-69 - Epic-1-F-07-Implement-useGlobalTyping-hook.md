@@ -1,9 +1,10 @@
 ---
 id: TASK-69
 title: '[Epic 1] F-07: Implement useGlobalTyping hook'
-status: To Do
+status: Done
 assignee: []
 created_date: '2026-03-27 02:59'
+updated_date: '2026-03-29 05:28'
 labels:
   - phase-1
   - hooks
@@ -35,3 +36,11 @@ Create a custom React hook that listens for global keyboard events and detects w
 - [ ] #5 Ignores typing when drag overlay CSS class is present on body
 - [ ] #6 Returns draft item state and setter functions
 <!-- AC:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+
+Created useGlobalTyping hook that:\n- Listens for global keyboard events\n- Detects alphanumeric keys (a-z, A-Z, 0-9) when no input is focused\n- Creates draft text item with first keystroke\n- Appends subsequent keystrokes to existing draft\n- Ignores typing when inputs are focused or drag overlay is active\n- Provides createDraft, updateDraft, submitDraft, cancelDraft functions\n\nHook includes comprehensive tests (14 passed, 1 skipped due to jsdom limitations).
+
+<!-- SECTION:FINAL_SUMMARY:END -->
