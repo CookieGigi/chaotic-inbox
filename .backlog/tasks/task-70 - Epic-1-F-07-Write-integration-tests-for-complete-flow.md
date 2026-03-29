@@ -1,9 +1,10 @@
 ---
 id: TASK-70
 title: '[Epic 1] F-07: Write integration tests for complete flow'
-status: To Do
+status: In Progress
 assignee: []
 created_date: '2026-03-27 02:59'
+updated_date: '2026-03-29 06:09'
 labels:
   - phase-4
   - testing
