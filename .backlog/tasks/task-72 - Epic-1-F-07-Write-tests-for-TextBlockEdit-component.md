@@ -4,7 +4,7 @@ title: '[Epic 1] F-07: Write tests for TextBlockEdit component'
 status: Done
 assignee: []
 created_date: '2026-03-27 02:59'
-updated_date: '2026-03-29 05:28'
+updated_date: '2026-03-29 05:38'
 labels:
   - phase-4
   - testing
@@ -29,12 +29,12 @@ Write unit tests for the TextBlockEdit component. Tests should cover: rendering 
 
 <!-- AC:BEGIN -->
 
-- [ ] #1 Test: renders with initialContent in textarea
-- [ ] #2 Test: pressing Enter creates newline
-- [ ] #3 Test: Ctrl+Enter calls onSubmit callback
-- [ ] #4 Test: Escape key calls onCancel callback
-- [ ] #5 Test: textarea auto-focuses on mount
-- [ ] #6 Test: cursor positioned at end of content on mount
+- [x] #1 Test: renders with initialContent in textarea
+- [x] #2 Test: pressing Enter creates newline
+- [x] #3 Test: Ctrl+Enter calls onSubmit callback
+- [x] #4 Test: Escape key calls onCancel callback
+- [x] #5 Test: textarea auto-focuses on mount
+- [x] #6 Test: cursor positioned at end of content on mount
 <!-- AC:END -->
 
 ## Final Summary
