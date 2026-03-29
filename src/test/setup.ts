@@ -74,8 +74,9 @@ beforeAll(() => {
   window.scrollTo = vi.fn()
 
   // Mock scrollIntoView on Element prototype
-  Object.defineProperty(window.HTMLElement.prototype, 'scrollIntoView', {
+  Object.defineProperty(Element.prototype, 'scrollIntoView', {
     writable: true,
+    configurable: true,
     value: vi.fn(),
   })
 

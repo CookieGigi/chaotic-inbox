@@ -14,7 +14,15 @@ vi.mock('@/components/Block', () => ({
 
 // Mock scrollIntoView for scroll testing
 const mockScrollIntoView = vi.fn()
-Element.prototype.scrollIntoView = mockScrollIntoView
+
+beforeAll(() => {
+  // Replace the setup.ts mock with our spyable mock
+  Object.defineProperty(Element.prototype, 'scrollIntoView', {
+    writable: true,
+    configurable: true,
+    value: mockScrollIntoView,
+  })
+})
 
 // Test data factories
 const createTextItem = (
