@@ -80,6 +80,35 @@ beforeAll(() => {
     value: vi.fn(),
   })
 
+  // Mock ClipboardEvent for paste tests
+  class MockClipboardEvent extends Event {
+    clipboardData: DataTransfer | null
+
+    constructor(type: string, eventInitDict?: ClipboardEventInit) {
+      super(type, eventInitDict)
+      this.clipboardData = eventInitDict?.clipboardData ?? null
+    }
+  }
+
+  Object.defineProperty(window, 'ClipboardEvent', {
+    writable: true,
+    configurable: true,
+    value: MockClipboardEvent,
+  })
+
+  // Mock DataTransferItemList for paste tests
+  class MockDataTransferItemList extends Array<DataTransferItem> {
+    constructor(...items: DataTransferItem[]) {
+      super(...items)
+    }
+  }
+
+  Object.defineProperty(window, 'DataTransferItemList', {
+    writable: true,
+    configurable: true,
+    value: MockDataTransferItemList,
+  })
+
   // Mock console methods to reduce noise during tests
   // but still allow errors to show
   const originalConsoleError = console.error

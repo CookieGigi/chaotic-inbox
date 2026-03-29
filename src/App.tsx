@@ -1,16 +1,17 @@
 import { useState, useCallback, useEffect } from 'react'
 import { Feed } from '@/components/Feed'
-import { useGlobalTyping } from '@/hooks/useGlobalTyping'
+import { useGlobalTyping, useGlobalPaste } from '@/hooks'
 import { createTextItem } from '@/models/itemFactories'
 import type { RawItem } from '@/models/rawItem'
 import { db } from '@/storage/local_db'
 import './App.css'
 
 /**
- * Main App component with global typing capture
+ * Main App component with global typing and paste capture
  *
  * Features:
  * - Global typing detection (alphanumeric keys create draft)
+ * - Global paste detection (Cmd+V / Ctrl+V anywhere)
  * - Draft block at bottom of feed for text entry
  * - Ctrl+Enter to persist, Escape to cancel
  * - Automatic persistence to local storage
@@ -42,6 +43,32 @@ function App() {
     onDraftCreate: handleDraftCreate,
     onDraftAppend: handleDraftAppend,
     hasDraft: draftContent.length > 0,
+  })
+
+  // Handle paste to draft (appends text when draft is active)
+  const handlePasteToDraft = useCallback((content: string) => {
+    setDraftContent((prev) => prev + content)
+  }, [])
+
+  // Handle paste items (creates new blocks)
+  const handlePasteItems = useCallback(async (newItems: RawItem[]) => {
+    try {
+      // Persist all items to storage first
+      for (const item of newItems) {
+        await db.items.add(item)
+      }
+      // Update local state
+      setItems((prev) => [...prev, ...newItems])
+    } catch (error) {
+      console.error('Failed to persist pasted items:', error)
+    }
+  }, [])
+
+  // Use the global paste hook
+  useGlobalPaste({
+    hasDraft: draftContent.length > 0,
+    onPasteToDraft: handlePasteToDraft,
+    onPasteItems: handlePasteItems,
   })
 
   // Sync draft content with hook's draft item

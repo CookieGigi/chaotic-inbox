@@ -1,0 +1,1 @@
+export { isInputElement } from './dom'

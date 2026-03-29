@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
+import { isInputElement } from '@/utils'
 
 /**
  * Draft item type for in-progress text capture
@@ -41,19 +42,6 @@ interface UseGlobalTypingReturn {
   cancelDraft: () => void
   /** Whether draft currently exists */
   hasDraft: boolean
-}
-
-/**
- * Check if an element is an input field or contenteditable
- */
-function isInputElement(element: Element | null): boolean {
-  if (!element) return false
-
-  const tagName = element.tagName.toLowerCase()
-  const isInput = tagName === 'input' || tagName === 'textarea'
-  const isContentEditable = element.getAttribute('contenteditable') === 'true'
-
-  return isInput || isContentEditable
 }
 
 /**
@@ -135,6 +123,11 @@ export function useGlobalTyping(
 
       // Skip if any input is focused
       if (isInputElement(document.activeElement)) {
+        return
+      }
+
+      // Skip if any modifier key is pressed (Ctrl, Alt, Meta)
+      if (event.ctrlKey || event.altKey || event.metaKey) {
         return
       }
 

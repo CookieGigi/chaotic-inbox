@@ -78,6 +78,45 @@ describe('useGlobalTyping', () => {
       expect(mockOnDraftCreate).not.toHaveBeenCalled()
     })
 
+    it('does not create draft when modifier keys are pressed', async () => {
+      renderHook(() =>
+        useGlobalTyping({
+          onDraftCreate: mockOnDraftCreate,
+          onDraftAppend: mockOnDraftAppend,
+        })
+      )
+
+      // Test with Ctrl key (e.g., Ctrl+V)
+      await act(async () => {
+        const ctrlEvent = new KeyboardEvent('keydown', {
+          key: 'v',
+          ctrlKey: true,
+        })
+        window.dispatchEvent(ctrlEvent)
+      })
+
+      // Test with Alt key
+      await act(async () => {
+        const altEvent = new KeyboardEvent('keydown', {
+          key: 'a',
+          altKey: true,
+        })
+        window.dispatchEvent(altEvent)
+      })
+
+      // Test with Meta key (Cmd on Mac)
+      await act(async () => {
+        const metaEvent = new KeyboardEvent('keydown', {
+          key: 'c',
+          metaKey: true,
+        })
+        window.dispatchEvent(metaEvent)
+      })
+
+      expect(mockOnDraftCreate).not.toHaveBeenCalled()
+      expect(mockOnDraftAppend).not.toHaveBeenCalled()
+    })
+
     it('does not create draft when input is focused', async () => {
       // Create and focus an input element BEFORE rendering hook
       const input = document.createElement('input')
