@@ -35,6 +35,11 @@
   --color-warning: #eed49f; /* Yellow - Quota warnings */
   --color-accent: #8bd5ca; /* Teal - Interactive, focus, user-configurable */
 
+  /* Draft block colors */
+  --color-draft-bg: rgba(30, 32, 48, 0.3); /* Surface at 30% opacity */
+  --color-draft-border: rgba(139, 213, 202, 0.5); /* Accent at 50% opacity */
+  --color-draft-hint: #939ab7; /* Surface 2 - Hint text */
+
   /* ============================================
      ACCENT OPTIONS (User-configurable)
      ============================================ */

@@ -1,9 +1,19 @@
 import { useEffect, useRef } from 'react'
 import type { RawItem } from '@/models/rawItem'
 import { Block } from '@/components/Block'
+import { DraftBlock } from '@/components/DraftBlock'
+import type { DraftTextItem } from '@/hooks/useGlobalTyping'
 
 export interface FeedProps {
   items: RawItem[]
+  /** Optional draft item to render at the bottom */
+  draftItem?: DraftTextItem | null
+  /** Callback when draft content changes */
+  onDraftChange?: (content: string) => void
+  /** Callback when draft is submitted */
+  onDraftSubmit?: () => void
+  /** Callback when draft is cancelled */
+  onDraftCancel?: () => void
 }
 
 /**
@@ -16,20 +26,28 @@ function sortByCaptureTime(items: RawItem[]): RawItem[] {
   )
 }
 
-export function Feed({ items }: FeedProps) {
+export function Feed({
+  items,
+  draftItem,
+  onDraftChange,
+  onDraftSubmit,
+  onDraftCancel,
+}: FeedProps) {
   const newestItemRef = useRef<HTMLDivElement>(null)
 
   // Auto-scroll to newest item on mount and when items change
   useEffect(() => {
-    if (newestItemRef.current && items.length > 0) {
+    if (newestItemRef.current && items.length > 0 && !draftItem) {
       newestItemRef.current.scrollIntoView({ behavior: 'smooth', block: 'end' })
     }
-  }, [items])
+  }, [items, draftItem])
 
   const sortedItems = sortByCaptureTime(items)
 
-  // Empty state
-  if (items.length === 0) {
+  const hasContent = items.length > 0 || !!draftItem
+
+  // Empty state - only show when no items AND no draft
+  if (!hasContent) {
     return (
       <div
         data-testid="feed"
@@ -64,11 +82,25 @@ export function Feed({ items }: FeedProps) {
         {sortedItems.map((item, index) => (
           <div
             key={item.id.toString()}
-            ref={index === sortedItems.length - 1 ? newestItemRef : undefined}
+            ref={
+              index === sortedItems.length - 1 && !draftItem
+                ? newestItemRef
+                : undefined
+            }
           >
             <Block item={item} />
           </div>
         ))}
+
+        {/* Draft block at the bottom */}
+        {draftItem && onDraftChange && onDraftSubmit && onDraftCancel && (
+          <DraftBlock
+            draft={draftItem}
+            onChange={onDraftChange}
+            onSubmit={onDraftSubmit}
+            onCancel={onDraftCancel}
+          />
+        )}
       </div>
     </div>
   )
