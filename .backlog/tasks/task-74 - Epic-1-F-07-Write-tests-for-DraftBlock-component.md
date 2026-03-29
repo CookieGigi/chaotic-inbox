@@ -1,9 +1,10 @@
 ---
 id: TASK-74
 title: '[Epic 1] F-07: Write tests for DraftBlock component'
-status: To Do
+status: In Progress
 assignee: []
 created_date: '2026-03-27 03:00'
+updated_date: '2026-03-29 06:00'
 labels:
   - phase-4
   - testing
