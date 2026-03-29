@@ -151,6 +151,11 @@ export function useGlobalPaste(
         for (let i = 0; i < items.length; i++) {
           const item = items[i]
 
+          // Skip if item is undefined or doesn't have type
+          if (!item?.type) {
+            continue
+          }
+
           if (item.type.startsWith('image/')) {
             // Handle image paste (TASK-3)
             const file = item.getAsFile()
