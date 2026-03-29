@@ -4,7 +4,7 @@ title: '[Epic 1] F-07: Integrate draft into Feed component'
 status: Done
 assignee: []
 created_date: '2026-03-27 03:00'
-updated_date: '2026-03-29 05:28'
+updated_date: '2026-03-29 05:38'
 labels:
   - phase-3
   - integration
@@ -27,11 +27,11 @@ Update Feed component to accept and render a draft item. Renders DraftBlock afte
 
 <!-- AC:BEGIN -->
 
-- [ ] #1 Accepts optional draftItem prop
-- [ ] #2 Renders DraftBlock after existing items
-- [ ] #3 Auto-scrolls to draft when created
-- [ ] #4 On submit: persists and scrolls to new block
-- [ ] #5 On cancel: removes draft without persistence
+- [x] #1 Accepts optional draftItem prop
+- [x] #2 Renders DraftBlock after existing items
+- [x] #3 Auto-scrolls to draft when created
+- [x] #4 On submit: persists and scrolls to new block
+- [x] #5 On cancel: removes draft without persistence
 <!-- AC:END -->
 
 ## Final Summary
