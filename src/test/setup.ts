@@ -109,6 +109,22 @@ beforeAll(() => {
     value: MockDataTransferItemList,
   })
 
+  // Mock DragEvent for drop tests
+  class MockDragEvent extends MouseEvent {
+    dataTransfer: DataTransfer | null
+
+    constructor(type: string, eventInitDict?: DragEventInit) {
+      super(type, eventInitDict)
+      this.dataTransfer = eventInitDict?.dataTransfer ?? null
+    }
+  }
+
+  Object.defineProperty(window, 'DragEvent', {
+    writable: true,
+    configurable: true,
+    value: MockDragEvent,
+  })
+
   // Mock console methods to reduce noise during tests
   // but still allow errors to show
   const originalConsoleError = console.error

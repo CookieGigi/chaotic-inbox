@@ -1,10 +1,10 @@
 ---
 id: TASK-6
 title: '[Epic 1] F-02: Drop a file anywhere on the app window'
-status: To Do
+status: Done
 assignee: []
 created_date: '2026-03-18 00:00'
-updated_date: '2026-03-18 00:25'
+updated_date: '2026-03-30 05:24'
 labels:
   - phase-3b
 milestone: m-0
@@ -12,7 +12,7 @@ dependencies: []
 references:
   - ./specs/epic-1-f02-user-stories.md
 documentation:
-  - backlog://doc/doc-3
+  - 'backlog://doc/doc-3'
 priority: high
 ---
 
@@ -32,9 +32,9 @@ The entire app window acts as the drop target.
 
 <!-- AC:BEGIN -->
 
-- [ ] #1 The entire app window acts as a drop target
-- [ ] #2 A dropped file is captured and appended as a block at the bottom of the feed
-- [ ] #3 The feed scrolls to the new block
+- [x] #1 The entire app window acts as a drop target
+- [x] #2 A dropped file is captured and appended as a block at the bottom of the feed
+- [x] #3 The feed scrolls to the new block
 <!-- AC:END -->
 
 ## Definition of Done
@@ -45,8 +45,3 @@ The entire app window acts as the drop target.
 - [ ] #2 Documentation updated
 - [ ] #3 No regressions introduced
 <!-- DOD:END -->
-
-## Related Links
-
-- [Spec: specs/epic-1-f02-user-stories.md](./specs/epic-1-f02-user-stories.md)
-- [Doc: doc-3](backlog://doc/doc-3)
