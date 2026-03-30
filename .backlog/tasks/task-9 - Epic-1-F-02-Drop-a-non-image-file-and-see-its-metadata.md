@@ -1,10 +1,10 @@
 ---
 id: TASK-9
 title: '[Epic 1] F-02: Drop a non-image file and see its metadata'
-status: To Do
+status: Done
 assignee: []
 created_date: '2026-03-18 00:00'
-updated_date: '2026-03-18 00:25'
+updated_date: '2026-03-30 05:24'
 labels:
   - phase-3b
 milestone: m-0
@@ -12,7 +12,7 @@ dependencies: []
 references:
   - ./specs/epic-1-f02-user-stories.md
 documentation:
-  - backlog://doc/doc-3
+  - 'backlog://doc/doc-3'
 priority: high
 ---
 
@@ -32,9 +32,9 @@ Non-image files show type-specific icons (PDF, zip, binary).
 
 <!-- AC:BEGIN -->
 
-- [ ] #1 Dropping a `.pdf` → file block with `FilePdf` icon, filename, and file size
-- [ ] #2 Dropping a `.zip` → file block with `FileZip` icon, filename, and file size
-- [ ] #3 Dropping an unknown binary → file block with `FileBinary` icon, filename, and file size
+- [x] #1 Dropping a `.pdf` → file block with `FilePdf` icon, filename, and file size
+- [x] #2 Dropping a `.zip` → file block with `FileZip` icon, filename, and file size
+- [x] #3 Dropping an unknown binary → file block with `FileBinary` icon, filename, and file size
 <!-- AC:END -->
 
 ## Definition of Done
@@ -45,8 +45,3 @@ Non-image files show type-specific icons (PDF, zip, binary).
 - [ ] #2 Documentation updated
 - [ ] #3 No regressions introduced
 <!-- DOD:END -->
-
-## Related Links
-
-- [Spec: specs/epic-1-f02-user-stories.md](./specs/epic-1-f02-user-stories.md)
-- [Doc: doc-3](backlog://doc/doc-3)
