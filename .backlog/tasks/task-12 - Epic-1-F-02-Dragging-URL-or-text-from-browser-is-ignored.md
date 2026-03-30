@@ -1,10 +1,10 @@
 ---
 id: TASK-12
 title: '[Epic 1] F-02: Dragging URL or text from browser is ignored'
-status: To Do
+status: Done
 assignee: []
 created_date: '2026-03-18 00:00'
-updated_date: '2026-03-18 00:25'
+updated_date: '2026-03-30 05:24'
 labels:
   - phase-3b
 milestone: m-0
@@ -12,7 +12,7 @@ dependencies: []
 references:
   - ./specs/epic-1-f02-user-stories.md
 documentation:
-  - backlog://doc/doc-3
+  - 'backlog://doc/doc-3'
 priority: high
 ---
 
@@ -32,10 +32,10 @@ Only file drags should trigger the capture flow.
 
 <!-- AC:BEGIN -->
 
-- [ ] #1 Dragging a link from a browser tab onto the app → no block is created
-- [ ] #2 Dragging selected text from a browser onto the app → no block is created
-- [ ] #3 No drop overlay is shown for non-file drag types
-- [ ] #4 The event is silently ignored with no feedback
+- [x] #1 Dragging a link from a browser tab onto the app → no block is created
+- [x] #2 Dragging selected text from a browser onto the app → no block is created
+- [x] #3 No drop overlay is shown for non-file drag types
+- [x] #4 The event is silently ignored with no feedback
 <!-- AC:END -->
 
 ## Definition of Done
@@ -46,8 +46,3 @@ Only file drags should trigger the capture flow.
 - [ ] #2 Documentation updated
 - [ ] #3 No regressions introduced
 <!-- DOD:END -->
-
-## Related Links
-
-- [Spec: specs/epic-1-f02-user-stories.md](./specs/epic-1-f02-user-stories.md)
-- [Doc: doc-3](backlog://doc/doc-3)
