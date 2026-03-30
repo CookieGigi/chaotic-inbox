@@ -1,10 +1,10 @@
 ---
 id: TASK-11
 title: '[Epic 1] F-02: Drag over interactive elements without breaking'
-status: To Do
+status: Done
 assignee: []
 created_date: '2026-03-18 00:00'
-updated_date: '2026-03-18 00:25'
+updated_date: '2026-03-30 05:24'
 labels:
   - phase-3b
 milestone: m-0
@@ -12,7 +12,7 @@ dependencies: []
 references:
   - ./specs/epic-1-f02-user-stories.md
 documentation:
-  - backlog://doc/doc-3
+  - 'backlog://doc/doc-3'
 priority: high
 ---
 
@@ -32,9 +32,9 @@ The drop overlay stays active even over inputs and buttons.
 
 <!-- AC:BEGIN -->
 
-- [ ] #1 Dragging a file over an `<input>`, `<textarea>`, or button keeps the full-screen overlay active
-- [ ] #2 Dropping a file while hovering over an interactive element captures the file normally
-- [ ] #3 The interactive element does not receive the drop event (no browser default behaviour)
+- [x] #1 Dragging a file over an `<input>`, `<textarea>`, or button keeps the full-screen overlay active
+- [x] #2 Dropping a file while hovering over an interactive element captures the file normally
+- [x] #3 The interactive element does not receive the drop event (no browser default behaviour)
 <!-- AC:END -->
 
 ## Definition of Done
@@ -45,8 +45,3 @@ The drop overlay stays active even over inputs and buttons.
 - [ ] #2 Documentation updated
 - [ ] #3 No regressions introduced
 <!-- DOD:END -->
-
-## Related Links
-
-- [Spec: specs/epic-1-f02-user-stories.md](./specs/epic-1-f02-user-stories.md)
-- [Doc: doc-3](backlog://doc/doc-3)
