@@ -4,7 +4,7 @@ title: '[Epic 1] F-03: Block type is immutable after capture'
 status: To Do
 assignee: []
 created_date: '2026-03-18 00:01'
-updated_date: '2026-03-22 09:03'
+updated_date: '2026-03-30 18:30'
 labels:
   - phase-2
 milestone: m-0
@@ -33,9 +33,9 @@ Type is determined once at capture and never changes.
 
 <!-- AC:BEGIN -->
 
-- [ ] #1 Block type is determined once at capture time and stored on the item record
-- [ ] #2 No mechanism exists to change the type of an existing block
-- [ ] #3 Raw input is stored in full, unmodified, regardless of how it is rendered
+- [x] #1 Block type is determined once at capture time and stored on the item record
+- [x] #2 No mechanism exists to change the type of an existing block
+- [x] #3 Raw input is stored in full, unmodified, regardless of how it is rendered
 <!-- AC:END -->
 
 ## Implementation Plan
