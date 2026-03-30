@@ -4,7 +4,7 @@ title: '[Epic 1] F-03: Pasted image renders inline'
 status: To Do
 assignee: []
 created_date: '2026-03-18 00:01'
-updated_date: '2026-03-22 09:03'
+updated_date: '2026-03-30 18:30'
 labels:
   - phase-2
 milestone: m-0
@@ -33,9 +33,9 @@ Images render inline within the feed column.
 
 <!-- AC:BEGIN -->
 
-- [ ] #1 A clipboard image is rendered as type `image`, inline within the feed column
-- [ ] #2 The image is constrained to the feed column width
-- [ ] #3 No file icon or filename is shown — only the image itself
+- [x] #1 A clipboard image is rendered as type `image`, inline within the feed column
+- [x] #2 The image is constrained to the feed column width
+- [x] #3 No file icon or filename is shown — only the image itself
 <!-- AC:END -->
 
 ## Implementation Plan
