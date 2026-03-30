@@ -4,7 +4,7 @@ title: '[Epic 1] F-03: Dropped non-image file renders with type-specific icon'
 status: To Do
 assignee: []
 created_date: '2026-03-18 00:01'
-updated_date: '2026-03-22 09:03'
+updated_date: '2026-03-30 18:30'
 labels:
   - phase-2
 milestone: m-0
@@ -33,12 +33,12 @@ File blocks show type icons from Phosphor Icons library.
 
 <!-- AC:BEGIN -->
 
-- [ ] #1 Dropping a `.pdf` → file block with `FilePdf` icon, filename, and file size
-- [ ] #2 Dropping a `.zip` or archive → file block with `FileZip` icon, filename, and file size
-- [ ] #3 Dropping a `.md` → file block with `FileMd` icon, filename, and file size
-- [ ] #4 Dropping a `.txt` → file block with `FileText` icon, filename, and file size
-- [ ] #5 Dropping an unknown or binary file → file block with `FileBinary` icon, filename, and file size
-- [ ] #6 No content preview is shown for file blocks
+- [x] #1 Dropping a `.pdf` → file block with `FilePdf` icon, filename, and file size
+- [x] #2 Dropping a `.zip` or archive → file block with `FileZip` icon, filename, and file size
+- [x] #3 Dropping a `.md` → file block with `FileMd` icon, filename, and file size
+- [x] #4 Dropping a `.txt` → file block with `FileText` icon, filename, and file size
+- [x] #5 Dropping an unknown or binary file → file block with `FileBinary` icon, filename, and file size
+- [x] #6 No content preview is shown for file blocks
 <!-- AC:END -->
 
 ## Implementation Plan
