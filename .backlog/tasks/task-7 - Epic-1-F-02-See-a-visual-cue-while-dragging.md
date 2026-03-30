@@ -1,10 +1,10 @@
 ---
 id: TASK-7
 title: '[Epic 1] F-02: See a visual cue while dragging'
-status: To Do
+status: Done
 assignee: []
 created_date: '2026-03-18 00:00'
-updated_date: '2026-03-18 00:25'
+updated_date: '2026-03-30 05:24'
 labels:
   - phase-3b
 milestone: m-0
@@ -12,7 +12,7 @@ dependencies: []
 references:
   - ./specs/epic-1-f02-user-stories.md
 documentation:
-  - backlog://doc/doc-3
+  - 'backlog://doc/doc-3'
 priority: high
 ---
 
@@ -32,8 +32,8 @@ Full-screen overlay appears on drag-enter.
 
 <!-- AC:BEGIN -->
 
-- [ ] #1 Dragging a file over the window triggers a full-screen overlay
-- [ ] #2 The overlay disappears immediately on drop or when the file is dragged away (drag-leave)
+- [x] #1 Dragging a file over the window triggers a full-screen overlay
+- [x] #2 The overlay disappears immediately on drop or when the file is dragged away (drag-leave)
 <!-- AC:END -->
 
 ## Definition of Done
@@ -44,8 +44,3 @@ Full-screen overlay appears on drag-enter.
 - [ ] #2 Documentation updated
 - [ ] #3 No regressions introduced
 <!-- DOD:END -->
-
-## Related Links
-
-- [Spec: specs/epic-1-f02-user-stories.md](./specs/epic-1-f02-user-stories.md)
-- [Doc: doc-3](backlog://doc/doc-3)
