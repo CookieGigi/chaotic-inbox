@@ -4,7 +4,7 @@ title: '[Epic 1] F-03: Pasted text renders as a text block'
 status: To Do
 assignee: []
 created_date: '2026-03-18 00:00'
-updated_date: '2026-03-22 09:03'
+updated_date: '2026-03-30 18:30'
 labels:
   - phase-2
 milestone: m-0
@@ -33,8 +33,8 @@ Text blocks use body font for natural reading experience.
 
 <!-- AC:BEGIN -->
 
-- [ ] #1 Clipboard text that is not a URL is saved and rendered as type `text`
-- [ ] #2 The block uses the body font (not monospace or a code style)
+- [x] #1 Clipboard text that is not a URL is saved and rendered as type `text`
+- [x] #2 The block uses the body font (not monospace or a code style)
 <!-- AC:END -->
 
 ## Implementation Plan
