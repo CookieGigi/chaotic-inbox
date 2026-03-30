@@ -19,22 +19,28 @@ priority: high
 ## Description
 
 <!-- SECTION:DESCRIPTION:BEGIN -->
+
 **As a** user,
 **I want** to drop several files simultaneously
 **so that** they are all captured in one gesture without repeating the action.
 
 Multi-file drops create multiple blocks in order.
+
 <!-- SECTION:DESCRIPTION:END -->
 
 ## Acceptance Criteria
+
 <!-- AC:BEGIN -->
+
 - [x] #1 Each file in a multi-file drop produces its own block
 - [x] #2 Blocks are appended in drop order
 - [x] #3 Each block renders according to its own type (image vs. file)
 <!-- AC:END -->
 
 ## Definition of Done
+
 <!-- DOD:BEGIN -->
+
 - [ ] #1 Tests pass
 - [ ] #2 Documentation updated
 - [ ] #3 No regressions introduced
