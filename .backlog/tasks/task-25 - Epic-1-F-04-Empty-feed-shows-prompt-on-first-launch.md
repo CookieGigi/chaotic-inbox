@@ -1,10 +1,10 @@
 ---
 id: TASK-25
 title: '[Epic 1] F-04: Empty feed shows prompt on first launch'
-status: To Do
+status: In Progress
 assignee: []
 created_date: '2026-03-18 00:01'
-updated_date: '2026-03-18 00:25'
+updated_date: '2026-03-31 19:04'
 labels:
   - phase-4
 milestone: m-0
@@ -12,7 +12,7 @@ dependencies: []
 references:
   - ./specs/epic-1-f04-user-stories.md
 documentation:
-  - backlog://doc/doc-5
+  - 'backlog://doc/doc-5'
 priority: high
 ---
 
@@ -46,8 +46,3 @@ Empty state communicates the capture gesture.
 - [ ] #2 Documentation updated
 - [ ] #3 No regressions introduced
 <!-- DOD:END -->
-
-## Related Links
-
-- [Spec: specs/epic-1-f04-user-stories.md](./specs/epic-1-f04-user-stories.md)
-- [Doc: doc-5](backlog://doc/doc-5)
