@@ -6,21 +6,17 @@ export interface TextBlockProps {
 }
 
 /**
- * Line height in pixels for text-base (15px * 1.6 line-height = 24px)
+ * Check if text content needs truncation
+ * @param scrollHeight - The measured scrollHeight of the element
+ * @param content - The text content to check for explicit newlines
+ * @returns true if content should be truncated
  */
-const LINE_HEIGHT = 24
-
-/**
- * Maximum height for 5 lines (5 * 24px = 120px)
- */
-const MAX_HEIGHT = LINE_HEIGHT * 5
-
-/**
- * Check if text has more than 5 explicit newlines
- * Used as fallback when scrollHeight measurement isn't available
- */
-function hasMoreThanFiveNewlines(content: string): boolean {
-  return content.split('\n').length > 5
+function shouldTruncateContent(scrollHeight: number, content: string): boolean {
+  const LINE_HEIGHT = 24
+  const MAX_HEIGHT = LINE_HEIGHT * 5
+  const isOverflowing = scrollHeight > MAX_HEIGHT + 1 // +1 for rounding
+  const hasMoreThanFiveNewlines = content.split('\n').length > 5
+  return isOverflowing || hasMoreThanFiveNewlines
 }
 
 export function TextBlock({ content }: TextBlockProps) {
@@ -32,9 +28,7 @@ export function TextBlock({ content }: TextBlockProps) {
     const checkTruncation = () => {
       if (textRef.current && content) {
         const element = textRef.current
-        // Check if content height exceeds 5 lines (for wrapped text)
-        const isOverflowing = element.scrollHeight > MAX_HEIGHT + 1 // +1 for rounding
-        setNeedsTruncation(isOverflowing || hasMoreThanFiveNewlines(content))
+        setNeedsTruncation(shouldTruncateContent(element.scrollHeight, content))
       }
     }
 
