@@ -21,6 +21,7 @@ const fileIconMap: Record<FileSubType, typeof File> = {
   pdf: FilePdf,
   docx: FileText,
   txt: FileText,
+  md: FileText,
   zip: FileZip,
   other: File,
 }

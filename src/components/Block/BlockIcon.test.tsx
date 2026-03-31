@@ -40,7 +40,7 @@ const createImageItem = (): RawItem => ({
 })
 
 const createFileItem = (
-  kind: 'pdf' | 'zip' | 'txt' | 'docx' | 'other'
+  kind: 'pdf' | 'zip' | 'txt' | 'md' | 'docx' | 'other'
 ): RawItem => ({
   id: `test-file-${kind}`,
   type: 'file',
@@ -98,6 +98,14 @@ describe('BlockIcon', () => {
 
     it('renders FileText icon for txt files', () => {
       const item = createFileItem('txt')
+      render(<BlockIcon item={item} />)
+
+      const icon = screen.getByTestId('block-icon')
+      expect(icon).toBeInTheDocument()
+    })
+
+    it('renders FileText icon for md files', () => {
+      const item = createFileItem('md')
       render(<BlockIcon item={item} />)
 
       const icon = screen.getByTestId('block-icon')

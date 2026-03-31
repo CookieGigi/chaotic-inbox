@@ -125,6 +125,38 @@ describe('Block', () => {
       expect(screen.getByText(/Size:/)).toBeInTheDocument()
       expect(screen.getByText(/1 KB/)).toBeInTheDocument()
     })
+
+    it('TASK-19: dispatches text with embedded URL to TextBlock, not UrlBlock', () => {
+      const item = createTextItem({
+        raw: 'Check out https://example.com for more info',
+      })
+      render(<Block item={item} />)
+
+      // Should render as text block (body font), not as clickable URL button
+      const textElement = screen.getByText(/Check out/)
+      expect(textElement).toBeInTheDocument()
+      expect(textElement).toHaveClass('text-base')
+      expect(textElement).toHaveClass('leading-relaxed')
+
+      // Should NOT have a button role (which UrlBlock uses)
+      const button = screen.queryByRole('button')
+      expect(button).not.toBeInTheDocument()
+    })
+
+    it('TASK-19: renders embedded URL as plain text in body font', () => {
+      const item = createTextItem({
+        raw: 'Visit https://example.com/path?query=1 for details',
+      })
+      render(<Block item={item} />)
+
+      const content = screen.getByTestId('block-content')
+      expect(content.textContent).toContain('https://example.com/path?query=1')
+
+      // Should be in body font, not link styling
+      const textElement = screen.getByTestId('text-block-content')
+      expect(textElement).toHaveClass('text-text') // Body text color
+      expect(textElement).not.toHaveClass('text-accent') // Not link color
+    })
   })
 
   describe('Block header structure', () => {

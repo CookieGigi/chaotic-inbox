@@ -1,10 +1,10 @@
 ---
 id: TASK-17
 title: '[Epic 1] F-03: Dropped non-image file renders with type-specific icon'
-status: To Do
+status: Done
 assignee: []
 created_date: '2026-03-18 00:01'
-updated_date: '2026-03-30 18:30'
+updated_date: '2026-03-31 10:22'
 labels:
   - phase-2
 milestone: m-0

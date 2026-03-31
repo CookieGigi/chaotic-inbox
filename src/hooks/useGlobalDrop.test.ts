@@ -321,6 +321,25 @@ describe('useGlobalDrop', () => {
       expect(items[0].metadata.kind).toBe('zip')
     })
 
+    it('should create file item with md subtype for .md', () => {
+      renderHook(() =>
+        useGlobalDrop({
+          onDropItems: mockOnDropItems,
+        })
+      )
+
+      const mockFile = new File(['# Markdown'], 'README.md', {
+        type: 'text/markdown',
+      })
+
+      const dropEvent = createMockDropEvent({ files: [mockFile] })
+      window.dispatchEvent(dropEvent)
+
+      const items = mockOnDropItems.mock.calls[0][0] as RawItem[]
+      expect(items[0].type).toBe('file')
+      expect(items[0].metadata.kind).toBe('md')
+    })
+
     it('should create file item with other subtype for unknown binary', () => {
       renderHook(() =>
         useGlobalDrop({

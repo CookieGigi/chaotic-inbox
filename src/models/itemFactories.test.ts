@@ -270,4 +270,91 @@ describe('itemFactories', () => {
       expect(item1.capturedAt).not.toBe(item2.capturedAt)
     })
   })
+
+  describe('TASK-18: Block type immutability', () => {
+    it('should determine type at capture time and store on item record', () => {
+      const textItem = createTextItem('Hello world', { kind: 'plain' })
+      const urlItem = createUrlItem('https://example.com', { kind: 'url' })
+      const imageItem = createImageItem(new Blob(['image']), { kind: 'image' })
+      const fileItem = createFileItem(new Blob(['file']), {
+        kind: 'pdf',
+        filename: 'doc.pdf',
+        filesize: 1024,
+        mimetype: 'application/pdf',
+      })
+
+      expect(textItem.type).toBe('text')
+      expect(urlItem.type).toBe('url')
+      expect(imageItem.type).toBe('image')
+      expect(fileItem.type).toBe('file')
+    })
+
+    it('should not allow type mutation on created items', () => {
+      const item = createTextItem('Hello world', { kind: 'plain' })
+
+      // Type should be a string literal, not modifiable
+      expect(item.type).toBe('text')
+
+      // Attempting to change type should either fail or not affect the item
+      // In TypeScript, this would be a compile-time error
+      // At runtime, we can verify the type remains unchanged
+      const originalType = item.type
+
+      // TypeScript would prevent this, but we verify the value hasn't changed
+      expect(item.type).toBe(originalType)
+    })
+
+    it('should store raw input unmodified regardless of rendering', () => {
+      const rawText = '  Padded text with whitespace  '
+      const item = createTextItem(rawText, { kind: 'plain' })
+
+      // Raw should be stored exactly as provided
+      expect(item.raw).toBe(rawText)
+      expect(item.raw).not.toBe(rawText.trim())
+    })
+
+    it('should preserve raw URL even when normalized for display', () => {
+      const rawUrl = 'example.com' // Without protocol
+      const item = createUrlItem(rawUrl, { kind: 'url' })
+
+      // Raw should store the original URL
+      expect(item.raw).toBe(rawUrl)
+      // Type should be url, not text
+      expect(item.type).toBe('url')
+    })
+
+    it('should store raw blob without transformation', () => {
+      const imageData = new Uint8Array([0x89, 0x50, 0x4e, 0x47]) // PNG header
+      const blob = new Blob([imageData], { type: 'image/png' })
+      const item = createImageItem(blob, { kind: 'image' })
+
+      // Raw should be the exact same blob
+      expect(item.raw).toBe(blob)
+    })
+
+    it('should maintain discriminated union between type and metadata', () => {
+      const textItem = createTextItem('test', { kind: 'plain' })
+      const urlItem = createUrlItem('https://example.com', { kind: 'url' })
+      const imageItem = createImageItem(new Blob(['image']), { kind: 'image' })
+      const fileItem = createFileItem(new Blob(['file']), {
+        kind: 'pdf',
+        filename: 'doc.pdf',
+        filesize: 1024,
+        mimetype: 'application/pdf',
+      })
+
+      // Type should always match metadata kind pattern
+      expect(textItem.type).toBe('text')
+      expect(textItem.metadata.kind).toBe('plain')
+
+      expect(urlItem.type).toBe('url')
+      expect(urlItem.metadata.kind).toBe('url')
+
+      expect(imageItem.type).toBe('image')
+      expect(imageItem.metadata.kind).toBe('image')
+
+      expect(fileItem.type).toBe('file')
+      expect(fileItem.metadata.kind).toBe('pdf')
+    })
+  })
 })

@@ -501,6 +501,90 @@ describe('useGlobalPaste', () => {
     })
   })
 
+  describe('TASK-19: Text with embedded URL renders as text block', () => {
+    it('should create text item when URL appears within a sentence', () => {
+      renderHook(() =>
+        useGlobalPaste({
+          onPasteItems: mockOnPasteItems,
+        })
+      )
+
+      const pasteEvent = createMockPasteEvent({
+        text: 'for NixOS — https://nixos.wiki/ is a great resource',
+      })
+      window.dispatchEvent(pasteEvent)
+
+      expect(mockOnPasteItems).toHaveBeenCalledTimes(1)
+
+      const items = mockOnPasteItems.mock.calls[0][0] as RawItem[]
+      expect(items).toHaveLength(1)
+      expect(items[0].type).toBe('text')
+      expect(items[0].metadata).toEqual({ kind: 'plain' })
+    })
+
+    it('should treat text with URL in middle as text type, not URL type', () => {
+      renderHook(() =>
+        useGlobalPaste({
+          onPasteItems: mockOnPasteItems,
+        })
+      )
+
+      const pasteEvent = createMockPasteEvent({
+        text: 'Check out https://example.com for more info',
+      })
+      window.dispatchEvent(pasteEvent)
+
+      const items = mockOnPasteItems.mock.calls[0][0] as RawItem[]
+      expect(items[0].type).toBe('text')
+    })
+
+    it('should only create URL item when entire string is a URL', () => {
+      renderHook(() =>
+        useGlobalPaste({
+          onPasteItems: mockOnPasteItems,
+        })
+      )
+
+      // This should be URL
+      const urlEvent = createMockPasteEvent({
+        text: 'https://example.com',
+      })
+      window.dispatchEvent(urlEvent)
+
+      let items = mockOnPasteItems.mock.calls[0][0] as RawItem[]
+      expect(items[0].type).toBe('url')
+
+      mockOnPasteItems.mockClear()
+
+      // This should be text (URL with trailing text)
+      const textEvent = createMockPasteEvent({
+        text: 'https://example.com check this out',
+      })
+      window.dispatchEvent(textEvent)
+
+      items = mockOnPasteItems.mock.calls[0][0] as RawItem[]
+      expect(items[0].type).toBe('text')
+    })
+
+    it('should preserve full text content including embedded URL', () => {
+      renderHook(() =>
+        useGlobalPaste({
+          onPasteItems: mockOnPasteItems,
+        })
+      )
+
+      const fullText = 'Visit https://example.com/path?query=1 for details'
+      const pasteEvent = createMockPasteEvent({
+        text: fullText,
+      })
+      window.dispatchEvent(pasteEvent)
+
+      const items = mockOnPasteItems.mock.calls[0][0] as RawItem[]
+      expect(items[0].type).toBe('text')
+      expect(items[0].raw).toBe(fullText)
+    })
+  })
+
   describe('Item Structure', () => {
     it('should create items with correct structure', () => {
       renderHook(() =>

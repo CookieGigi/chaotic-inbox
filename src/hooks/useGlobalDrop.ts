@@ -51,6 +51,7 @@ function getFileSubType(filename: string): FileSubType {
   if (lowerFilename.endsWith('.zip')) return 'zip'
   if (lowerFilename.endsWith('.txt')) return 'txt'
   if (lowerFilename.endsWith('.docx')) return 'docx'
+  if (lowerFilename.endsWith('.md')) return 'md'
   return 'other'
 }
 

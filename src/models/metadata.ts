@@ -1,4 +1,4 @@
-export type FileSubType = 'pdf' | 'docx' | 'txt' | 'zip' | 'other'
+export type FileSubType = 'pdf' | 'docx' | 'txt' | 'md' | 'zip' | 'other'
 
 export interface FileMetadata {
   kind: FileSubType

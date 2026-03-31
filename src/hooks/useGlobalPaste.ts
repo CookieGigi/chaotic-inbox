@@ -35,10 +35,12 @@ function isDragOverlayActive(): boolean {
 }
 
 /**
- * Check if text is a valid URL
+ * Check if text is a valid URL (entire string must be a URL)
  */
 function isValidUrl(text: string): boolean {
-  return /^https?:\/\/.+/.test(text.trim())
+  const trimmed = text.trim()
+  // Must start with http:// or https:// and contain no whitespace
+  return /^https?:\/\/\S+$/.test(trimmed)
 }
 
 /**

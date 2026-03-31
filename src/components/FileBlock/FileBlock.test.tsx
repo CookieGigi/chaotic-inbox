@@ -6,7 +6,7 @@ import type { RawItem } from '@/models/rawItem'
 function createFileItem(
   filename: string,
   filesize: number,
-  subtype: 'pdf' | 'zip' | 'txt' | 'docx' | 'other' = 'other'
+  subtype: 'pdf' | 'zip' | 'txt' | 'md' | 'docx' | 'other' = 'other'
 ): RawItem & { type: 'file' } {
   return {
     id: 'test-id',
@@ -139,6 +139,13 @@ describe('FileBlock', () => {
       render(<FileBlock item={item} />)
 
       expect(screen.getByText(/8 KB/)).toBeInTheDocument()
+    })
+
+    it('renders md file size correctly', () => {
+      const item = createFileItem('README.md', 2048, 'md')
+      render(<FileBlock item={item} />)
+
+      expect(screen.getByText(/2 KB/)).toBeInTheDocument()
     })
   })
 
