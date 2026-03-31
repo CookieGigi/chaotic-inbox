@@ -1,5 +1,42 @@
 import { describe, it, expect } from 'vitest'
-import { isFileItem, isTextItem, isUrlItem, isImageItem } from './metadata'
+import {
+  getItemType,
+  isFileItem,
+  isTextItem,
+  isUrlItem,
+  isImageItem,
+} from './metadata'
+
+describe('getItemType', () => {
+  it('should return the correct type for valid item types', () => {
+    expect(getItemType({ type: 'file' })).toBe('file')
+    expect(getItemType({ type: 'text' })).toBe('text')
+    expect(getItemType({ type: 'url' })).toBe('url')
+    expect(getItemType({ type: 'image' })).toBe('image')
+  })
+
+  it('should return null for invalid types', () => {
+    expect(getItemType({ type: 'unknown' })).toBeNull()
+    expect(getItemType({ type: '' })).toBeNull()
+    expect(getItemType({ type: 'invalid' })).toBeNull()
+  })
+
+  it('should be case sensitive', () => {
+    expect(getItemType({ type: 'File' })).toBeNull()
+    expect(getItemType({ type: 'TEXT' })).toBeNull()
+    expect(getItemType({ type: 'URL' })).toBeNull()
+    expect(getItemType({ type: 'Image' })).toBeNull()
+  })
+
+  it('should handle items with additional properties', () => {
+    expect(
+      getItemType({ type: 'file', extra: 'data' } as { type: string })
+    ).toBe('file')
+    expect(
+      getItemType({ type: 'text', metadata: {} } as { type: string })
+    ).toBe('text')
+  })
+})
 
 describe('metadata type guards', () => {
   describe('isFileItem', () => {
