@@ -1,11 +1,11 @@
 import {
-  Article,
-  Link,
-  Image,
-  FilePdf,
-  FileZip,
-  FileText,
-  File,
+  ArticleIcon,
+  LinkIcon,
+  ImageIcon,
+  FilePdfIcon,
+  FileZipIcon,
+  FileTextIcon,
+  FileIcon,
 } from '@phosphor-icons/react'
 import type { RawItem } from '@/models/rawItem'
 import {
@@ -17,13 +17,13 @@ import {
 import type { FileSubType } from '@/models/metadata'
 
 // Map file subtypes to their respective icons
-const fileIconMap: Record<FileSubType, typeof File> = {
-  pdf: FilePdf,
-  docx: FileText,
-  txt: FileText,
-  md: FileText,
-  zip: FileZip,
-  other: File,
+const fileIconMap: Record<FileSubType, typeof FileIcon> = {
+  pdf: FilePdfIcon,
+  docx: FileTextIcon,
+  txt: FileTextIcon,
+  md: FileTextIcon,
+  zip: FileZipIcon,
+  other: FileIcon,
 }
 
 interface BlockIconProps {
@@ -39,17 +39,17 @@ export function BlockIcon({ item }: BlockIconProps) {
   }
 
   if (isTextItem(item)) {
-    return <Article {...iconProps} />
+    return <ArticleIcon {...iconProps} />
   }
   if (isUrlItem(item)) {
-    return <Link {...iconProps} />
+    return <LinkIcon {...iconProps} />
   }
   if (isImageItem(item)) {
-    return <Image {...iconProps} />
+    return <ImageIcon {...iconProps} />
   }
   if (isFileItem(item)) {
     const IconComponent = fileIconMap[item.metadata.kind]
     return <IconComponent {...iconProps} />
   }
-  return <File {...iconProps} />
+  return <FileIcon {...iconProps} />
 }
