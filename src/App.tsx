@@ -4,7 +4,7 @@ import { useGlobalTyping, useGlobalPaste, useGlobalDrop } from '@/hooks'
 import { createTextItem } from '@/models/itemFactories'
 import type { RawItem } from '@/models/rawItem'
 import { db } from '@/storage/local_db'
-import { UploadSimple } from '@phosphor-icons/react'
+import { UploadSimpleIcon } from '@phosphor-icons/react'
 import './App.css'
 
 /**
@@ -157,7 +157,11 @@ function App() {
           className="fixed inset-0 bg-bg/90 backdrop-blur-sm flex items-center justify-center z-50 pointer-events-none"
         >
           <div className="flex flex-col items-center gap-4">
-            <UploadSimple size={64} className="text-accent" weight="duotone" />
+            <UploadSimpleIcon
+              size={64}
+              className="text-accent"
+              weight="duotone"
+            />
             <p className="text-lg font-medium text-text">Drop files here</p>
           </div>
         </div>

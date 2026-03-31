@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { CaretDown, CaretUp } from '@phosphor-icons/react'
+import { CaretDownIcon, CaretUpIcon } from '@phosphor-icons/react'
 
 export interface TextBlockProps {
   content: string
@@ -68,12 +68,12 @@ export function TextBlock({ content }: TextBlockProps) {
         >
           {isExpanded ? (
             <>
-              <CaretUp size={16} weight="regular" aria-hidden="true" />
+              <CaretUpIcon size={16} weight="regular" aria-hidden="true" />
               <span>Show less</span>
             </>
           ) : (
             <>
-              <CaretDown size={16} weight="regular" aria-hidden="true" />
+              <CaretDownIcon size={16} weight="regular" aria-hidden="true" />
               <span>Show more</span>
             </>
           )}

@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { Article } from '@phosphor-icons/react'
+import { ArticleIcon } from '@phosphor-icons/react'
 import { TextBlockEdit } from '@/components/TextBlock/TextBlockEdit'
 import { Timestamp } from '@/components/Timestamp'
 import type { DraftTextItem } from '@/hooks/useGlobalTyping'
@@ -52,7 +52,7 @@ export function DraftBlock({
         data-testid="draft-block-header"
       >
         <div className="flex items-center gap-2 min-w-0 flex-1">
-          <Article
+          <ArticleIcon
             size={16}
             weight="regular"
             className="text-text-muted flex-shrink-0"
