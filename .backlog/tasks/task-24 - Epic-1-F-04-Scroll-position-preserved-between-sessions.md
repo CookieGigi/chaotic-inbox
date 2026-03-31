@@ -1,10 +1,10 @@
 ---
 id: TASK-24
 title: '[Epic 1] F-04: Scroll position preserved between sessions'
-status: To Do
+status: Done
 assignee: []
 created_date: '2026-03-18 00:01'
-updated_date: '2026-03-18 00:25'
+updated_date: '2026-03-31 19:14'
 labels:
   - phase-4
 milestone: m-0
@@ -12,7 +12,7 @@ dependencies: []
 references:
   - ./specs/epic-1-f04-user-stories.md
 documentation:
-  - backlog://doc/doc-5
+  - 'backlog://doc/doc-5'
 priority: high
 ---
 
@@ -32,9 +32,9 @@ Save and restore scroll position in local storage.
 
 <!-- AC:BEGIN -->
 
-- [ ] #1 Scroll position is saved to local storage when the app is closed or backgrounded
-- [ ] #2 On launch with no new items, the saved scroll position is restored
-- [ ] #3 If new items exist since the last session, scroll position is superseded — the feed scrolls to the bottom instead
+- [x] #1 Scroll position is saved to local storage when the app is closed or backgrounded
+- [x] #2 On launch with no new items, the saved scroll position is restored
+- [x] #3 If new items exist since the last session, scroll position is superseded — the feed scrolls to the bottom instead
 <!-- AC:END -->
 
 ## Definition of Done
@@ -45,8 +45,3 @@ Save and restore scroll position in local storage.
 - [ ] #2 Documentation updated
 - [ ] #3 No regressions introduced
 <!-- DOD:END -->
-
-## Related Links
-
-- [Spec: specs/epic-1-f04-user-stories.md](./specs/epic-1-f04-user-stories.md)
-- [Doc: doc-5](backlog://doc/doc-5)
