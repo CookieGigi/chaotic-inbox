@@ -1,10 +1,10 @@
 ---
 id: TASK-20
 title: '[Epic 1] F-04: Feed opens at the right position on launch'
-status: In Progress
+status: Done
 assignee: []
 created_date: '2026-03-18 00:01'
-updated_date: '2026-03-31 19:04'
+updated_date: '2026-03-31 19:14'
 labels:
   - phase-4
 milestone: m-0
@@ -32,9 +32,9 @@ Smart positioning based on new items vs. previous session.
 
 <!-- AC:BEGIN -->
 
-- [ ] #1 On launch, if any items were captured since the last session → scroll to the most recent block
-- [ ] #2 On launch, if no new items since the last session → restore the previous scroll position
-- [ ] #3 If there is no previous scroll position (first launch, or no items) → scroll to bottom
+- [x] #1 On launch, if any items were captured since the last session → scroll to the most recent block
+- [x] #2 On launch, if no new items since the last session → restore the previous scroll position
+- [x] #3 If there is no previous scroll position (first launch, or no items) → scroll to bottom
 <!-- AC:END -->
 
 ## Definition of Done
