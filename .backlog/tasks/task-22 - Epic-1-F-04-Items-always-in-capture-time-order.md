@@ -1,10 +1,10 @@
 ---
 id: TASK-22
 title: '[Epic 1] F-04: Items always in capture-time order'
-status: To Do
+status: Done
 assignee: []
 created_date: '2026-03-18 00:01'
-updated_date: '2026-03-18 00:25'
+updated_date: '2026-03-31 19:14'
 labels:
   - phase-4
 milestone: m-0
@@ -12,7 +12,7 @@ dependencies: []
 references:
   - ./specs/epic-1-f04-user-stories.md
 documentation:
-  - backlog://doc/doc-5
+  - 'backlog://doc/doc-5'
 priority: high
 ---
 
@@ -32,9 +32,9 @@ Strict chronological ordering with no sorting options.
 
 <!-- AC:BEGIN -->
 
-- [ ] #1 Items are ordered ascending by `capturedAt` — oldest at top, newest at bottom
-- [ ] #2 No sort control or reorder mechanism is present
-- [ ] #3 The order cannot be changed by any user action
+- [x] #1 Items are ordered ascending by `capturedAt` — oldest at top, newest at bottom
+- [x] #2 No sort control or reorder mechanism is present
+- [x] #3 The order cannot be changed by any user action
 <!-- AC:END -->
 
 ## Definition of Done
@@ -45,8 +45,3 @@ Strict chronological ordering with no sorting options.
 - [ ] #2 Documentation updated
 - [ ] #3 No regressions introduced
 <!-- DOD:END -->
-
-## Related Links
-
-- [Spec: specs/epic-1-f04-user-stories.md](./specs/epic-1-f04-user-stories.md)
-- [Doc: doc-5](backlog://doc/doc-5)
