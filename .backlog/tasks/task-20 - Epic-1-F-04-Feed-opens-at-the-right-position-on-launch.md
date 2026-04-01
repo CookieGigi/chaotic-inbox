@@ -4,7 +4,7 @@ title: '[Epic 1] F-04: Feed opens at the right position on launch'
 status: Done
 assignee: []
 created_date: '2026-03-18 00:01'
-updated_date: '2026-03-31 19:14'
+updated_date: '2026-04-01 16:21'
 labels:
   - phase-4
 milestone: m-0
@@ -21,10 +21,10 @@ priority: high
 <!-- SECTION:DESCRIPTION:BEGIN -->
 
 **As a** user,
-**I want** the feed to open at the most recent block if anything is new, or where I left off if nothing has changed,
-**so that** I always land in the most useful position without any manual scrolling.
+**I want** the feed to open at my last scroll position,
+**so that** I always land exactly where I left off without any manual scrolling.
 
-Smart positioning based on new items vs. previous session.
+Always restore the previous scroll position on launch.
 
 <!-- SECTION:DESCRIPTION:END -->
 
@@ -32,9 +32,9 @@ Smart positioning based on new items vs. previous session.
 
 <!-- AC:BEGIN -->
 
-- [x] #1 On launch, if any items were captured since the last session → scroll to the most recent block
-- [x] #2 On launch, if no new items since the last session → restore the previous scroll position
-- [x] #3 If there is no previous scroll position (first launch, or no items) → scroll to bottom
+- [ ] #1 On launch, restore the previous scroll position from localStorage
+- [ ] #2 If there is no previous scroll position (first launch), scroll to bottom
+- [ ] #3 Position is restored smoothly with behavior: 'smooth'
 <!-- AC:END -->
 
 ## Definition of Done
