@@ -27,25 +27,15 @@ export interface ImageMetadata {
 
 export type Metadata = FileMetadata | TextMetadata | UrlMetadata | ImageMetadata
 
-export type ItemType = 'text' | 'url' | 'image' | 'file'
-
-const VALID_ITEM_TYPES: ItemType[] = ['text', 'url', 'image', 'file']
-
-export function getItemType(item: { type: string }): ItemType | null {
-  return VALID_ITEM_TYPES.includes(item.type as ItemType)
-    ? (item.type as ItemType)
-    : null
-}
+export const isFileItem = (item: { type: string }): item is { type: 'file' } =>
+  item.type === 'file'
 
 export const isTextItem = (item: { type: string }): item is { type: 'text' } =>
-  getItemType(item) === 'text'
+  item.type === 'text'
 
 export const isUrlItem = (item: { type: string }): item is { type: 'url' } =>
-  getItemType(item) === 'url'
+  item.type === 'url'
 
 export const isImageItem = (item: {
   type: string
-}): item is { type: 'image' } => getItemType(item) === 'image'
-
-export const isFileItem = (item: { type: string }): item is { type: 'file' } =>
-  getItemType(item) === 'file'
+}): item is { type: 'image' } => item.type === 'image'

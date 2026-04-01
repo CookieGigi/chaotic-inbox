@@ -5,16 +5,9 @@ export type {
   UrlMetadata,
   ImageMetadata,
   Metadata,
-  ItemType,
 } from './metadata'
 
-export {
-  getItemType,
-  isFileItem,
-  isTextItem,
-  isUrlItem,
-  isImageItem,
-} from './metadata'
+export { isFileItem, isTextItem, isUrlItem, isImageItem } from './metadata'
 
 export type { RawItem } from './rawItem'
 

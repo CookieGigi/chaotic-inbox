@@ -3,7 +3,6 @@ import type { RawItem } from '@/models/rawItem'
 import { Block } from '@/components/Block'
 import { DraftBlock } from '@/components/DraftBlock'
 import type { DraftTextItem } from '@/hooks/useGlobalTyping'
-import { useScrollPosition } from '@/hooks/useScrollPosition'
 
 export interface FeedProps {
   items: RawItem[]
@@ -35,79 +34,17 @@ export function Feed({
   onDraftCancel,
 }: FeedProps) {
   const newestItemRef = useRef<HTMLDivElement>(null)
-  const hasDoneInitialScroll = useRef(false)
-  const previousItemsLength = useRef(items.length)
 
-  // Use scroll position hook for smart scroll behavior
-  const {
-    savedScrollPosition,
-    isFirstLaunch,
-    checkForNewItems,
-    markAllItemsAsSeen,
-  } = useScrollPosition()
+  // Auto-scroll to newest item on mount and when items change
+  useEffect(() => {
+    if (newestItemRef.current && items.length > 0 && !draftItem) {
+      newestItemRef.current.scrollIntoView({ behavior: 'smooth', block: 'end' })
+    }
+  }, [items, draftItem])
 
   const sortedItems = sortByCaptureTime(items)
+
   const hasContent = items.length > 0 || !!draftItem
-
-  // Initial mount: apply smart scroll logic
-  useEffect(() => {
-    if (hasDoneInitialScroll.current) {
-      return
-    }
-
-    hasDoneInitialScroll.current = true
-
-    if (items.length === 0) {
-      return
-    }
-
-    const hasNewItems = checkForNewItems(items)
-
-    if (hasNewItems) {
-      // New items exist - scroll to newest
-      if (newestItemRef.current && !draftItem) {
-        newestItemRef.current.scrollIntoView({
-          behavior: 'smooth',
-          block: 'end',
-        })
-      }
-      markAllItemsAsSeen(items)
-    } else if (!isFirstLaunch && savedScrollPosition > 0) {
-      // No new items and we have a saved position - restore it
-      window.scrollTo({ top: savedScrollPosition, behavior: 'smooth' })
-    } else {
-      // First launch or no saved position - scroll to bottom
-      if (newestItemRef.current && !draftItem) {
-        newestItemRef.current.scrollIntoView({
-          behavior: 'smooth',
-          block: 'end',
-        })
-      }
-      markAllItemsAsSeen(items)
-    }
-  }, []) // Only run on mount
-
-  // Handle new items added after mount
-  useEffect(() => {
-    if (!hasDoneInitialScroll.current) {
-      return
-    }
-
-    // Only scroll if items were added (length increased)
-    if (items.length > previousItemsLength.current) {
-      previousItemsLength.current = items.length
-
-      if (newestItemRef.current && !draftItem) {
-        newestItemRef.current.scrollIntoView({
-          behavior: 'smooth',
-          block: 'end',
-        })
-        markAllItemsAsSeen(items)
-      }
-    } else {
-      previousItemsLength.current = items.length
-    }
-  }, [items.length, draftItem, markAllItemsAsSeen])
 
   // Empty state - only show when no items AND no draft
   if (!hasContent) {
