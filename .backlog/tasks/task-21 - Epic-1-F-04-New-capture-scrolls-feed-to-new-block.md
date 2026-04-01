@@ -1,7 +1,7 @@
 ---
 id: TASK-21
 title: '[Epic 1] F-04: New capture scrolls feed to new block'
-status: Done
+status: To Do
 assignee: []
 created_date: '2026-03-18 00:01'
 updated_date: '2026-04-01 16:21'
