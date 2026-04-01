@@ -4,7 +4,7 @@ title: '[Epic 1] F-04: Feed opens at the right position on launch'
 status: Done
 assignee: []
 created_date: '2026-03-18 00:01'
-updated_date: '2026-04-01 16:21'
+updated_date: '2026-04-01 16:32'
 labels:
   - phase-4
 milestone: m-0
@@ -32,9 +32,9 @@ Always restore the previous scroll position on launch.
 
 <!-- AC:BEGIN -->
 
-- [ ] #1 On launch, restore the previous scroll position from localStorage
-- [ ] #2 If there is no previous scroll position (first launch), scroll to bottom
-- [ ] #3 Position is restored smoothly with behavior: 'smooth'
+- [x] #1 On launch, restore the previous scroll position from localStorage
+- [x] #2 If there is no previous scroll position (first launch), scroll to bottom
+- [x] #3 Position is restored smoothly with behavior: 'smooth'
 <!-- AC:END -->
 
 ## Definition of Done
