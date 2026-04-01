@@ -3,6 +3,7 @@ import type { RawItem } from '@/models/rawItem'
 import { Block } from '@/components/Block'
 import { DraftBlock } from '@/components/DraftBlock'
 import type { DraftTextItem } from '@/hooks/useGlobalTyping'
+import { useScrollPosition } from '@/hooks/useScrollPosition'
 
 export interface FeedProps {
   items: RawItem[]
@@ -34,15 +35,61 @@ export function Feed({
   onDraftCancel,
 }: FeedProps) {
   const newestItemRef = useRef<HTMLDivElement>(null)
+  const hasDoneInitialScroll = useRef(false)
+  const previousItemsLength = useRef(items.length)
 
-  // Auto-scroll to newest item on mount and when items change
-  useEffect(() => {
-    if (newestItemRef.current && items.length > 0 && !draftItem) {
-      newestItemRef.current.scrollIntoView({ behavior: 'smooth', block: 'end' })
-    }
-  }, [items, draftItem])
+  // Use scroll position hook for persistence
+  const { savedScrollPosition } = useScrollPosition()
 
   const sortedItems = sortByCaptureTime(items)
+
+  // Initial mount: restore scroll position or scroll to bottom
+  useEffect(() => {
+    if (hasDoneInitialScroll.current || draftItem) {
+      return
+    }
+
+    hasDoneInitialScroll.current = true
+    previousItemsLength.current = items.length
+
+    if (items.length === 0) {
+      return
+    }
+
+    // Restore saved position if available, otherwise scroll to bottom
+    if (savedScrollPosition > 0) {
+      window.scrollTo({ top: savedScrollPosition, behavior: 'smooth' })
+    } else {
+      // First launch or no saved position - scroll to newest item
+      if (newestItemRef.current) {
+        newestItemRef.current.scrollIntoView({
+          behavior: 'smooth',
+          block: 'end',
+        })
+      }
+    }
+  }, [savedScrollPosition, items.length, draftItem])
+
+  // Handle new items added after mount
+  useEffect(() => {
+    if (!hasDoneInitialScroll.current || draftItem) {
+      return
+    }
+
+    // Only scroll if items were added (length increased)
+    if (items.length > previousItemsLength.current) {
+      previousItemsLength.current = items.length
+
+      if (newestItemRef.current) {
+        newestItemRef.current.scrollIntoView({
+          behavior: 'smooth',
+          block: 'end',
+        })
+      }
+    } else {
+      previousItemsLength.current = items.length
+    }
+  }, [items.length, draftItem])
 
   const hasContent = items.length > 0 || !!draftItem
 
