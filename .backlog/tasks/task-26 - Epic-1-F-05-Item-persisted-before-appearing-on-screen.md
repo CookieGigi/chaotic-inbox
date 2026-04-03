@@ -1,10 +1,10 @@
 ---
 id: TASK-26
 title: '[Epic 1] F-05: Item persisted before appearing on screen'
-status: To Do
+status: Done
 assignee: []
 created_date: '2026-03-18 00:02'
-updated_date: '2026-04-03 17:17'
+updated_date: '2026-04-03 17:18'
 labels:
   - phase-1
 milestone: m-0
@@ -55,7 +55,7 @@ Reference the Item & Metadata Model (doc-20) for persistence integration:
 
 <!-- DOD:BEGIN -->
 
-- [ ] #1 Tests pass
-- [ ] #2 Documentation updated
-- [ ] #3 No regressions introduced
+- [x] #1 Tests pass
+- [x] #2 Documentation updated
+- [x] #3 No regressions introduced
 <!-- DOD:END -->
