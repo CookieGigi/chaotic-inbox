@@ -1,10 +1,10 @@
 ---
 id: TASK-78
 title: Migrate App state management to Zustand
-status: To Do
+status: In Progress
 assignee: []
 created_date: '2026-03-31 19:06'
-updated_date: '2026-04-04 07:20'
+updated_date: '2026-04-04 07:38'
 labels:
   - refactor
   - state-management
@@ -61,6 +61,34 @@ Refactor src/App.tsx to use Zustand instead of React Context + useState hooks. T
 - [ ] #8 All existing functionality remains working (typing, paste, drop, submit, cancel)
 - [ ] #9 Remove unused useState and useCallback hooks from App.tsx
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+
+## TASK-78 Implementation Plan
+
+### Phase 1: Update/Write Tests FIRST (Current)
+
+1. Add minimal store tests (src/store/appStore.test.ts)
+2. Update hook tests (useGlobalTyping, useGlobalPaste, useGlobalDrop)
+3. Keep existing integration tests as migration guard
+
+### Phase 2: Implementation
+
+1. Install Zustand
+2. Create store (src/store/appStore.ts)
+3. Migrate hooks to use store
+4. Simplify components (DraftBlock, Feed, App.tsx)
+
+### Phase 3: Verify
+
+- All tests pass
+- Manual verification of all features
+
+**Approach:** Move logic into store as much as possible, keep hooks as thin wrappers.
+
+<!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
 
