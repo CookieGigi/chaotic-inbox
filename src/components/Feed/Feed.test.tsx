@@ -344,7 +344,7 @@ describe('Feed', () => {
       await waitFor(() => {
         expect(mockScrollTo).toHaveBeenCalledWith({
           top: 500,
-          behavior: 'smooth',
+          behavior: 'instant',
         })
       })
     })

@@ -24,7 +24,7 @@ function App() {
   // Load items from storage on mount
   useEffect(() => {
     const loadItems = async () => {
-      const allItems = await db.items.toArray()
+      const allItems = await db.items.orderBy('capturedAt').toArray()
       setItems(allItems)
     }
     loadItems()

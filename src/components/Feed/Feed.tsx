@@ -43,27 +43,38 @@ export function Feed({
 
   const sortedItems = sortByCaptureTime(items)
 
+  // Disable browser's native scroll restoration
+  useEffect(() => {
+    if ('scrollRestoration' in history) {
+      history.scrollRestoration = 'manual'
+    }
+  }, [])
+
   // Initial mount: restore scroll position or scroll to bottom
   useEffect(() => {
     if (hasDoneInitialScroll.current || draftItem) {
       return
     }
 
-    hasDoneInitialScroll.current = true
     previousItemsLength.current = items.length
 
     if (items.length === 0) {
       return
     }
 
+    hasDoneInitialScroll.current = true
+
     // Restore saved position if available, otherwise scroll to bottom
     if (savedScrollPosition > 0) {
-      window.scrollTo({ top: savedScrollPosition, behavior: 'smooth' })
+      // Use requestAnimationFrame to ensure DOM is ready
+      requestAnimationFrame(() => {
+        window.scrollTo({ top: savedScrollPosition, behavior: 'instant' })
+      })
     } else {
       // First launch or no saved position - scroll to newest item
       if (newestItemRef.current) {
         newestItemRef.current.scrollIntoView({
-          behavior: 'smooth',
+          behavior: 'auto',
           block: 'end',
         })
       }
@@ -82,7 +93,7 @@ export function Feed({
 
       if (newestItemRef.current) {
         newestItemRef.current.scrollIntoView({
-          behavior: 'smooth',
+          behavior: 'auto',
           block: 'end',
         })
       }

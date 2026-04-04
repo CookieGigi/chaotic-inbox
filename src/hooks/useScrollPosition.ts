@@ -1,7 +1,6 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 
 const STORAGE_KEY_POSITION = 'vault:scroll-position'
-const DEBOUNCE_MS = 150
 
 interface UseScrollPositionReturn {
   /** Current saved scroll position from localStorage */
@@ -15,49 +14,52 @@ function getSavedScrollPosition(): number {
   return isNaN(parsed) ? 0 : parsed
 }
 
+function saveScrollPositionToStorage() {
+  const scrollY = window.scrollY
+  if (scrollY > 0) {
+    localStorage.setItem(STORAGE_KEY_POSITION, String(scrollY))
+  }
+}
+
 /**
  * Hook for managing scroll position persistence.
  *
  * Features:
- * - Saves window scroll position to localStorage when user stops scrolling (debounced)
+ * - Saves window scroll position to localStorage when page is hidden/unloaded
  * - Returns saved scroll position for restoration
+ * - No continuous scroll listening (avoids race conditions)
  */
 export function useScrollPosition(): UseScrollPositionReturn {
   // Read initial value from localStorage using lazy initializer
-  const [savedScrollPosition, setSavedScrollPosition] = useState<number>(
-    getSavedScrollPosition
-  )
+  const [savedScrollPosition] = useState<number>(getSavedScrollPosition)
 
-  // Ref for debounce timer
-  const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-
-  // Debounced scroll handler - saves scroll position when user stops scrolling
+  // Save scroll position on page hide/visibility change
   useEffect(() => {
-    const handleScroll = () => {
-      // Clear existing timer
-      if (debounceTimerRef.current) {
-        clearTimeout(debounceTimerRef.current)
+    // Save when page is hidden (user switches tabs, closes browser, etc.)
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        saveScrollPositionToStorage()
       }
-
-      // Set new timer to save after debounce period
-      debounceTimerRef.current = setTimeout(() => {
-        const scrollY = window.scrollY
-
-        // Only save non-zero positions to avoid overwriting useful positions
-        if (scrollY > 0) {
-          localStorage.setItem(STORAGE_KEY_POSITION, String(scrollY))
-          setSavedScrollPosition(scrollY)
-        }
-      }, DEBOUNCE_MS)
     }
 
-    window.addEventListener('scroll', handleScroll, { passive: true })
+    // Save when page is about to unload (user closes window, navigates away)
+    const handleBeforeUnload = () => {
+      saveScrollPositionToStorage()
+    }
+
+    // Save when page is hidden (more reliable on mobile)
+    const handlePageHide = () => {
+      saveScrollPositionToStorage()
+    }
+
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+    window.addEventListener('beforeunload', handleBeforeUnload)
+    window.addEventListener('pagehide', handlePageHide)
 
     return () => {
-      window.removeEventListener('scroll', handleScroll)
-      if (debounceTimerRef.current) {
-        clearTimeout(debounceTimerRef.current)
-      }
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
+      window.removeEventListener('beforeunload', handleBeforeUnload)
+      window.removeEventListener('pagehide', handlePageHide)
     }
   }, [])
 
