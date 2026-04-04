@@ -1,7 +1,9 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import 'fake-indexeddb/auto'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 import { DraftBlock } from './DraftBlock'
-import type { DraftTextItem } from '@/hooks/useGlobalTyping'
+import { useAppStore } from '@/store/appStore'
+import type { DraftTextItem } from '@/store/appStore'
 
 describe('DraftBlock', () => {
   const mockDraft: DraftTextItem = {
@@ -11,15 +13,13 @@ describe('DraftBlock', () => {
     capturedAt: '2024-01-01T00:00:00.000Z',
   }
 
-  const mockOnChange = vi.fn()
-  const mockOnSubmit = vi.fn()
-  const mockOnCancel = vi.fn()
-
   // Store original scrollIntoView
   let originalScrollIntoView: typeof Element.prototype.scrollIntoView
 
   beforeEach(() => {
     vi.clearAllMocks()
+    // Reset store
+    useAppStore.getState().reset()
     // Store original before mocking
     originalScrollIntoView = window.HTMLElement.prototype.scrollIntoView
   })
@@ -27,18 +27,13 @@ describe('DraftBlock', () => {
   afterEach(() => {
     // Restore original after each test
     window.HTMLElement.prototype.scrollIntoView = originalScrollIntoView
+    // Reset store
+    useAppStore.getState().reset()
   })
 
   describe('rendering', () => {
     it('renders with draft styling classes', () => {
-      render(
-        <DraftBlock
-          draft={mockDraft}
-          onChange={mockOnChange}
-          onSubmit={mockOnSubmit}
-          onCancel={mockOnCancel}
-        />
-      )
+      render(<DraftBlock draft={mockDraft} />)
 
       const draftBlock = screen.getByTestId('draft-block')
       expect(draftBlock).toBeInTheDocument()
@@ -55,14 +50,7 @@ describe('DraftBlock', () => {
     })
 
     it('displays hint text below textarea', () => {
-      render(
-        <DraftBlock
-          draft={mockDraft}
-          onChange={mockOnChange}
-          onSubmit={mockOnSubmit}
-          onCancel={mockOnCancel}
-        />
-      )
+      render(<DraftBlock draft={mockDraft} />)
 
       const hintElement = screen.getByTestId('draft-block-hint')
       expect(hintElement).toBeInTheDocument()
@@ -72,14 +60,7 @@ describe('DraftBlock', () => {
     })
 
     it('renders with "Draft" label in header', () => {
-      render(
-        <DraftBlock
-          draft={mockDraft}
-          onChange={mockOnChange}
-          onSubmit={mockOnSubmit}
-          onCancel={mockOnCancel}
-        />
-      )
+      render(<DraftBlock draft={mockDraft} />)
 
       const header = screen.getByTestId('draft-block-header')
       expect(header).toBeInTheDocument()
@@ -87,14 +68,7 @@ describe('DraftBlock', () => {
     })
 
     it('renders Article icon in header', () => {
-      render(
-        <DraftBlock
-          draft={mockDraft}
-          onChange={mockOnChange}
-          onSubmit={mockOnSubmit}
-          onCancel={mockOnCancel}
-        />
-      )
+      render(<DraftBlock draft={mockDraft} />)
 
       const header = screen.getByTestId('draft-block-header')
       const svgIcon = header.querySelector('svg')
@@ -102,14 +76,7 @@ describe('DraftBlock', () => {
     })
 
     it('renders Timestamp with capturedAt date', () => {
-      render(
-        <DraftBlock
-          draft={mockDraft}
-          onChange={mockOnChange}
-          onSubmit={mockOnSubmit}
-          onCancel={mockOnCancel}
-        />
-      )
+      render(<DraftBlock draft={mockDraft} />)
 
       // Timestamp should be rendered (time element)
       const timeElement = screen
@@ -121,14 +88,7 @@ describe('DraftBlock', () => {
 
   describe('focus state', () => {
     it('applies accent border on focus', () => {
-      render(
-        <DraftBlock
-          draft={mockDraft}
-          onChange={mockOnChange}
-          onSubmit={mockOnSubmit}
-          onCancel={mockOnCancel}
-        />
-      )
+      render(<DraftBlock draft={mockDraft} />)
 
       const draftBlock = screen.getByTestId('draft-block')
       // Check for focus-within styling classes
@@ -139,14 +99,7 @@ describe('DraftBlock', () => {
     })
 
     it('textarea auto-focuses on mount', () => {
-      render(
-        <DraftBlock
-          draft={mockDraft}
-          onChange={mockOnChange}
-          onSubmit={mockOnSubmit}
-          onCancel={mockOnCancel}
-        />
-      )
+      render(<DraftBlock draft={mockDraft} />)
 
       const textarea = screen.getByTestId('text-block-edit-textarea')
       expect(document.activeElement).toBe(textarea)
@@ -154,54 +107,36 @@ describe('DraftBlock', () => {
   })
 
   describe('submission persistence', () => {
-    it('calls onSubmit when Ctrl+Enter is pressed', () => {
-      render(
-        <DraftBlock
-          draft={mockDraft}
-          onChange={mockOnChange}
-          onSubmit={mockOnSubmit}
-          onCancel={mockOnCancel}
-        />
-      )
+    it('calls store submitDraft when Ctrl+Enter is pressed', () => {
+      const submitDraftSpy = vi.spyOn(useAppStore.getState(), 'submitDraft')
+      render(<DraftBlock draft={mockDraft} />)
 
       const textarea = screen.getByTestId('text-block-edit-textarea')
       fireEvent.keyDown(textarea, { key: 'Enter', ctrlKey: true })
 
-      expect(mockOnSubmit).toHaveBeenCalledTimes(1)
+      expect(submitDraftSpy).toHaveBeenCalledTimes(1)
     })
 
-    it('does not call onSubmit on regular Enter (allows multi-line)', () => {
-      render(
-        <DraftBlock
-          draft={mockDraft}
-          onChange={mockOnChange}
-          onSubmit={mockOnSubmit}
-          onCancel={mockOnCancel}
-        />
-      )
+    it('does not call submitDraft on regular Enter (allows multi-line)', () => {
+      const submitDraftSpy = vi.spyOn(useAppStore.getState(), 'submitDraft')
+      render(<DraftBlock draft={mockDraft} />)
 
       const textarea = screen.getByTestId('text-block-edit-textarea')
       fireEvent.keyDown(textarea, { key: 'Enter' })
 
-      expect(mockOnSubmit).not.toHaveBeenCalled()
+      expect(submitDraftSpy).not.toHaveBeenCalled()
     })
   })
 
   describe('cancellation', () => {
-    it('calls onCancel when Escape is pressed', () => {
-      render(
-        <DraftBlock
-          draft={mockDraft}
-          onChange={mockOnChange}
-          onSubmit={mockOnSubmit}
-          onCancel={mockOnCancel}
-        />
-      )
+    it('calls store cancelDraft when Escape is pressed', () => {
+      const cancelDraftSpy = vi.spyOn(useAppStore.getState(), 'cancelDraft')
+      render(<DraftBlock draft={mockDraft} />)
 
       const textarea = screen.getByTestId('text-block-edit-textarea')
       fireEvent.keyDown(textarea, { key: 'Escape' })
 
-      expect(mockOnCancel).toHaveBeenCalledTimes(1)
+      expect(cancelDraftSpy).toHaveBeenCalledTimes(1)
     })
   })
 
@@ -210,14 +145,7 @@ describe('DraftBlock', () => {
       const scrollIntoViewMock = vi.fn()
       window.HTMLElement.prototype.scrollIntoView = scrollIntoViewMock
 
-      render(
-        <DraftBlock
-          draft={mockDraft}
-          onChange={mockOnChange}
-          onSubmit={mockOnSubmit}
-          onCancel={mockOnCancel}
-        />
-      )
+      render(<DraftBlock draft={mockDraft} />)
 
       expect(scrollIntoViewMock).toHaveBeenCalledTimes(1)
       expect(scrollIntoViewMock).toHaveBeenCalledWith({
@@ -228,31 +156,18 @@ describe('DraftBlock', () => {
   })
 
   describe('content editing', () => {
-    it('calls onChange when content changes', () => {
-      render(
-        <DraftBlock
-          draft={mockDraft}
-          onChange={mockOnChange}
-          onSubmit={mockOnSubmit}
-          onCancel={mockOnCancel}
-        />
-      )
+    it('calls store updateDraft when content changes', () => {
+      const updateDraftSpy = vi.spyOn(useAppStore.getState(), 'updateDraft')
+      render(<DraftBlock draft={mockDraft} />)
 
       const textarea = screen.getByTestId('text-block-edit-textarea')
       fireEvent.change(textarea, { target: { value: 'Updated content' } })
 
-      expect(mockOnChange).toHaveBeenCalledWith('Updated content')
+      expect(updateDraftSpy).toHaveBeenCalledWith('Updated content')
     })
 
     it('renders with initial draft content', () => {
-      render(
-        <DraftBlock
-          draft={mockDraft}
-          onChange={mockOnChange}
-          onSubmit={mockOnSubmit}
-          onCancel={mockOnCancel}
-        />
-      )
+      render(<DraftBlock draft={mockDraft} />)
 
       const textarea = screen.getByTestId('text-block-edit-textarea')
       expect(textarea).toHaveValue('Initial draft content')
@@ -261,28 +176,14 @@ describe('DraftBlock', () => {
 
   describe('structure', () => {
     it('renders as article element with proper role', () => {
-      render(
-        <DraftBlock
-          draft={mockDraft}
-          onChange={mockOnChange}
-          onSubmit={mockOnSubmit}
-          onCancel={mockOnCancel}
-        />
-      )
+      render(<DraftBlock draft={mockDraft} />)
 
       const draftBlock = screen.getByTestId('draft-block')
       expect(draftBlock.tagName).toBe('ARTICLE')
     })
 
     it('contains header, content, and hint sections', () => {
-      render(
-        <DraftBlock
-          draft={mockDraft}
-          onChange={mockOnChange}
-          onSubmit={mockOnSubmit}
-          onCancel={mockOnCancel}
-        />
-      )
+      render(<DraftBlock draft={mockDraft} />)
 
       expect(screen.getByTestId('draft-block-header')).toBeInTheDocument()
       expect(screen.getByTestId('draft-block-content')).toBeInTheDocument()
@@ -290,14 +191,7 @@ describe('DraftBlock', () => {
     })
 
     it('has sr-only text for accessibility', () => {
-      render(
-        <DraftBlock
-          draft={mockDraft}
-          onChange={mockOnChange}
-          onSubmit={mockOnSubmit}
-          onCancel={mockOnCancel}
-        />
-      )
+      render(<DraftBlock draft={mockDraft} />)
 
       const srOnlySpan = screen.getByText('Keyboard shortcuts:')
       expect(srOnlySpan).toHaveClass('sr-only')

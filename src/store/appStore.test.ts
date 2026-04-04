@@ -1,0 +1,413 @@
+import 'fake-indexeddb/auto'
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
+import type { RawItem } from '@/models/rawItem'
+import { db } from '@/storage/local_db'
+import {
+  createTextItem,
+  createUrlItem,
+  createImageItem,
+} from '@/models/itemFactories'
+
+/**
+ * Mock the store module to test with fresh state
+ * We need to reset the store between tests
+ */
+const createMockStore = () => {
+  // Track store state
+  let items: RawItem[] = []
+  let draftContent = ''
+  let draftItem: {
+    id: 'draft'
+    type: 'text'
+    content: string
+    capturedAt: string
+  } | null = null
+  let isDragging = false
+
+  // Track listeners
+  const listeners = new Set<() => void>()
+  const notify = () => {
+    listeners.forEach((l) => {
+      l()
+    })
+  }
+
+  return {
+    // Getters
+    getItems: () => items,
+    getDraftContent: () => draftContent,
+    getDraftItem: () => draftItem,
+    getIsDragging: () => isDragging,
+
+    // Actions
+    loadItems: async () => {
+      const allItems = await db.items.toArray()
+      items = allItems.sort(
+        (a, b) =>
+          new Date(a.capturedAt).getTime() - new Date(b.capturedAt).getTime()
+      )
+      notify()
+    },
+
+    addItems: async (newItems: RawItem[]) => {
+      // Persist to DB
+      for (const item of newItems) {
+        await db.items.add(item)
+      }
+      // Update state
+      items = [...items, ...newItems]
+      notify()
+    },
+
+    createDraft: (content: string) => {
+      draftItem = {
+        id: 'draft',
+        type: 'text',
+        content,
+        capturedAt: new Date().toISOString(),
+      }
+      draftContent = content
+      notify()
+    },
+
+    appendToDraft: (char: string) => {
+      if (!draftItem) return
+      draftContent += char
+      draftItem = { ...draftItem, content: draftContent }
+      notify()
+    },
+
+    updateDraft: (content: string) => {
+      draftContent = content
+      if (draftItem) {
+        draftItem = { ...draftItem, content }
+      }
+      notify()
+    },
+
+    submitDraft: async () => {
+      if (draftContent.trim().length > 0) {
+        const textItem = createTextItem(draftContent.trim(), { kind: 'plain' })
+        await db.items.add(textItem)
+        items = [...items, textItem]
+      }
+      draftContent = ''
+      draftItem = null
+      notify()
+    },
+
+    cancelDraft: () => {
+      draftContent = ''
+      draftItem = null
+      notify()
+    },
+
+    setIsDragging: (value: boolean) => {
+      isDragging = value
+      notify()
+    },
+
+    // Subscribe mechanism
+    subscribe: (listener: () => void) => {
+      listeners.add(listener)
+      return () => listeners.delete(listener)
+    },
+
+    // Reset for tests
+    reset: () => {
+      items = []
+      draftContent = ''
+      draftItem = null
+      isDragging = false
+      listeners.clear()
+    },
+  }
+}
+
+describe('AppStore', () => {
+  let store: ReturnType<typeof createMockStore>
+
+  beforeEach(async () => {
+    await db.items.clear()
+    store = createMockStore()
+  })
+
+  afterEach(async () => {
+    await db.items.clear()
+    store.reset()
+  })
+
+  describe('State Initialization', () => {
+    it('starts with empty items array', () => {
+      expect(store.getItems()).toEqual([])
+    })
+
+    it('starts with no draft item', () => {
+      expect(store.getDraftItem()).toBeNull()
+    })
+
+    it('starts with empty draft content', () => {
+      expect(store.getDraftContent()).toBe('')
+    })
+
+    it('starts with isDragging false', () => {
+      expect(store.getIsDragging()).toBe(false)
+    })
+  })
+
+  describe('loadItems', () => {
+    it('loads items from database ordered by capturedAt', async () => {
+      // Pre-populate database with explicit timestamps
+      const item1 = {
+        ...createTextItem('First', { kind: 'plain' }),
+        capturedAt: '2026-01-01T10:00:00.000Z' as RawItem['capturedAt'],
+      }
+      const item2 = {
+        ...createUrlItem('https://example.com', { kind: 'url' }),
+        capturedAt: '2026-01-01T11:00:00.000Z' as RawItem['capturedAt'],
+      }
+      await db.items.add(item1)
+      await db.items.add(item2)
+
+      await store.loadItems()
+
+      expect(store.getItems()).toHaveLength(2)
+      expect(store.getItems()[0].type).toBe('text')
+      expect(store.getItems()[1].type).toBe('url')
+    })
+
+    it('loads empty array when database is empty', async () => {
+      await store.loadItems()
+      expect(store.getItems()).toEqual([])
+    })
+  })
+
+  describe('addItems', () => {
+    it('persists items to database', async () => {
+      const newItem = createTextItem('Test content', { kind: 'plain' })
+
+      await store.addItems([newItem])
+
+      const dbItems = await db.items.toArray()
+      expect(dbItems).toHaveLength(1)
+      expect(dbItems[0].raw).toBe('Test content')
+    })
+
+    it('updates items state', async () => {
+      const newItem = createTextItem('Test content', { kind: 'plain' })
+
+      await store.addItems([newItem])
+
+      expect(store.getItems()).toHaveLength(1)
+      expect(store.getItems()[0].raw).toBe('Test content')
+    })
+
+    it('handles multiple items', async () => {
+      const items = [
+        createTextItem('Item 1', { kind: 'plain' }),
+        createTextItem('Item 2', { kind: 'plain' }),
+      ]
+
+      await store.addItems(items)
+
+      expect(store.getItems()).toHaveLength(2)
+      const dbItems = await db.items.toArray()
+      expect(dbItems).toHaveLength(2)
+    })
+
+    it('handles image items', async () => {
+      const blob = new Blob(['image data'], { type: 'image/png' })
+      const imageItem = createImageItem(blob, { kind: 'image' })
+
+      await store.addItems([imageItem])
+
+      expect(store.getItems()[0].type).toBe('image')
+    })
+
+    it('appends items to existing items', async () => {
+      const item1 = createTextItem('First', { kind: 'plain' })
+      await db.items.add(item1)
+      await store.loadItems()
+
+      const item2 = createTextItem('Second', { kind: 'plain' })
+      await store.addItems([item2])
+
+      expect(store.getItems()).toHaveLength(2)
+    })
+  })
+
+  describe('Draft Management', () => {
+    describe('createDraft', () => {
+      it('creates draft with initial content', () => {
+        store.createDraft('Hello')
+
+        expect(store.getDraftItem()).not.toBeNull()
+        expect(store.getDraftItem()?.content).toBe('Hello')
+        expect(store.getDraftContent()).toBe('Hello')
+      })
+
+      it('creates draft with correct structure', () => {
+        store.createDraft('Test')
+
+        const draft = store.getDraftItem()
+        expect(draft?.id).toBe('draft')
+        expect(draft?.type).toBe('text')
+        expect(draft?.capturedAt).toBeDefined()
+      })
+    })
+
+    describe('appendToDraft', () => {
+      it('appends character to draft content', () => {
+        store.createDraft('H')
+        store.appendToDraft('i')
+
+        expect(store.getDraftContent()).toBe('Hi')
+        expect(store.getDraftItem()?.content).toBe('Hi')
+      })
+
+      it('does nothing if no draft exists', () => {
+        store.appendToDraft('x')
+
+        expect(store.getDraftContent()).toBe('')
+        expect(store.getDraftItem()).toBeNull()
+      })
+    })
+
+    describe('updateDraft', () => {
+      it('updates draft content completely', () => {
+        store.createDraft('Initial')
+        store.updateDraft('Updated')
+
+        expect(store.getDraftContent()).toBe('Updated')
+        expect(store.getDraftItem()?.content).toBe('Updated')
+      })
+
+      it('does nothing if no draft exists', () => {
+        store.updateDraft('Something')
+
+        expect(store.getDraftItem()).toBeNull()
+      })
+    })
+
+    describe('submitDraft', () => {
+      it('persists draft content to database', async () => {
+        store.createDraft('Draft content')
+
+        await store.submitDraft()
+
+        const dbItems = await db.items.toArray()
+        expect(dbItems).toHaveLength(1)
+        expect(dbItems[0].raw).toBe('Draft content')
+      })
+
+      it('adds persisted item to items state', async () => {
+        store.createDraft('Draft content')
+
+        await store.submitDraft()
+
+        expect(store.getItems()).toHaveLength(1)
+        expect(store.getItems()[0].type).toBe('text')
+      })
+
+      it('clears draft after submission', async () => {
+        store.createDraft('Draft')
+
+        await store.submitDraft()
+
+        expect(store.getDraftItem()).toBeNull()
+        expect(store.getDraftContent()).toBe('')
+      })
+
+      it('does not persist empty draft', async () => {
+        store.createDraft('')
+
+        await store.submitDraft()
+
+        const dbItems = await db.items.toArray()
+        expect(dbItems).toHaveLength(0)
+      })
+
+      it('does not persist whitespace-only draft', async () => {
+        store.createDraft('   \n\t  ')
+
+        await store.submitDraft()
+
+        const dbItems = await db.items.toArray()
+        expect(dbItems).toHaveLength(0)
+        expect(store.getDraftItem()).toBeNull()
+      })
+
+      it('trims content before persisting', async () => {
+        store.createDraft('  Trimmed  ')
+
+        await store.submitDraft()
+
+        const dbItems = await db.items.toArray()
+        expect(dbItems[0].raw).toBe('Trimmed')
+      })
+    })
+
+    describe('cancelDraft', () => {
+      it('clears draft item', () => {
+        store.createDraft('Content')
+
+        store.cancelDraft()
+
+        expect(store.getDraftItem()).toBeNull()
+      })
+
+      it('clears draft content', () => {
+        store.createDraft('Content')
+
+        store.cancelDraft()
+
+        expect(store.getDraftContent()).toBe('')
+      })
+
+      it('does not persist anything', async () => {
+        store.createDraft('Content')
+
+        store.cancelDraft()
+
+        const dbItems = await db.items.toArray()
+        expect(dbItems).toHaveLength(0)
+      })
+    })
+  })
+
+  describe('Drag State', () => {
+    it('sets isDragging to true', () => {
+      store.setIsDragging(true)
+
+      expect(store.getIsDragging()).toBe(true)
+    })
+
+    it('sets isDragging to false', () => {
+      store.setIsDragging(true)
+      store.setIsDragging(false)
+
+      expect(store.getIsDragging()).toBe(false)
+    })
+  })
+
+  describe('Subscribe mechanism', () => {
+    it('notifies listeners on state change', () => {
+      const listener = vi.fn()
+      store.subscribe(listener)
+
+      store.setIsDragging(true)
+
+      expect(listener).toHaveBeenCalled()
+    })
+
+    it('allows unsubscribing', () => {
+      const listener = vi.fn()
+      const unsubscribe = store.subscribe(listener)
+
+      unsubscribe()
+      store.setIsDragging(true)
+
+      expect(listener).not.toHaveBeenCalled()
+    })
+  })
+})

@@ -1,11 +1,8 @@
 import { useEffect, useCallback, useRef, useState } from 'react'
-import { v4 as uuidv4 } from 'uuid'
+import { useAppStore } from '@/store/appStore'
 import type { RawItem } from '@/models/rawItem'
-import type {
-  FileSubType,
-  FileMetadata,
-  ImageMetadata,
-} from '@/models/metadata'
+import type { FileSubType } from '@/models/metadata'
+import { createImageItem, createFileItem } from '@/models/itemFactories'
 
 /**
  * Hook options for useGlobalDrop
@@ -13,8 +10,6 @@ import type {
 interface UseGlobalDropOptions {
   /** Whether drop capture is disabled */
   disabled?: boolean
-  /** Called when new items should be created from drop */
-  onDropItems?: (items: RawItem[]) => void
 }
 
 /**
@@ -61,33 +56,15 @@ function getFileSubType(filename: string): FileSubType {
 function processFile(file: File): RawItem | null {
   if (isImageFile(file.name)) {
     // Create image item
-    const metadata: ImageMetadata = {
-      kind: 'image',
-    }
-    return {
-      id: uuidv4() as RawItem['id'],
-      type: 'image',
-      raw: file,
-      capturedAt: new Date().toISOString() as RawItem['capturedAt'],
-      metadata,
-      title: file.name,
-    }
+    return createImageItem(file, { kind: 'image' })
   } else {
     // Create file item
-    const metadata: FileMetadata = {
+    return createFileItem(file, {
       kind: getFileSubType(file.name),
       filename: file.name,
       filesize: file.size,
       mimetype: file.type || 'application/octet-stream',
-    }
-    return {
-      id: uuidv4() as RawItem['id'],
-      type: 'file',
-      raw: file,
-      capturedAt: new Date().toISOString() as RawItem['capturedAt'],
-      metadata,
-      title: file.name,
-    }
+    })
   }
 }
 
@@ -102,29 +79,39 @@ function processFile(file: File): RawItem | null {
  * - Supports multiple files dropped simultaneously
  * - Ignores non-file drags (URLs, text)
  * - Works over interactive elements
+ *
+ * Uses Zustand store for state management.
  */
 export function useGlobalDrop(
   options: UseGlobalDropOptions = {}
 ): UseGlobalDropReturn {
-  const { disabled = false, onDropItems } = options
+  const { disabled = false } = options
 
-  const [isDragging, setIsDragging] = useState(false)
+  // Subscribe to store actions
+  const addItems = useAppStore((state) => state.addItems)
+  const setIsDragging = useAppStore((state) => state.setIsDragging)
+
+  const [isDragging, setLocalIsDragging] = useState(false)
   const dragCounterRef = useRef(0)
 
   /**
    * Handle dragenter - show overlay for file drags
    */
-  const handleDragEnter = useCallback((event: DragEvent) => {
-    event.preventDefault()
+  const handleDragEnter = useCallback(
+    (event: DragEvent) => {
+      event.preventDefault()
 
-    // Only respond to file drags
-    if (!hasFiles(event.dataTransfer)) {
-      return
-    }
+      // Only respond to file drags
+      if (!hasFiles(event.dataTransfer)) {
+        return
+      }
 
-    dragCounterRef.current += 1
-    setIsDragging(true)
-  }, [])
+      dragCounterRef.current += 1
+      setLocalIsDragging(true)
+      setIsDragging(true)
+    },
+    [setIsDragging]
+  )
 
   /**
    * Handle dragover - allow drop
@@ -136,15 +123,19 @@ export function useGlobalDrop(
   /**
    * Handle dragleave - hide overlay when leaving window
    */
-  const handleDragLeave = useCallback((event: DragEvent) => {
-    event.preventDefault()
+  const handleDragLeave = useCallback(
+    (event: DragEvent) => {
+      event.preventDefault()
 
-    dragCounterRef.current -= 1
-    if (dragCounterRef.current <= 0) {
-      dragCounterRef.current = 0
-      setIsDragging(false)
-    }
-  }, [])
+      dragCounterRef.current -= 1
+      if (dragCounterRef.current <= 0) {
+        dragCounterRef.current = 0
+        setLocalIsDragging(false)
+        setIsDragging(false)
+      }
+    },
+    [setIsDragging]
+  )
 
   /**
    * Handle drop - process files
@@ -155,6 +146,7 @@ export function useGlobalDrop(
 
       // Reset drag state
       dragCounterRef.current = 0
+      setLocalIsDragging(false)
       setIsDragging(false)
 
       // Only process file drops
@@ -179,10 +171,10 @@ export function useGlobalDrop(
 
       // Create items from drop
       if (newItems.length > 0) {
-        onDropItems?.(newItems)
+        addItems(newItems)
       }
     },
-    [onDropItems]
+    [addItems, setIsDragging]
   )
 
   useEffect(() => {

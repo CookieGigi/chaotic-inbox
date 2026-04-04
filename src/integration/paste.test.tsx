@@ -4,6 +4,7 @@ import { render, screen, waitFor, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import App from '@/App'
 import { db } from '@/storage/local_db'
+import { useAppStore } from '@/store/appStore'
 import type { RawItem } from '@/models/rawItem'
 import { createTextItem } from '@/models/itemFactories'
 
@@ -79,8 +80,9 @@ function createMockPasteEvent(options: {
 
 describe('F06: Keyboard-First Capture', () => {
   beforeEach(async () => {
-    // Clear the database before each test
+    // Clear the database and reset store before each test
     await db.items.clear()
+    useAppStore.getState().reset()
     // Reset scrollIntoView mock
     vi.clearAllMocks()
   })
@@ -88,6 +90,7 @@ describe('F06: Keyboard-First Capture', () => {
   afterEach(async () => {
     // Clean up after each test
     await db.items.clear()
+    useAppStore.getState().reset()
     // Reset document focus state
     document.body.focus()
   })

@@ -4,6 +4,7 @@ import { render, screen, waitFor, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import App from './App'
 import { db } from '@/storage/local_db'
+import { useAppStore } from '@/store/appStore'
 import type { RawItem } from '@/models/rawItem'
 
 // Mock the Block component to simplify testing
@@ -18,10 +19,12 @@ vi.mock('@/components/Block', () => ({
 describe('F05 - TASK-29: Items survive app restart', () => {
   beforeEach(async () => {
     await db.items.clear()
+    useAppStore.getState().reset()
   })
 
   afterEach(async () => {
     await db.items.clear()
+    useAppStore.getState().reset()
   })
 
   describe('AC #1: All items from previous sessions load on launch', () => {

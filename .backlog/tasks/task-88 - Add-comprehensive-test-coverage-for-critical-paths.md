@@ -4,10 +4,12 @@ title: Add comprehensive test coverage for critical paths
 status: To Do
 assignee: []
 created_date: '2026-04-04 06:01'
+updated_date: '2026-04-04 07:20'
 labels:
   - testing
   - quality
   - coverage
+  - order-3
 milestone: m-0
 dependencies: []
 priority: high

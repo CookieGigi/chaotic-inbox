@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { DraftBlock } from './DraftBlock'
-import type { DraftTextItem } from '@/hooks/useGlobalTyping'
+import type { DraftTextItem } from '@/store/appStore'
 
 const meta: Meta<typeof DraftBlock> = {
   title: 'Components/DraftBlock',
@@ -10,14 +10,9 @@ const meta: Meta<typeof DraftBlock> = {
     docs: {
       description: {
         component:
-          'Draft block for in-progress text capture. Shows editable textarea with hint text and visual distinction from read-only blocks.',
+          'Draft block for in-progress text capture. Shows editable textarea with hint text and visual distinction from read-only blocks. Uses Zustand store for actions.',
       },
     },
-  },
-  argTypes: {
-    onChange: { action: 'changed' },
-    onSubmit: { action: 'submitted' },
-    onCancel: { action: 'cancelled' },
   },
 }
 
@@ -34,27 +29,18 @@ const createMockDraft = (content: string): DraftTextItem => ({
 export const Empty: Story = {
   args: {
     draft: createMockDraft(''),
-    onChange: () => {},
-    onSubmit: () => {},
-    onCancel: () => {},
   },
 }
 
 export const WithContent: Story = {
   args: {
     draft: createMockDraft('This is a draft text block. Edit me!'),
-    onChange: () => {},
-    onSubmit: () => {},
-    onCancel: () => {},
   },
 }
 
 export const SingleCharacter: Story = {
   args: {
     draft: createMockDraft('a'),
-    onChange: () => {},
-    onSubmit: () => {},
-    onCancel: () => {},
   },
   parameters: {
     docs: {
@@ -72,9 +58,6 @@ export const MultiLine: Story = {
 with several lines
 of text content
 showing how it expands`),
-    onChange: () => {},
-    onSubmit: () => {},
-    onCancel: () => {},
   },
 }
 
@@ -88,9 +71,6 @@ The draft block should grow to accommodate all the content without scrolling.
 You can keep typing and the textarea will expand vertically.
 
 Use Ctrl+Enter to save or Escape to cancel.`),
-    onChange: () => {},
-    onSubmit: () => {},
-    onCancel: () => {},
   },
 }
 
@@ -99,15 +79,12 @@ export const Interactive: Story = {
     draft: createMockDraft(
       'Interactive draft - type and use keyboard shortcuts'
     ),
-    onChange: () => {},
-    onSubmit: () => {},
-    onCancel: () => {},
   },
   parameters: {
     docs: {
       description: {
         story:
-          'Interactive draft where all actions are logged. Try editing the text, then press Ctrl+Enter to submit or Escape to cancel.',
+          'Interactive draft. Try editing the text, then press Ctrl+Enter to submit or Escape to cancel. Actions are handled via Zustand store.',
       },
     },
   },
@@ -116,9 +93,6 @@ export const Interactive: Story = {
 export const InFeedContext: Story = {
   args: {
     draft: createMockDraft('New draft at the bottom of the feed'),
-    onChange: () => {},
-    onSubmit: () => {},
-    onCancel: () => {},
   },
   decorators: [
     (Story) => (
@@ -152,9 +126,6 @@ export const InFeedContext: Story = {
 export const FocusedState: Story = {
   args: {
     draft: createMockDraft('This draft is focused'),
-    onChange: () => {},
-    onSubmit: () => {},
-    onCancel: () => {},
   },
   parameters: {
     docs: {

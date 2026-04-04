@@ -1,7 +1,12 @@
 import { useEffect, useCallback, useRef } from 'react'
-import { v4 as uuidv4 } from 'uuid'
+import { useAppStore } from '@/store/appStore'
 import type { RawItem } from '@/models/rawItem'
 import { isInputElement } from '@/utils'
+import {
+  createTextItem,
+  createUrlItem,
+  createImageItem,
+} from '@/models/itemFactories'
 
 /**
  * Hook options for useGlobalPaste
@@ -9,14 +14,6 @@ import { isInputElement } from '@/utils'
 interface UseGlobalPasteOptions {
   /** Whether paste capture is disabled */
   disabled?: boolean
-  /** Whether a draft currently exists */
-  hasDraft?: boolean
-  /** Current draft content (for appending paste to draft) */
-  draftContent?: string
-  /** Called when text should be appended to existing draft */
-  onPasteToDraft?: (content: string) => void
-  /** Called when new items should be created from paste */
-  onPasteItems?: (items: RawItem[]) => void
 }
 
 /**
@@ -44,18 +41,6 @@ function isValidUrl(text: string): boolean {
 }
 
 /**
- * Extract hostname from URL for display
- */
-function extractHostname(url: string): string {
-  try {
-    const urlObj = new URL(url.startsWith('http') ? url : `https://${url}`)
-    return urlObj.hostname
-  } catch {
-    return url
-  }
-}
-
-/**
  * Hook to capture global paste events and create items
  *
  * Features:
@@ -65,16 +50,18 @@ function extractHostname(url: string): string {
  * - Appends to draft if active and only text pasted
  * - Ignores when inputs are focused or drag overlay is active
  * - Silently ignores empty or unsupported clipboard
+ *
+ * Uses Zustand store for state management.
  */
 export function useGlobalPaste(
   options: UseGlobalPasteOptions = {}
 ): UseGlobalPasteReturn {
-  const {
-    disabled = false,
-    hasDraft = false,
-    onPasteToDraft,
-    onPasteItems,
-  } = options
+  const { disabled = false } = options
+
+  // Subscribe to store state and actions
+  const draftItem = useAppStore((state) => state.draftItem)
+  const addItems = useAppStore((state) => state.addItems)
+  const appendToDraft = useAppStore((state) => state.appendToDraft)
 
   const isPastingRef = useRef(false)
 
@@ -87,23 +74,10 @@ export function useGlobalPaste(
 
     if (isValidUrl(trimmedText)) {
       // URL item
-      return {
-        id: uuidv4() as RawItem['id'],
-        type: 'url',
-        raw: trimmedText,
-        capturedAt: new Date().toISOString() as RawItem['capturedAt'],
-        metadata: { kind: 'url' as const },
-        title: extractHostname(trimmedText),
-      }
+      return createUrlItem(trimmedText, { kind: 'url' })
     } else {
       // Text item
-      return {
-        id: uuidv4() as RawItem['id'],
-        type: 'text',
-        raw: trimmedText,
-        capturedAt: new Date().toISOString() as RawItem['capturedAt'],
-        metadata: { kind: 'plain' as const },
-      }
+      return createTextItem(trimmedText, { kind: 'plain' })
     }
   }, [])
 
@@ -111,20 +85,14 @@ export function useGlobalPaste(
    * Process an image blob and create image item
    */
   const processImage = useCallback((blob: Blob): RawItem | null => {
-    return {
-      id: uuidv4() as RawItem['id'],
-      type: 'image',
-      raw: blob,
-      capturedAt: new Date().toISOString() as RawItem['capturedAt'],
-      metadata: { kind: 'image' as const },
-    }
+    return createImageItem(blob, { kind: 'image' })
   }, [])
 
   useEffect(() => {
     if (disabled) return
 
     const handlePaste = async (event: ClipboardEvent) => {
-      // Skip if window doesn't have focus (TASK-33: F-06)
+      // Skip if window doesn't have focus
       if (!document.hasFocus()) {
         return
       }
@@ -134,7 +102,7 @@ export function useGlobalPaste(
         return
       }
 
-      // Skip if any input is focused (TASK-4)
+      // Skip if any input is focused
       if (isInputElement(document.activeElement)) {
         return
       }
@@ -164,7 +132,7 @@ export function useGlobalPaste(
           }
 
           if (item.type.startsWith('image/')) {
-            // Handle image paste (TASK-3)
+            // Handle image paste
             const file = item.getAsFile()
             if (file) {
               const imageItem = processImage(file)
@@ -174,7 +142,7 @@ export function useGlobalPaste(
               }
             }
           } else if (item.type === 'text/plain') {
-            // Handle text paste (TASK-1, TASK-2)
+            // Handle text paste
             const text = clipboardData.getData('text/plain')
             if (text) {
               textContent = text
@@ -184,9 +152,9 @@ export function useGlobalPaste(
         }
 
         // If we have text and no images, check if we should append to draft
-        if (textContent && !hasImage && hasDraft) {
-          // Append to existing draft (Decision B)
-          onPasteToDraft?.(textContent)
+        if (textContent && !hasImage && draftItem) {
+          // Append to existing draft
+          appendToDraft(textContent)
         } else if (textContent) {
           // Create new text/URL item
           const textItem = processText(textContent)
@@ -195,11 +163,11 @@ export function useGlobalPaste(
           }
         }
 
-        // Create items from paste (TASK-1, TASK-2, TASK-3)
+        // Create items from paste
         if (newItems.length > 0) {
-          onPasteItems?.(newItems)
+          addItems(newItems)
         }
-        // If no items were created, silently ignore (TASK-5)
+        // If no items were created, silently ignore
       } finally {
         isPastingRef.current = false
       }
@@ -210,14 +178,7 @@ export function useGlobalPaste(
     return () => {
       window.removeEventListener('paste', handlePaste)
     }
-  }, [
-    disabled,
-    hasDraft,
-    processText,
-    processImage,
-    onPasteToDraft,
-    onPasteItems,
-  ])
+  }, [disabled, draftItem, processText, processImage, appendToDraft, addItems])
 
   return {
     isPasting: isPastingRef.current,

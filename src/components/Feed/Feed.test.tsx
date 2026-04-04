@@ -429,15 +429,7 @@ describe('Feed', () => {
         capturedAt: new Date().toISOString(),
       }
 
-      render(
-        <Feed
-          items={items}
-          draftItem={draftItem}
-          onDraftChange={() => {}}
-          onDraftSubmit={() => {}}
-          onDraftCancel={() => {}}
-        />
-      )
+      render(<Feed items={items} draftItem={draftItem} />)
 
       // Should not auto-scroll when draft is active
       await new Promise((resolve) => setTimeout(resolve, 100))

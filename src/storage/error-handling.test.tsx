@@ -4,6 +4,7 @@ import { render, screen, waitFor, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import App from '@/App'
 import { db } from '@/storage/local_db'
+import { useAppStore } from '@/store/appStore'
 import type { RawItem } from '@/models/rawItem'
 
 // Mock the Block component to simplify testing
@@ -20,6 +21,7 @@ describe('F05 - TASK-30: Storage failure surfaced to user', () => {
 
   beforeEach(async () => {
     await db.items.clear()
+    useAppStore.getState().reset()
     // Save original add function
     originalAdd = db.items.add.bind(db.items)
     // Reset console.error spy
@@ -28,6 +30,7 @@ describe('F05 - TASK-30: Storage failure surfaced to user', () => {
 
   afterEach(async () => {
     await db.items.clear()
+    useAppStore.getState().reset()
     // Restore original add function
     db.items.add = originalAdd
     vi.restoreAllMocks()

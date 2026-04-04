@@ -4,6 +4,7 @@ import { render, screen, waitFor, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import App from './App'
 import { db } from '@/storage/local_db'
+import { useAppStore } from '@/store/appStore'
 import type { RawItem } from '@/models/rawItem'
 
 // Mock the Block component to simplify testing
@@ -17,13 +18,15 @@ vi.mock('@/components/Block', () => ({
 
 describe('App - Global Typing Integration', () => {
   beforeEach(async () => {
-    // Clear the database before each test
+    // Clear the database and reset store before each test
     await db.items.clear()
+    useAppStore.getState().reset()
   })
 
   afterEach(async () => {
     // Clean up after each test
     await db.items.clear()
+    useAppStore.getState().reset()
   })
 
   describe('AC #1: Full flow from typing to persisted block', () => {

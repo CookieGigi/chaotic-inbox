@@ -1,16 +1,9 @@
-import { useState, useEffect, useCallback, useRef } from 'react'
+import { useEffect } from 'react'
+import { useAppStore } from '@/store/appStore'
 import { isInputElement } from '@/utils'
 
-/**
- * Draft item type for in-progress text capture
- * Temporary ID, not persisted until submitted
- */
-export interface DraftTextItem {
-  id: 'draft'
-  type: 'text'
-  content: string
-  capturedAt: string
-}
+// Re-export DraftTextItem from store for backward compatibility
+export type { DraftTextItem } from '@/store/appStore'
 
 /**
  * Hook options for useGlobalTyping
@@ -18,12 +11,6 @@ export interface DraftTextItem {
 interface UseGlobalTypingOptions {
   /** Whether typing capture is disabled (e.g., during drag overlay) */
   disabled?: boolean
-  /** Called when a new draft should be created */
-  onDraftCreate?: (content: string) => void
-  /** Called when content should be appended to existing draft */
-  onDraftAppend?: (char: string) => void
-  /** Whether a draft currently exists */
-  hasDraft?: boolean
 }
 
 /**
@@ -31,7 +18,7 @@ interface UseGlobalTypingOptions {
  */
 interface UseGlobalTypingReturn {
   /** Current draft item or null */
-  draftItem: DraftTextItem | null
+  draftItem: import('@/store/appStore').DraftTextItem | null
   /** Create a new draft with initial content */
   createDraft: (initialContent: string) => void
   /** Update draft content */
@@ -59,58 +46,23 @@ function isDragOverlayActive(): boolean {
  * - Creates draft with first keystroke as content
  * - Appends subsequent keystrokes to existing draft
  * - Ignores when inputs are focused or drag overlay is active
+ *
+ * Uses Zustand store for state management.
  */
 export function useGlobalTyping(
   options: UseGlobalTypingOptions = {}
 ): UseGlobalTypingReturn {
-  const {
-    disabled = false,
-    onDraftCreate,
-    onDraftAppend,
-    hasDraft: externalHasDraft,
-  } = options
+  const { disabled = false } = options
 
-  const [draftItem, setDraftItem] = useState<DraftTextItem | null>(null)
-  const draftRef = useRef<DraftTextItem | null>(null)
+  // Subscribe to store state and actions
+  const draftItem = useAppStore((state) => state.draftItem)
+  const createDraft = useAppStore((state) => state.createDraft)
+  const appendToDraft = useAppStore((state) => state.appendToDraft)
+  const updateDraft = useAppStore((state) => state.updateDraft)
+  const submitDraft = useAppStore((state) => state.submitDraft)
+  const cancelDraft = useAppStore((state) => state.cancelDraft)
 
-  // Keep ref in sync with state for event handler access
-  useEffect(() => {
-    draftRef.current = draftItem
-  }, [draftItem])
-
-  const createDraft = useCallback(
-    (initialContent: string) => {
-      const newDraft: DraftTextItem = {
-        id: 'draft',
-        type: 'text',
-        content: initialContent,
-        capturedAt: new Date().toISOString(),
-      }
-      setDraftItem(newDraft)
-      onDraftCreate?.(initialContent)
-    },
-    [onDraftCreate]
-  )
-
-  const updateDraft = useCallback((content: string) => {
-    if (draftRef.current) {
-      setDraftItem({
-        ...draftRef.current,
-        content,
-      })
-    }
-  }, [])
-
-  const submitDraft = useCallback(() => {
-    setDraftItem(null)
-  }, [])
-
-  const cancelDraft = useCallback(() => {
-    setDraftItem(null)
-  }, [])
-
-  // Determine if draft exists (prefer external if provided)
-  const hasDraft = externalHasDraft ?? draftItem !== null
+  const hasDraft = draftItem !== null
 
   useEffect(() => {
     if (disabled) return
@@ -144,7 +96,7 @@ export function useGlobalTyping(
 
       if (hasDraft) {
         // Append to existing draft
-        onDraftAppend?.(key)
+        appendToDraft(key)
       } else {
         // Create new draft with this character
         createDraft(key)
@@ -156,7 +108,7 @@ export function useGlobalTyping(
     return () => {
       window.removeEventListener('keydown', handleKeyDown)
     }
-  }, [disabled, hasDraft, createDraft, onDraftAppend])
+  }, [disabled, hasDraft, createDraft, appendToDraft])
 
   return {
     draftItem,

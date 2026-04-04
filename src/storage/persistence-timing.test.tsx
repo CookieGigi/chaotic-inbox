@@ -4,6 +4,7 @@ import { render, screen, waitFor, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import App from '@/App'
 import { db } from '@/storage/local_db'
+import { useAppStore } from '@/store/appStore'
 import type { RawItem } from '@/models/rawItem'
 
 // Mock the Block component to simplify testing
@@ -18,10 +19,12 @@ vi.mock('@/components/Block', () => ({
 describe('F05 - TASK-26: Item persisted before appearing on screen', () => {
   beforeEach(async () => {
     await db.items.clear()
+    useAppStore.getState().reset()
   })
 
   afterEach(async () => {
     await db.items.clear()
+    useAppStore.getState().reset()
   })
 
   describe('AC #1: Write to local storage completes before UI update', () => {
@@ -230,7 +233,7 @@ describe('F05 - TASK-26: Item persisted before appearing on screen', () => {
     it('survives simulated app crash after persistence', async () => {
       const user = userEvent.setup()
 
-      render(<App />)
+      const { unmount } = render(<App />)
 
       // Create and persist item
       await act(async () => {
@@ -252,8 +255,10 @@ describe('F05 - TASK-26: Item persisted before appearing on screen', () => {
       })
 
       // Simulate "force quit" by clearing React state (unmount/remount)
-      const { unmount } = render(<App />)
       unmount()
+
+      // Reset store to simulate fresh app start
+      useAppStore.getState().reset()
 
       // Verify item still in DB (as if app crashed but storage persisted)
       const dbItemsAfterCrash = await db.items.toArray()

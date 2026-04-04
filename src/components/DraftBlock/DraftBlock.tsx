@@ -2,18 +2,13 @@ import { useEffect, useRef } from 'react'
 import { ArticleIcon } from '@phosphor-icons/react'
 import { TextBlockEdit } from '@/components/TextBlock/TextBlockEdit'
 import { Timestamp } from '@/components/Timestamp'
-import type { DraftTextItem } from '@/hooks/useGlobalTyping'
+import { useAppStore } from '@/store/appStore'
+import type { DraftTextItem } from '@/store/appStore'
 import type { ISO8601Timestamp } from '@/types/branded'
 
 export interface DraftBlockProps {
   /** The draft item to render */
   draft: DraftTextItem
-  /** Callback when content changes */
-  onChange: (content: string) => void
-  /** Callback when user submits */
-  onSubmit: () => void
-  /** Callback when user cancels */
-  onCancel: () => void
 }
 
 /**
@@ -24,14 +19,16 @@ export interface DraftBlockProps {
  * - Shows hint text below textarea (Ctrl+Enter to save, Escape to cancel)
  * - Auto-scrolls into view on mount
  * - Uses draft-specific colors and focus states
+ *
+ * Uses Zustand store for draft actions (update, submit, cancel).
  */
-export function DraftBlock({
-  draft,
-  onChange,
-  onSubmit,
-  onCancel,
-}: DraftBlockProps) {
+export function DraftBlock({ draft }: DraftBlockProps) {
   const blockRef = useRef<HTMLDivElement>(null)
+
+  // Subscribe to store actions
+  const updateDraft = useAppStore((state) => state.updateDraft)
+  const submitDraft = useAppStore((state) => state.submitDraft)
+  const cancelDraft = useAppStore((state) => state.cancelDraft)
 
   // Scroll into view on mount
   useEffect(() => {
@@ -66,9 +63,9 @@ export function DraftBlock({
       <div data-testid="draft-block-content" className="mb-2">
         <TextBlockEdit
           initialContent={draft.content}
-          onChange={onChange}
-          onSubmit={onSubmit}
-          onCancel={onCancel}
+          onChange={updateDraft}
+          onSubmit={submitDraft}
+          onCancel={cancelDraft}
         />
       </div>
 

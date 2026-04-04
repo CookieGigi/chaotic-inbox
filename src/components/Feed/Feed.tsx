@@ -2,19 +2,13 @@ import { useEffect, useRef } from 'react'
 import type { RawItem } from '@/models/rawItem'
 import { Block } from '@/components/Block'
 import { DraftBlock } from '@/components/DraftBlock'
-import type { DraftTextItem } from '@/hooks/useGlobalTyping'
+import type { DraftTextItem } from '@/store/appStore'
 import { useScrollPosition } from '@/hooks/useScrollPosition'
 
 export interface FeedProps {
   items: RawItem[]
   /** Optional draft item to render at the bottom */
   draftItem?: DraftTextItem | null
-  /** Callback when draft content changes */
-  onDraftChange?: (content: string) => void
-  /** Callback when draft is submitted */
-  onDraftSubmit?: () => void
-  /** Callback when draft is cancelled */
-  onDraftCancel?: () => void
 }
 
 /**
@@ -27,13 +21,7 @@ function sortByCaptureTime(items: RawItem[]): RawItem[] {
   )
 }
 
-export function Feed({
-  items,
-  draftItem,
-  onDraftChange,
-  onDraftSubmit,
-  onDraftCancel,
-}: FeedProps) {
+export function Feed({ items, draftItem }: FeedProps) {
   const newestItemRef = useRef<HTMLDivElement>(null)
   const hasDoneInitialScroll = useRef(false)
   const previousItemsLength = useRef(items.length)
@@ -151,14 +139,7 @@ export function Feed({
         ))}
 
         {/* Draft block at the bottom */}
-        {draftItem && onDraftChange && onDraftSubmit && onDraftCancel && (
-          <DraftBlock
-            draft={draftItem}
-            onChange={onDraftChange}
-            onSubmit={onDraftSubmit}
-            onCancel={onDraftCancel}
-          />
-        )}
+        {draftItem && <DraftBlock draft={draftItem} />}
       </div>
     </div>
   )
