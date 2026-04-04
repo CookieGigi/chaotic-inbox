@@ -19,22 +19,28 @@ priority: high
 ## Description
 
 <!-- SECTION:DESCRIPTION:BEGIN -->
+
 **As a** user,
 **I want** the feed to scroll automatically to a newly captured block
 **so that** I get immediate confirmation that my item landed at the bottom.
 
 Auto-scroll confirms successful capture. Only applies to items added during the current session (after mount).
+
 <!-- SECTION:DESCRIPTION:END -->
 
 ## Acceptance Criteria
+
 <!-- AC:BEGIN -->
+
 - [x] #1 After any paste or drop during the session, the feed scrolls to the newly appended block
 - [x] #2 The scroll happens after the block is rendered, not before
 - [x] #3 Does not scroll on initial mount (position restoration handles that)
 <!-- AC:END -->
 
 ## Definition of Done
+
 <!-- DOD:BEGIN -->
+
 - [ ] #1 Tests pass
 - [ ] #2 Documentation updated
 - [ ] #3 No regressions introduced
