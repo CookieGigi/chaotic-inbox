@@ -4,7 +4,7 @@ title: '[Epic 1] F-06: Paste with no element focused'
 status: To Do
 assignee: []
 created_date: '2026-03-18 00:09'
-updated_date: '2026-03-18 00:25'
+updated_date: '2026-04-04 06:08'
 labels:
   - phase-5
 milestone: m-0
@@ -12,7 +12,7 @@ dependencies: []
 references:
   - ./specs/epic-1-f06-user-stories.md
 documentation:
-  - backlog://doc/doc-7
+  - 'backlog://doc/doc-7'
 priority: medium
 ---
 
@@ -32,9 +32,9 @@ The global paste listener requires no focused input.
 
 <!-- AC:BEGIN -->
 
-- [ ] #1 App launched, no element focused, `Cmd+V` / `Ctrl+V` pressed → item is captured and appended to the feed
-- [ ] #2 The feed scrolls to the new block
-- [ ] #3 No click, focus, or navigation step is required before the keystroke
+- [x] #1 App launched, no element focused, `Cmd+V` / `Ctrl+V` pressed → item is captured and appended to the feed
+- [x] #2 The feed scrolls to the new block
+- [x] #3 No click, focus, or navigation step is required before the keystroke
 <!-- AC:END -->
 
 ## Definition of Done
@@ -45,8 +45,3 @@ The global paste listener requires no focused input.
 - [ ] #2 Documentation updated
 - [ ] #3 No regressions introduced
 <!-- DOD:END -->
-
-## Related Links
-
-- [Spec: specs/epic-1-f06-user-stories.md](./specs/epic-1-f06-user-stories.md)
-- [Doc: doc-7](backlog://doc/doc-7)

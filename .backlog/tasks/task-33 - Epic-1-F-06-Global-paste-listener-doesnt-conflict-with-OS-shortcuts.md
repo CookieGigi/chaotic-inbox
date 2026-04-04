@@ -4,7 +4,7 @@ title: "[Epic 1] F-06: Global paste listener doesn't conflict with OS shortcuts"
 status: To Do
 assignee: []
 created_date: '2026-03-18 00:10'
-updated_date: '2026-03-18 00:25'
+updated_date: '2026-04-04 06:08'
 labels:
   - phase-5
 milestone: m-0
@@ -12,7 +12,7 @@ dependencies: []
 references:
   - ./specs/epic-1-f06-user-stories.md
 documentation:
-  - backlog://doc/doc-7
+  - 'backlog://doc/doc-7'
 priority: medium
 ---
 
@@ -32,9 +32,9 @@ Listener only fires when app window has focus.
 
 <!-- AC:BEGIN -->
 
-- [ ] #1 The listener only fires when the app window has focus
-- [ ] #2 No OS-level paste shortcut is intercepted or suppressed outside of the app window
-- [ ] #3 No conflict arises with OS clipboard manager shortcuts on any supported platform (e.g. `Cmd+Shift+V` on macOS, `Win+V` on Windows)
+- [x] #1 The listener only fires when the app window has focus
+- [x] #2 No OS-level paste shortcut is intercepted or suppressed outside of the app window
+- [x] #3 No conflict arises with OS clipboard manager shortcuts on any supported platform (e.g. `Cmd+Shift+V` on macOS, `Win+V` on Windows)
 <!-- AC:END -->
 
 ## Definition of Done
@@ -45,8 +45,3 @@ Listener only fires when app window has focus.
 - [ ] #2 Documentation updated
 - [ ] #3 No regressions introduced
 <!-- DOD:END -->
-
-## Related Links
-
-- [Spec: specs/epic-1-f06-user-stories.md](./specs/epic-1-f06-user-stories.md)
-- [Doc: doc-7](backlog://doc/doc-7)

@@ -73,6 +73,13 @@ beforeAll(() => {
   // Mock scrollTo
   window.scrollTo = vi.fn()
 
+  // Mock document.hasFocus to return true by default (for paste tests)
+  Object.defineProperty(document, 'hasFocus', {
+    writable: true,
+    configurable: true,
+    value: vi.fn(() => true),
+  })
+
   // Mock scrollIntoView on Element prototype
   Object.defineProperty(Element.prototype, 'scrollIntoView', {
     writable: true,

@@ -124,6 +124,11 @@ export function useGlobalPaste(
     if (disabled) return
 
     const handlePaste = async (event: ClipboardEvent) => {
+      // Skip if window doesn't have focus (TASK-33: F-06)
+      if (!document.hasFocus()) {
+        return
+      }
+
       // Skip if drag overlay is active
       if (isDragOverlayActive()) {
         return
