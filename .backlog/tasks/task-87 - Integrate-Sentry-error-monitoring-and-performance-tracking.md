@@ -4,11 +4,13 @@ title: Integrate Sentry error monitoring and performance tracking
 status: To Do
 assignee: []
 created_date: '2026-04-04 06:01'
+updated_date: '2026-04-04 07:20'
 labels:
   - monitoring
   - production
   - error-handling
   - sentry
+  - order-4
 milestone: m-0
 dependencies: []
 priority: high
