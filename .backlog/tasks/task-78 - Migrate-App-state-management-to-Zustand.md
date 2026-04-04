@@ -4,11 +4,12 @@ title: Migrate App state management to Zustand
 status: To Do
 assignee: []
 created_date: '2026-03-31 19:06'
-updated_date: '2026-03-31 19:35'
+updated_date: '2026-04-04 07:20'
 labels:
   - refactor
   - state-management
   - zustand
+  - order-1
 dependencies: []
 references:
   - src/App.tsx
