@@ -1,8 +1,8 @@
 import { useEffect, useCallback, useRef, useState } from 'react'
 import { useAppStore } from '@/store/appStore'
 import type { RawItem } from '@/models/rawItem'
-import type { FileSubType } from '@/models/metadata'
 import { createImageItem, createFileItem } from '@/models/itemFactories'
+import { isImageFile, getFileSubType } from '@/utils/fileTypeDetection'
 
 /**
  * Hook options for useGlobalDrop
@@ -29,42 +29,29 @@ function hasFiles(dataTransfer: DataTransfer | null): boolean {
 }
 
 /**
- * Check if a file is an image based on extension
- */
-function isImageFile(filename: string): boolean {
-  const imageExtensions = ['.png', '.jpg', '.jpeg', '.gif', '.webp']
-  const lowerFilename = filename.toLowerCase()
-  return imageExtensions.some((ext) => lowerFilename.endsWith(ext))
-}
-
-/**
- * Get file subtype from filename
- */
-function getFileSubType(filename: string): FileSubType {
-  const lowerFilename = filename.toLowerCase()
-  if (lowerFilename.endsWith('.pdf')) return 'pdf'
-  if (lowerFilename.endsWith('.zip')) return 'zip'
-  if (lowerFilename.endsWith('.txt')) return 'txt'
-  if (lowerFilename.endsWith('.docx')) return 'docx'
-  if (lowerFilename.endsWith('.md')) return 'md'
-  return 'other'
-}
-
-/**
  * Process a file and create appropriate RawItem
+ * Uses magic number detection with extension fallback
  */
-function processFile(file: File): RawItem | null {
-  if (isImageFile(file.name)) {
-    // Create image item
-    return createImageItem(file, { kind: 'image' })
-  } else {
-    // Create file item
-    return createFileItem(file, {
-      kind: getFileSubType(file.name),
-      filename: file.name,
-      filesize: file.size,
-      mimetype: file.type || 'application/octet-stream',
-    })
+async function processFile(file: File): Promise<RawItem | null> {
+  try {
+    const isImage = await isImageFile(file)
+
+    if (isImage) {
+      // Create image item
+      return createImageItem(file, { kind: 'image' })
+    } else {
+      // Create file item with detected subtype
+      const subType = await getFileSubType(file)
+      return createFileItem(file, {
+        kind: subType,
+        filename: file.name,
+        filesize: file.size,
+        mimetype: file.type || 'application/octet-stream',
+      })
+    }
+  } catch (error) {
+    console.error('Error processing file:', error)
+    return null
   }
 }
 
@@ -74,11 +61,12 @@ function processFile(file: File): RawItem | null {
  * Features:
  * - Detects file drag events anywhere in the app
  * - Shows visual overlay during drag
- * - Handles image files (png, jpg, gif, webp) as image items
+ * - Handles image files (png, jpg, gif, webp) as image items using magic numbers
  * - Handles other files as file items with metadata
  * - Supports multiple files dropped simultaneously
  * - Ignores non-file drags (URLs, text)
  * - Works over interactive elements
+ * - Uses hybrid detection (magic numbers + extension fallback) for security
  *
  * Uses Zustand store for state management.
  */
@@ -141,7 +129,7 @@ export function useGlobalDrop(
    * Handle drop - process files
    */
   const handleDrop = useCallback(
-    (event: DragEvent) => {
+    async (event: DragEvent) => {
       event.preventDefault()
 
       // Reset drag state
@@ -159,19 +147,15 @@ export function useGlobalDrop(
         return
       }
 
-      // Process all files
-      const newItems: RawItem[] = []
-      for (let i = 0; i < files.length; i++) {
-        const file = files[i]
-        const item = processFile(file)
-        if (item) {
-          newItems.push(item)
-        }
-      }
+      // Process all files concurrently
+      const itemPromises = Array.from(files).map(processFile)
+      const items = (await Promise.all(itemPromises)).filter(
+        Boolean
+      ) as RawItem[]
 
       // Create items from drop
-      if (newItems.length > 0) {
-        addItems(newItems)
+      if (items.length > 0) {
+        addItems(items)
       }
     },
     [addItems, setIsDragging]

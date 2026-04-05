@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import type { RawItem } from '@/models/rawItem'
+import type { FileSubType } from '@/models/metadata'
 import { BlockIcon } from './BlockIcon'
 
 // Test data factories
@@ -39,9 +40,7 @@ const createImageItem = (): RawItem => ({
   },
 })
 
-const createFileItem = (
-  kind: 'pdf' | 'zip' | 'txt' | 'md' | 'docx' | 'other'
-): RawItem => ({
+const createFileItem = (kind: FileSubType): RawItem => ({
   id: `test-file-${kind}`,
   type: 'file',
   capturedAt: '2026-03-24T10:00:00.000Z' as RawItem['capturedAt'],
@@ -88,8 +87,8 @@ describe('BlockIcon', () => {
       expect(icon).toBeInTheDocument()
     })
 
-    it('renders FileZip icon for zip files', () => {
-      const item = createFileItem('zip')
+    it('renders FileDoc icon for docx files', () => {
+      const item = createFileItem('docx')
       render(<BlockIcon item={item} />)
 
       const icon = screen.getByTestId('block-icon')
@@ -104,7 +103,7 @@ describe('BlockIcon', () => {
       expect(icon).toBeInTheDocument()
     })
 
-    it('renders FileText icon for md files', () => {
+    it('renders FileMd icon for md files', () => {
       const item = createFileItem('md')
       render(<BlockIcon item={item} />)
 
@@ -112,8 +111,64 @@ describe('BlockIcon', () => {
       expect(icon).toBeInTheDocument()
     })
 
-    it('renders FileText icon for docx files', () => {
-      const item = createFileItem('docx')
+    it('renders FileZip icon for zip files', () => {
+      const item = createFileItem('zip')
+      render(<BlockIcon item={item} />)
+
+      const icon = screen.getByTestId('block-icon')
+      expect(icon).toBeInTheDocument()
+    })
+
+    it('renders FileCode icon for code files', () => {
+      const item = createFileItem('code')
+      render(<BlockIcon item={item} />)
+
+      const icon = screen.getByTestId('block-icon')
+      expect(icon).toBeInTheDocument()
+    })
+
+    it('renders FileAudio icon for audio files', () => {
+      const item = createFileItem('audio')
+      render(<BlockIcon item={item} />)
+
+      const icon = screen.getByTestId('block-icon')
+      expect(icon).toBeInTheDocument()
+    })
+
+    it('renders FileVideo icon for video files', () => {
+      const item = createFileItem('video')
+      render(<BlockIcon item={item} />)
+
+      const icon = screen.getByTestId('block-icon')
+      expect(icon).toBeInTheDocument()
+    })
+
+    it('renders FileCsv icon for csv files', () => {
+      const item = createFileItem('csv')
+      render(<BlockIcon item={item} />)
+
+      const icon = screen.getByTestId('block-icon')
+      expect(icon).toBeInTheDocument()
+    })
+
+    it('renders FileXls icon for xls files', () => {
+      const item = createFileItem('xls')
+      render(<BlockIcon item={item} />)
+
+      const icon = screen.getByTestId('block-icon')
+      expect(icon).toBeInTheDocument()
+    })
+
+    it('renders FilePpt icon for ppt files', () => {
+      const item = createFileItem('ppt')
+      render(<BlockIcon item={item} />)
+
+      const icon = screen.getByTestId('block-icon')
+      expect(icon).toBeInTheDocument()
+    })
+
+    it('renders FileArchive icon for archive files', () => {
+      const item = createFileItem('archive')
       render(<BlockIcon item={item} />)
 
       const icon = screen.getByTestId('block-icon')

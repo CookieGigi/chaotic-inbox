@@ -6,6 +6,15 @@ import {
   FileZipIcon,
   FileTextIcon,
   FileIcon,
+  FileDocIcon,
+  FileMdIcon,
+  FileCodeIcon,
+  FileAudioIcon,
+  FileVideoIcon,
+  FileCsvIcon,
+  FileXlsIcon,
+  FilePptIcon,
+  FileArchiveIcon,
 } from '@phosphor-icons/react'
 import type { RawItem } from '@/models/rawItem'
 import {
@@ -19,10 +28,17 @@ import type { FileSubType } from '@/models/metadata'
 // Map file subtypes to their respective icons
 const fileIconMap: Record<FileSubType, typeof FileIcon> = {
   pdf: FilePdfIcon,
-  docx: FileTextIcon,
+  docx: FileDocIcon,
   txt: FileTextIcon,
-  md: FileTextIcon,
+  md: FileMdIcon,
   zip: FileZipIcon,
+  code: FileCodeIcon,
+  audio: FileAudioIcon,
+  video: FileVideoIcon,
+  csv: FileCsvIcon,
+  xls: FileXlsIcon,
+  ppt: FilePptIcon,
+  archive: FileArchiveIcon,
   other: FileIcon,
 }
 
