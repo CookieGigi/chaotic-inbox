@@ -1,4 +1,6 @@
+import { useMemo, useEffect } from 'react'
 import type { RawItem } from '@/models/rawItem'
+import type { ImageMetadata } from '@/models/metadata'
 import {
   isTextItem,
   isUrlItem,
@@ -17,6 +19,28 @@ export interface BlockProps {
   item: RawItem
 }
 
+// Component for rendering image blocks with proper blob URL cleanup
+function ImageBlockContent({ item }: { item: RawItem }) {
+  const blob = item.raw as Blob
+  const objectUrl = useMemo(() => URL.createObjectURL(blob), [blob])
+  const metadata = item.metadata as ImageMetadata
+
+  useEffect(() => {
+    return () => {
+      URL.revokeObjectURL(objectUrl)
+    }
+  }, [objectUrl])
+
+  return (
+    <ImageBlock
+      src={objectUrl}
+      alt={metadata.alt}
+      width={metadata.width}
+      height={metadata.height}
+    />
+  )
+}
+
 // Render the appropriate content based on type
 function renderBlockContent(item: RawItem) {
   if (isTextItem(item)) {
@@ -26,16 +50,7 @@ function renderBlockContent(item: RawItem) {
     return <UrlBlock url={item.raw as string} />
   }
   if (isImageItem(item)) {
-    const blob = item.raw as Blob
-    const objectUrl = URL.createObjectURL(blob)
-    return (
-      <ImageBlock
-        src={objectUrl}
-        alt={item.metadata.alt}
-        width={item.metadata.width}
-        height={item.metadata.height}
-      />
-    )
+    return <ImageBlockContent item={item} />
   }
   if (isFileItem(item)) {
     return <FileBlock item={item} />
