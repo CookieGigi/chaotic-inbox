@@ -33,3 +33,5 @@ dist-ssr
 storybook-static
 .playwright-mcp
 initial-state.yml
+coverage
+.opencode/package-lock.json
