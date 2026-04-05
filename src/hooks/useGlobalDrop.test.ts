@@ -4,33 +4,32 @@ import { renderHook, act } from '@testing-library/react'
 import { useGlobalDrop } from './useGlobalDrop'
 import type { RawItem } from '@/models/rawItem'
 import { db } from '@/storage/local_db'
-
-/**
- * Mock the app store to test hook behavior
- */
-const mockStore = {
-  addItems: vi.fn(),
-  setIsDragging: vi.fn(),
-  isDragging: false,
-}
-
-// Mock the store module
-vi.mock('@/store/appStore', () => ({
-  useAppStore: () => mockStore,
-}))
+import { useAppStore } from '@/store/appStore'
 
 describe('useGlobalDrop', () => {
+  // Store spies
+  let addItemsSpy: ReturnType<typeof vi.spyOn>
+  let setIsDraggingSpy: ReturnType<typeof vi.spyOn>
+
   beforeEach(async () => {
+    // Clear all mocks first
     vi.clearAllMocks()
+
+    // Clear database and reset store
+    await db.items.clear()
+    useAppStore.getState().reset()
+
+    // Setup spies on store actions (after reset)
+    addItemsSpy = vi.spyOn(useAppStore.getState(), 'addItems')
+    setIsDraggingSpy = vi.spyOn(useAppStore.getState(), 'setIsDragging')
+
+    // Reset DOM
     document.body.innerHTML = ''
     document.body.className = ''
-    mockStore.isDragging = false
-    // Clear database
-    await db.items.clear()
   })
 
   afterEach(() => {
-    vi.clearAllMocks()
+    vi.restoreAllMocks()
   })
 
   /**
@@ -85,8 +84,7 @@ describe('useGlobalDrop', () => {
   }
 
   describe('Drop a file anywhere on the app window', () => {
-    it.skip('should create item when a file is dropped', () => {
-      // Module mock path resolution issue - behavior tested in integration tests
+    it('should create item when a file is dropped', () => {
       renderHook(() => useGlobalDrop())
 
       const mockFile = new File(['test content'], 'document.txt', {
@@ -99,8 +97,8 @@ describe('useGlobalDrop', () => {
 
       window.dispatchEvent(dropEvent)
 
-      expect(mockStore.addItems).toHaveBeenCalledTimes(1)
-      const items = mockStore.addItems.mock.calls[0][0] as RawItem[]
+      expect(addItemsSpy).toHaveBeenCalledTimes(1)
+      const items = addItemsSpy.mock.calls[0][0] as RawItem[]
       expect(items).toHaveLength(1)
       expect(items[0].type).toBe('file')
     })
@@ -119,22 +117,20 @@ describe('useGlobalDrop', () => {
   })
 
   describe('Visual cue while dragging (calls store.setIsDragging)', () => {
-    it.skip('should call setIsDragging(true) on dragenter with files', () => {
-      // Module mock path resolution issue - behavior tested in integration tests
+    it('should call setIsDragging(true) on dragenter with files', () => {
       renderHook(() => useGlobalDrop())
 
-      expect(mockStore.isDragging).toBe(false)
+      expect(useAppStore.getState().isDragging).toBe(false)
 
       act(() => {
         const dragEnterEvent = createMockDragEvent('dragenter')
         window.dispatchEvent(dragEnterEvent)
       })
 
-      expect(mockStore.setIsDragging).toHaveBeenCalledWith(true)
+      expect(setIsDraggingSpy).toHaveBeenCalledWith(true)
     })
 
-    it.skip('should call setIsDragging(false) on dragleave', () => {
-      // Module mock path resolution issue - behavior tested in integration tests
+    it('should call setIsDragging(false) on dragleave', () => {
       renderHook(() => useGlobalDrop())
 
       // First enter
@@ -143,7 +139,7 @@ describe('useGlobalDrop', () => {
         window.dispatchEvent(dragEnterEvent)
       })
 
-      expect(mockStore.setIsDragging).toHaveBeenLastCalledWith(true)
+      expect(setIsDraggingSpy).toHaveBeenLastCalledWith(true)
 
       // Then leave
       act(() => {
@@ -151,11 +147,10 @@ describe('useGlobalDrop', () => {
         window.dispatchEvent(dragLeaveEvent)
       })
 
-      expect(mockStore.setIsDragging).toHaveBeenLastCalledWith(false)
+      expect(setIsDraggingSpy).toHaveBeenLastCalledWith(false)
     })
 
-    it.skip('should call setIsDragging(false) on drop', () => {
-      // Module mock path resolution issue - behavior tested in integration tests
+    it('should call setIsDragging(false) on drop', () => {
       renderHook(() => useGlobalDrop())
 
       // Enter drag
@@ -169,7 +164,7 @@ describe('useGlobalDrop', () => {
         window.dispatchEvent(createMockDropEvent({ files: [mockFile] }))
       })
 
-      expect(mockStore.setIsDragging).toHaveBeenLastCalledWith(false)
+      expect(setIsDraggingSpy).toHaveBeenLastCalledWith(false)
     })
 
     it('should prevent default on dragover', () => {
@@ -185,8 +180,7 @@ describe('useGlobalDrop', () => {
   })
 
   describe('Drop an image file and see it rendered inline', () => {
-    it.skip('should create image item for .png file', () => {
-      // Module mock path resolution issue - behavior tested in integration tests
+    it('should create image item for .png file', () => {
       renderHook(() => useGlobalDrop())
 
       const mockFile = new File(['image data'], 'photo.png', {
@@ -196,13 +190,12 @@ describe('useGlobalDrop', () => {
       const dropEvent = createMockDropEvent({ files: [mockFile] })
       window.dispatchEvent(dropEvent)
 
-      expect(mockStore.addItems).toHaveBeenCalledTimes(1)
-      const items = mockStore.addItems.mock.calls[0][0] as RawItem[]
+      expect(addItemsSpy).toHaveBeenCalledTimes(1)
+      const items = addItemsSpy.mock.calls[0][0] as RawItem[]
       expect(items[0].type).toBe('image')
     })
 
-    it.skip('should create image item for .jpg file', () => {
-      // Module mock path resolution issue - behavior tested in integration tests
+    it('should create image item for .jpg file', () => {
       renderHook(() => useGlobalDrop())
 
       const mockFile = new File(['image data'], 'photo.jpg', {
@@ -212,12 +205,11 @@ describe('useGlobalDrop', () => {
       const dropEvent = createMockDropEvent({ files: [mockFile] })
       window.dispatchEvent(dropEvent)
 
-      const items = mockStore.addItems.mock.calls[0][0] as RawItem[]
+      const items = addItemsSpy.mock.calls[0][0] as RawItem[]
       expect(items[0].type).toBe('image')
     })
 
-    it.skip('should create image item for .gif file', () => {
-      // Module mock path resolution issue - behavior tested in integration tests
+    it('should create image item for .gif file', () => {
       renderHook(() => useGlobalDrop())
 
       const mockFile = new File(['image data'], 'animation.gif', {
@@ -227,12 +219,11 @@ describe('useGlobalDrop', () => {
       const dropEvent = createMockDropEvent({ files: [mockFile] })
       window.dispatchEvent(dropEvent)
 
-      const items = mockStore.addItems.mock.calls[0][0] as RawItem[]
+      const items = addItemsSpy.mock.calls[0][0] as RawItem[]
       expect(items[0].type).toBe('image')
     })
 
-    it.skip('should create image item for .webp file', () => {
-      // Module mock path resolution issue - behavior tested in integration tests
+    it('should create image item for .webp file', () => {
       renderHook(() => useGlobalDrop())
 
       const mockFile = new File(['image data'], 'photo.webp', {
@@ -242,12 +233,11 @@ describe('useGlobalDrop', () => {
       const dropEvent = createMockDropEvent({ files: [mockFile] })
       window.dispatchEvent(dropEvent)
 
-      const items = mockStore.addItems.mock.calls[0][0] as RawItem[]
+      const items = addItemsSpy.mock.calls[0][0] as RawItem[]
       expect(items[0].type).toBe('image')
     })
 
-    it.skip('should include image blob in raw field', () => {
-      // Module mock path resolution issue - behavior tested in integration tests
+    it('should include image blob in raw field', () => {
       renderHook(() => useGlobalDrop())
 
       const mockFile = new File(['image data'], 'photo.png', {
@@ -257,14 +247,13 @@ describe('useGlobalDrop', () => {
       const dropEvent = createMockDropEvent({ files: [mockFile] })
       window.dispatchEvent(dropEvent)
 
-      const items = mockStore.addItems.mock.calls[0][0] as RawItem[]
+      const items = addItemsSpy.mock.calls[0][0] as RawItem[]
       expect(items[0].raw).toBeInstanceOf(Blob)
     })
   })
 
   describe('Drop a non-image file and see its metadata', () => {
-    it.skip('should create file item with pdf subtype for .pdf', () => {
-      // Module mock path resolution issue - behavior tested in integration tests
+    it('should create file item with pdf subtype for .pdf', () => {
       renderHook(() => useGlobalDrop())
 
       const mockFile = new File(['pdf content'], 'document.pdf', {
@@ -274,13 +263,12 @@ describe('useGlobalDrop', () => {
       const dropEvent = createMockDropEvent({ files: [mockFile] })
       window.dispatchEvent(dropEvent)
 
-      const items = mockStore.addItems.mock.calls[0][0] as RawItem[]
+      const items = addItemsSpy.mock.calls[0][0] as RawItem[]
       expect(items[0].type).toBe('file')
       expect(items[0].metadata.kind).toBe('pdf')
     })
 
-    it.skip('should create file item with zip subtype for .zip', () => {
-      // Module mock path resolution issue - behavior tested in integration tests
+    it('should create file item with zip subtype for .zip', () => {
       renderHook(() => useGlobalDrop())
 
       const mockFile = new File(['zip content'], 'archive.zip', {
@@ -290,13 +278,12 @@ describe('useGlobalDrop', () => {
       const dropEvent = createMockDropEvent({ files: [mockFile] })
       window.dispatchEvent(dropEvent)
 
-      const items = mockStore.addItems.mock.calls[0][0] as RawItem[]
+      const items = addItemsSpy.mock.calls[0][0] as RawItem[]
       expect(items[0].type).toBe('file')
       expect(items[0].metadata.kind).toBe('zip')
     })
 
-    it.skip('should create file item with md subtype for .md', () => {
-      // Module mock path resolution issue - behavior tested in integration tests
+    it('should create file item with md subtype for .md', () => {
       renderHook(() => useGlobalDrop())
 
       const mockFile = new File(['# Markdown'], 'README.md', {
@@ -306,13 +293,12 @@ describe('useGlobalDrop', () => {
       const dropEvent = createMockDropEvent({ files: [mockFile] })
       window.dispatchEvent(dropEvent)
 
-      const items = mockStore.addItems.mock.calls[0][0] as RawItem[]
+      const items = addItemsSpy.mock.calls[0][0] as RawItem[]
       expect(items[0].type).toBe('file')
       expect(items[0].metadata.kind).toBe('md')
     })
 
-    it.skip('should create file item with other subtype for unknown binary', () => {
-      // Module mock path resolution issue - behavior tested in integration tests
+    it('should create file item with other subtype for unknown binary', () => {
       renderHook(() => useGlobalDrop())
 
       const mockFile = new File(['binary data'], 'data.bin', {
@@ -322,13 +308,12 @@ describe('useGlobalDrop', () => {
       const dropEvent = createMockDropEvent({ files: [mockFile] })
       window.dispatchEvent(dropEvent)
 
-      const items = mockStore.addItems.mock.calls[0][0] as RawItem[]
+      const items = addItemsSpy.mock.calls[0][0] as RawItem[]
       expect(items[0].type).toBe('file')
       expect(items[0].metadata.kind).toBe('other')
     })
 
-    it.skip('should include filename in metadata', () => {
-      // Module mock path resolution issue - behavior tested in integration tests
+    it('should include filename in metadata', () => {
       renderHook(() => useGlobalDrop())
 
       const mockFile = new File(['content'], 'my-document.pdf', {
@@ -338,15 +323,14 @@ describe('useGlobalDrop', () => {
       const dropEvent = createMockDropEvent({ files: [mockFile] })
       window.dispatchEvent(dropEvent)
 
-      const items = mockStore.addItems.mock.calls[0][0] as RawItem[]
+      const items = addItemsSpy.mock.calls[0][0] as RawItem[]
       expect((items[0].metadata as { filename: string }).filename).toBe(
         'my-document.pdf'
       )
       expect(items[0].title).toBe('my-document.pdf')
     })
 
-    it.skip('should include filesize in metadata', () => {
-      // Module mock path resolution issue - behavior tested in integration tests
+    it('should include filesize in metadata', () => {
       renderHook(() => useGlobalDrop())
 
       const content = 'x'.repeat(2048)
@@ -357,12 +341,11 @@ describe('useGlobalDrop', () => {
       const dropEvent = createMockDropEvent({ files: [mockFile] })
       window.dispatchEvent(dropEvent)
 
-      const items = mockStore.addItems.mock.calls[0][0] as RawItem[]
+      const items = addItemsSpy.mock.calls[0][0] as RawItem[]
       expect((items[0].metadata as { filesize: number }).filesize).toBe(2048)
     })
 
-    it.skip('should include mimetype in metadata', () => {
-      // Module mock path resolution issue - behavior tested in integration tests
+    it('should include mimetype in metadata', () => {
       renderHook(() => useGlobalDrop())
 
       const mockFile = new File(['content'], 'doc.pdf', {
@@ -372,7 +355,7 @@ describe('useGlobalDrop', () => {
       const dropEvent = createMockDropEvent({ files: [mockFile] })
       window.dispatchEvent(dropEvent)
 
-      const items = mockStore.addItems.mock.calls[0][0] as RawItem[]
+      const items = addItemsSpy.mock.calls[0][0] as RawItem[]
       expect((items[0].metadata as { mimetype: string }).mimetype).toBe(
         'application/pdf'
       )
@@ -380,8 +363,7 @@ describe('useGlobalDrop', () => {
   })
 
   describe('Drop multiple files at once', () => {
-    it.skip('should create multiple items for multiple files', () => {
-      // Module mock path resolution issue - behavior tested in integration tests
+    it('should create multiple items for multiple files', () => {
       renderHook(() => useGlobalDrop())
 
       const files = [
@@ -393,13 +375,12 @@ describe('useGlobalDrop', () => {
       const dropEvent = createMockDropEvent({ files })
       window.dispatchEvent(dropEvent)
 
-      expect(mockStore.addItems).toHaveBeenCalledTimes(1)
-      const items = mockStore.addItems.mock.calls[0][0] as RawItem[]
+      expect(addItemsSpy).toHaveBeenCalledTimes(1)
+      const items = addItemsSpy.mock.calls[0][0] as RawItem[]
       expect(items).toHaveLength(3)
     })
 
-    it.skip('should create items in drop order', () => {
-      // Module mock path resolution issue - behavior tested in integration tests
+    it('should create items in drop order', () => {
       renderHook(() => useGlobalDrop())
 
       const files = [
@@ -413,7 +394,7 @@ describe('useGlobalDrop', () => {
       const dropEvent = createMockDropEvent({ files })
       window.dispatchEvent(dropEvent)
 
-      const items = mockStore.addItems.mock.calls[0][0] as RawItem[]
+      const items = addItemsSpy.mock.calls[0][0] as RawItem[]
       expect((items[0].metadata as { filename: string }).filename).toBe(
         'first.pdf'
       )
@@ -425,8 +406,7 @@ describe('useGlobalDrop', () => {
       )
     })
 
-    it.skip('should render each block according to its own type', () => {
-      // Module mock path resolution issue - behavior tested in integration tests
+    it('should render each block according to its own type', () => {
       renderHook(() => useGlobalDrop())
 
       const files = [
@@ -437,7 +417,7 @@ describe('useGlobalDrop', () => {
       const dropEvent = createMockDropEvent({ files })
       window.dispatchEvent(dropEvent)
 
-      const items = mockStore.addItems.mock.calls[0][0] as RawItem[]
+      const items = addItemsSpy.mock.calls[0][0] as RawItem[]
       expect(items[0].type).toBe('image')
       expect(items[1].type).toBe('file')
       expect(items[1].metadata.kind).toBe('pdf')
@@ -445,8 +425,7 @@ describe('useGlobalDrop', () => {
   })
 
   describe('Drag over interactive elements without breaking', () => {
-    it.skip('should keep overlay active when dragging over input', () => {
-      // Module mock path resolution issue - behavior tested in integration tests
+    it('should keep overlay active when dragging over input', () => {
       renderHook(() => useGlobalDrop())
 
       // Create input and append to body
@@ -458,20 +437,19 @@ describe('useGlobalDrop', () => {
         window.dispatchEvent(createMockDragEvent('dragenter'))
       })
 
-      expect(mockStore.setIsDragging).toHaveBeenLastCalledWith(true)
+      expect(setIsDraggingSpy).toHaveBeenLastCalledWith(true)
 
       // Drag over input
       const dragOverEvent = createMockDragEvent('dragover')
       input.dispatchEvent(dragOverEvent)
 
       // Should still be dragging
-      expect(mockStore.setIsDragging).toHaveBeenCalledWith(true)
+      expect(setIsDraggingSpy).toHaveBeenCalledWith(true)
 
       document.body.removeChild(input)
     })
 
-    it.skip('should capture file when dropped on interactive element', () => {
-      // Module mock path resolution issue - behavior tested in integration tests
+    it('should capture file when dropped on interactive element', () => {
       renderHook(() => useGlobalDrop())
 
       const input = document.createElement('input')
@@ -482,7 +460,7 @@ describe('useGlobalDrop', () => {
 
       input.dispatchEvent(dropEvent)
 
-      expect(mockStore.addItems).toHaveBeenCalledTimes(1)
+      expect(addItemsSpy).toHaveBeenCalledTimes(1)
 
       document.body.removeChild(input)
     })
@@ -514,7 +492,7 @@ describe('useGlobalDrop', () => {
       })
       window.dispatchEvent(dragEnterEvent)
 
-      expect(mockStore.setIsDragging).not.toHaveBeenCalledWith(true)
+      expect(setIsDraggingSpy).not.toHaveBeenCalledWith(true)
     })
 
     it('should NOT create items for text drop', () => {
@@ -525,7 +503,7 @@ describe('useGlobalDrop', () => {
       })
       window.dispatchEvent(dragEvent)
 
-      expect(mockStore.addItems).not.toHaveBeenCalled()
+      expect(addItemsSpy).not.toHaveBeenCalled()
     })
 
     it('should NOT create items for URL drop', () => {
@@ -536,11 +514,10 @@ describe('useGlobalDrop', () => {
       })
       window.dispatchEvent(dragEvent)
 
-      expect(mockStore.addItems).not.toHaveBeenCalled()
+      expect(addItemsSpy).not.toHaveBeenCalled()
     })
 
-    it.skip('should show overlay only for file drags', () => {
-      // Module mock path resolution issue - behavior tested in integration tests
+    it('should show overlay only for file drags', () => {
       renderHook(() => useGlobalDrop())
 
       // Text drag - no overlay
@@ -551,7 +528,7 @@ describe('useGlobalDrop', () => {
           })
         )
       })
-      expect(mockStore.setIsDragging).not.toHaveBeenCalledWith(true)
+      expect(setIsDraggingSpy).not.toHaveBeenCalledWith(true)
 
       vi.clearAllMocks()
 
@@ -563,7 +540,7 @@ describe('useGlobalDrop', () => {
           })
         )
       })
-      expect(mockStore.setIsDragging).not.toHaveBeenCalledWith(true)
+      expect(setIsDraggingSpy).not.toHaveBeenCalledWith(true)
 
       vi.clearAllMocks()
 
@@ -575,7 +552,7 @@ describe('useGlobalDrop', () => {
           })
         )
       })
-      expect(mockStore.setIsDragging).toHaveBeenCalledWith(true)
+      expect(setIsDraggingSpy).toHaveBeenCalledWith(true)
     })
   })
 
@@ -586,7 +563,7 @@ describe('useGlobalDrop', () => {
       const dragEnterEvent = createMockDragEvent('dragenter')
       window.dispatchEvent(dragEnterEvent)
 
-      expect(mockStore.setIsDragging).not.toHaveBeenCalled()
+      expect(setIsDraggingSpy).not.toHaveBeenCalled()
     })
 
     it('should not process drops when disabled', () => {
@@ -596,20 +573,19 @@ describe('useGlobalDrop', () => {
       const dropEvent = createMockDropEvent({ files: [mockFile] })
       window.dispatchEvent(dropEvent)
 
-      expect(mockStore.addItems).not.toHaveBeenCalled()
+      expect(addItemsSpy).not.toHaveBeenCalled()
     })
   })
 
   describe('Item structure', () => {
-    it.skip('should create items with correct structure', () => {
-      // Module mock path resolution issue - behavior tested in integration tests
+    it('should create items with correct structure', () => {
       renderHook(() => useGlobalDrop())
 
       const mockFile = new File(['content'], 'doc.txt', { type: 'text/plain' })
       const dropEvent = createMockDropEvent({ files: [mockFile] })
       window.dispatchEvent(dropEvent)
 
-      const items = mockStore.addItems.mock.calls[0][0] as RawItem[]
+      const items = addItemsSpy.mock.calls[0][0] as RawItem[]
       const item = items[0]
 
       expect(item).toHaveProperty('id')
@@ -631,11 +607,10 @@ describe('useGlobalDrop', () => {
       const dropEvent = createMockDropEvent({ files: [] })
       window.dispatchEvent(dropEvent)
 
-      expect(mockStore.addItems).not.toHaveBeenCalled()
+      expect(addItemsSpy).not.toHaveBeenCalled()
     })
 
-    it.skip('should handle dragleave correctly with nested dragenters', () => {
-      // Module mock path resolution issue - behavior tested in integration tests
+    it('should handle dragleave correctly with nested dragenters', () => {
       renderHook(() => useGlobalDrop())
 
       // Multiple enters (simulating child elements)
@@ -644,7 +619,7 @@ describe('useGlobalDrop', () => {
         window.dispatchEvent(createMockDragEvent('dragenter'))
       })
 
-      expect(mockStore.setIsDragging).toHaveBeenLastCalledWith(true)
+      expect(setIsDraggingSpy).toHaveBeenLastCalledWith(true)
 
       // One leave shouldn't hide yet
       act(() => {
@@ -658,7 +633,7 @@ describe('useGlobalDrop', () => {
         window.dispatchEvent(createMockDragEvent('dragleave'))
       })
 
-      expect(mockStore.setIsDragging).toHaveBeenLastCalledWith(false)
+      expect(setIsDraggingSpy).toHaveBeenLastCalledWith(false)
     })
   })
 })

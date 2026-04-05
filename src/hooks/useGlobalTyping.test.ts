@@ -3,58 +3,37 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { renderHook, act } from '@testing-library/react'
 import { useGlobalTyping } from './useGlobalTyping'
 import { db } from '@/storage/local_db'
-
-/**
- * Mock the app store to test hook behavior
- * Use a factory function to create fresh mock for each test
- */
-let mockDraftItem: {
-  id: 'draft'
-  type: 'text'
-  content: string
-  capturedAt: string
-} | null = null
-let mockDraftContent = ''
-
-const mockStore = {
-  createDraft: vi.fn(),
-  appendToDraft: vi.fn(),
-  updateDraft: vi.fn(),
-  submitDraft: vi.fn(),
-  cancelDraft: vi.fn(),
-  get draftItem() {
-    return mockDraftItem
-  },
-  get draftContent() {
-    return mockDraftContent
-  },
-}
-
-// Mock the store module
-vi.mock('@/store/appStore', () => ({
-  useAppStore: () => mockStore,
-}))
+import { useAppStore } from '@/store/appStore'
 
 describe('useGlobalTyping', () => {
+  // Store spies
+  let createDraftSpy: ReturnType<typeof vi.spyOn>
+  let appendToDraftSpy: ReturnType<typeof vi.spyOn>
+
   beforeEach(async () => {
+    // Clear all mocks first
     vi.clearAllMocks()
-    // Reset body classes
-    document.body.className = ''
-    // Reset store state
-    mockDraftItem = null
-    mockDraftContent = ''
-    // Clear database
+
+    // Clear database and reset store
     await db.items.clear()
+    useAppStore.getState().reset()
+
+    // Setup spies on store actions (after reset)
+    createDraftSpy = vi.spyOn(useAppStore.getState(), 'createDraft')
+    appendToDraftSpy = vi.spyOn(useAppStore.getState(), 'appendToDraft')
+
+    // Reset DOM
+    document.body.className = ''
   })
 
   afterEach(() => {
     // Clean up any event listeners
     document.body.innerHTML = ''
+    vi.restoreAllMocks()
   })
 
   describe('draft creation via store', () => {
-    it.skip('calls store.createDraft when typing alphanumeric character', async () => {
-      // Module mock path resolution issue - behavior tested in integration tests
+    it('calls store.createDraft when typing alphanumeric character', async () => {
       renderHook(() => useGlobalTyping())
 
       // Simulate typing 'a'
@@ -63,11 +42,10 @@ describe('useGlobalTyping', () => {
         window.dispatchEvent(event)
       })
 
-      expect(mockStore.createDraft).toHaveBeenCalledWith('a')
+      expect(createDraftSpy).toHaveBeenCalledWith('a')
     })
 
-    it.skip('calls store.createDraft when typing numbers', async () => {
-      // Module mock path resolution issue - behavior tested in integration tests
+    it('calls store.createDraft when typing numbers', async () => {
       renderHook(() => useGlobalTyping())
 
       await act(async () => {
@@ -75,7 +53,7 @@ describe('useGlobalTyping', () => {
         window.dispatchEvent(event)
       })
 
-      expect(mockStore.createDraft).toHaveBeenCalledWith('5')
+      expect(createDraftSpy).toHaveBeenCalledWith('5')
     })
 
     it('does not create draft when typing symbols', async () => {
@@ -90,7 +68,7 @@ describe('useGlobalTyping', () => {
         })
       })
 
-      expect(mockStore.createDraft).not.toHaveBeenCalled()
+      expect(createDraftSpy).not.toHaveBeenCalled()
     })
 
     it('does not create draft when modifier keys are pressed', async () => {
@@ -123,8 +101,8 @@ describe('useGlobalTyping', () => {
         window.dispatchEvent(metaEvent)
       })
 
-      expect(mockStore.createDraft).not.toHaveBeenCalled()
-      expect(mockStore.appendToDraft).not.toHaveBeenCalled()
+      expect(createDraftSpy).not.toHaveBeenCalled()
+      expect(appendToDraftSpy).not.toHaveBeenCalled()
     })
 
     it('does not create draft when input is focused', async () => {
@@ -143,7 +121,7 @@ describe('useGlobalTyping', () => {
         window.dispatchEvent(event)
       })
 
-      expect(mockStore.createDraft).not.toHaveBeenCalled()
+      expect(createDraftSpy).not.toHaveBeenCalled()
 
       document.body.removeChild(input)
     })
@@ -162,7 +140,7 @@ describe('useGlobalTyping', () => {
         window.dispatchEvent(event)
       })
 
-      expect(mockStore.createDraft).not.toHaveBeenCalled()
+      expect(createDraftSpy).not.toHaveBeenCalled()
 
       document.body.removeChild(textarea)
     })
@@ -183,7 +161,7 @@ describe('useGlobalTyping', () => {
         window.dispatchEvent(event)
       })
 
-      expect(mockStore.createDraft).not.toHaveBeenCalled()
+      expect(createDraftSpy).not.toHaveBeenCalled()
 
       document.body.removeChild(div)
     })
@@ -198,7 +176,7 @@ describe('useGlobalTyping', () => {
         window.dispatchEvent(event)
       })
 
-      expect(mockStore.createDraft).not.toHaveBeenCalled()
+      expect(createDraftSpy).not.toHaveBeenCalled()
     })
 
     it('does not create draft when disabled', async () => {
@@ -209,21 +187,17 @@ describe('useGlobalTyping', () => {
         window.dispatchEvent(event)
       })
 
-      expect(mockStore.createDraft).not.toHaveBeenCalled()
+      expect(createDraftSpy).not.toHaveBeenCalled()
     })
   })
 
   describe('draft appending via store', () => {
-    it.skip('calls store.appendToDraft when typing continues with existing draft', async () => {
-      // This test requires module mock reset between renders
-      // Full behavior tested in integration tests
-      // Set up store to indicate draft exists
-      mockDraftItem = {
-        id: 'draft',
-        type: 'text',
-        content: 'H',
-        capturedAt: new Date().toISOString(),
-      }
+    it('calls store.appendToDraft when typing continues with existing draft', async () => {
+      // Create a draft first - this will trigger the spy
+      useAppStore.getState().createDraft('H')
+
+      // Clear the spy after creating the draft so we only capture new calls
+      createDraftSpy.mockClear()
 
       renderHook(() => useGlobalTyping())
 
@@ -233,44 +207,43 @@ describe('useGlobalTyping', () => {
         window.dispatchEvent(event)
       })
 
-      expect(mockStore.appendToDraft).toHaveBeenCalledWith('b')
-      expect(mockStore.createDraft).not.toHaveBeenCalled()
+      expect(appendToDraftSpy).toHaveBeenCalledWith('b')
+      expect(createDraftSpy).not.toHaveBeenCalled()
     })
   })
 
   describe('draft state from store', () => {
-    it.skip('returns draftItem from store', () => {
-      // This test requires module mock reset between renders
-      // Full behavior tested in integration tests
+    it('returns draftItem from store', () => {
       const draftItem = {
         id: 'draft' as const,
         type: 'text' as const,
         content: 'Test draft',
         capturedAt: new Date().toISOString(),
       }
-      mockDraftItem = draftItem
+
+      // Set the draft in the store
+      useAppStore.setState({ draftItem, draftContent: 'Test draft' })
 
       const { result } = renderHook(() => useGlobalTyping())
 
-      expect(result.current.draftItem).toBe(draftItem)
+      expect(result.current.draftItem).toEqual(draftItem)
     })
 
-    it.skip('returns hasDraft based on store draftItem', () => {
-      // This test requires module mock reset between renders
-      // Full behavior tested in integration tests
+    it('returns hasDraft based on store draftItem', () => {
       // Test when no draft
-      mockDraftItem = null
-
       const { result: result1 } = renderHook(() => useGlobalTyping())
       expect(result1.current.hasDraft).toBe(false)
 
-      // Test when draft exists - need to re-render to pick up new mock value
-      mockDraftItem = {
-        id: 'draft',
-        type: 'text',
-        content: 'Test',
-        capturedAt: new Date().toISOString(),
-      }
+      // Test when draft exists - set the store state
+      useAppStore.setState({
+        draftItem: {
+          id: 'draft',
+          type: 'text',
+          content: 'Test',
+          capturedAt: new Date().toISOString(),
+        },
+        draftContent: 'Test',
+      })
 
       const { result: result2 } = renderHook(() => useGlobalTyping())
       expect(result2.current.hasDraft).toBe(true)

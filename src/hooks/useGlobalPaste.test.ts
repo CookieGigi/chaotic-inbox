@@ -4,38 +4,32 @@ import { renderHook } from '@testing-library/react'
 import { useGlobalPaste } from './useGlobalPaste'
 import type { RawItem } from '@/models/rawItem'
 import { db } from '@/storage/local_db'
-
-/**
- * Mock the app store to test hook behavior
- */
-const mockStore = {
-  addItems: vi.fn(),
-  appendToDraft: vi.fn(),
-  draftItem: null as {
-    id: 'draft'
-    type: 'text'
-    content: string
-    capturedAt: string
-  } | null,
-}
-
-// Mock the store module
-vi.mock('@/store/appStore', () => ({
-  useAppStore: () => mockStore,
-}))
+import { useAppStore } from '@/store/appStore'
 
 describe('useGlobalPaste', () => {
+  // Store spies
+  let addItemsSpy: ReturnType<typeof vi.spyOn>
+  let appendToDraftSpy: ReturnType<typeof vi.spyOn>
+
   beforeEach(async () => {
+    // Clear all mocks first
     vi.clearAllMocks()
+
+    // Clear database and reset store
+    await db.items.clear()
+    useAppStore.getState().reset()
+
+    // Setup spies on store actions (after reset)
+    addItemsSpy = vi.spyOn(useAppStore.getState(), 'addItems')
+    appendToDraftSpy = vi.spyOn(useAppStore.getState(), 'appendToDraft')
+
+    // Reset DOM
     document.body.innerHTML = ''
     document.body.className = ''
-    mockStore.draftItem = null
-    // Clear database
-    await db.items.clear()
   })
 
   afterEach(() => {
-    vi.clearAllMocks()
+    vi.restoreAllMocks()
   })
 
   /**
@@ -100,8 +94,7 @@ describe('useGlobalPaste', () => {
   }
 
   describe('Text Paste (calls store.addItems)', () => {
-    it.skip('should create text item when plain text is pasted', () => {
-      // Module mock path resolution issue - behavior tested in integration tests
+    it('should create text item when plain text is pasted', () => {
       renderHook(() => useGlobalPaste())
 
       const pasteEvent = createMockPasteEvent({
@@ -109,17 +102,16 @@ describe('useGlobalPaste', () => {
       })
       window.dispatchEvent(pasteEvent)
 
-      expect(mockStore.addItems).toHaveBeenCalledTimes(1)
+      expect(addItemsSpy).toHaveBeenCalledTimes(1)
 
-      const items = mockStore.addItems.mock.calls[0][0] as RawItem[]
+      const items = addItemsSpy.mock.calls[0][0] as RawItem[]
       expect(items).toHaveLength(1)
       expect(items[0].type).toBe('text')
       expect(items[0].raw).toBe('Hello world')
       expect(items[0].metadata).toEqual({ kind: 'plain' })
     })
 
-    it.skip('should trim whitespace from pasted text', () => {
-      // Module mock path resolution issue - behavior tested in integration tests
+    it('should trim whitespace from pasted text', () => {
       renderHook(() => useGlobalPaste())
 
       const pasteEvent = createMockPasteEvent({
@@ -127,15 +119,15 @@ describe('useGlobalPaste', () => {
       })
       window.dispatchEvent(pasteEvent)
 
-      expect(mockStore.addItems).toHaveBeenCalledTimes(1)
+      expect(addItemsSpy).toHaveBeenCalledTimes(1)
 
-      const items = mockStore.addItems.mock.calls[0][0] as RawItem[]
+      const items = addItemsSpy.mock.calls[0][0] as RawItem[]
       expect(items[0].raw).toBe('Padded text')
     })
   })
 
   describe('URL Paste', () => {
-    it.skip('should create URL item when https URL is pasted', () => {
+    it('should create URL item when https URL is pasted', () => {
       renderHook(() => useGlobalPaste())
 
       const pasteEvent = createMockPasteEvent({
@@ -143,16 +135,16 @@ describe('useGlobalPaste', () => {
       })
       window.dispatchEvent(pasteEvent)
 
-      expect(mockStore.addItems).toHaveBeenCalledTimes(1)
+      expect(addItemsSpy).toHaveBeenCalledTimes(1)
 
-      const items = mockStore.addItems.mock.calls[0][0] as RawItem[]
+      const items = addItemsSpy.mock.calls[0][0] as RawItem[]
       expect(items).toHaveLength(1)
       expect(items[0].type).toBe('url')
       expect(items[0].raw).toBe('https://example.com')
       expect(items[0].title).toBe('example.com')
     })
 
-    it.skip('should create URL item when http URL is pasted', () => {
+    it('should create URL item when http URL is pasted', () => {
       renderHook(() => useGlobalPaste())
 
       const pasteEvent = createMockPasteEvent({
@@ -160,14 +152,14 @@ describe('useGlobalPaste', () => {
       })
       window.dispatchEvent(pasteEvent)
 
-      expect(mockStore.addItems).toHaveBeenCalledTimes(1)
+      expect(addItemsSpy).toHaveBeenCalledTimes(1)
 
-      const items = mockStore.addItems.mock.calls[0][0] as RawItem[]
+      const items = addItemsSpy.mock.calls[0][0] as RawItem[]
       expect(items[0].type).toBe('url')
       expect(items[0].raw).toBe('http://example.com/path')
     })
 
-    it.skip('should extract hostname as title for URL items', () => {
+    it('should extract hostname as title for URL items', () => {
       renderHook(() => useGlobalPaste())
 
       const pasteEvent = createMockPasteEvent({
@@ -175,15 +167,15 @@ describe('useGlobalPaste', () => {
       })
       window.dispatchEvent(pasteEvent)
 
-      expect(mockStore.addItems).toHaveBeenCalledTimes(1)
+      expect(addItemsSpy).toHaveBeenCalledTimes(1)
 
-      const items = mockStore.addItems.mock.calls[0][0] as RawItem[]
+      const items = addItemsSpy.mock.calls[0][0] as RawItem[]
       expect(items[0].title).toBe('www.example.com')
     })
   })
 
   describe('Image Paste', () => {
-    it.skip('should create image item when image is pasted', () => {
+    it('should create image item when image is pasted', () => {
       renderHook(() => useGlobalPaste())
 
       const mockFile = new File(['image data'], 'test.png', {
@@ -195,15 +187,15 @@ describe('useGlobalPaste', () => {
       })
       window.dispatchEvent(pasteEvent)
 
-      expect(mockStore.addItems).toHaveBeenCalledTimes(1)
+      expect(addItemsSpy).toHaveBeenCalledTimes(1)
 
-      const items = mockStore.addItems.mock.calls[0][0] as RawItem[]
+      const items = addItemsSpy.mock.calls[0][0] as RawItem[]
       expect(items).toHaveLength(1)
       expect(items[0].type).toBe('image')
       expect(items[0].raw).toBeInstanceOf(File)
     })
 
-    it.skip('should handle multiple image types', () => {
+    it('should handle multiple image types', () => {
       renderHook(() => useGlobalPaste())
 
       const mockFile = new File(['image data'], 'test.jpg', {
@@ -215,15 +207,15 @@ describe('useGlobalPaste', () => {
       })
       window.dispatchEvent(pasteEvent)
 
-      expect(mockStore.addItems).toHaveBeenCalledTimes(1)
+      expect(addItemsSpy).toHaveBeenCalledTimes(1)
 
-      const items = mockStore.addItems.mock.calls[0][0] as RawItem[]
+      const items = addItemsSpy.mock.calls[0][0] as RawItem[]
       expect(items[0].type).toBe('image')
     })
   })
 
   describe('Multiple Items', () => {
-    it.skip('should handle multiple images in single paste', () => {
+    it('should handle multiple images in single paste', () => {
       renderHook(() => useGlobalPaste())
 
       const mockFile1 = new File(['image data 1'], 'test1.png', {
@@ -238,9 +230,9 @@ describe('useGlobalPaste', () => {
       })
       window.dispatchEvent(pasteEvent)
 
-      expect(mockStore.addItems).toHaveBeenCalledTimes(1)
+      expect(addItemsSpy).toHaveBeenCalledTimes(1)
 
-      const items = mockStore.addItems.mock.calls[0][0] as RawItem[]
+      const items = addItemsSpy.mock.calls[0][0] as RawItem[]
       expect(items).toHaveLength(2)
       expect(items[0].type).toBe('image')
       expect(items[1].type).toBe('image')
@@ -248,14 +240,12 @@ describe('useGlobalPaste', () => {
   })
 
   describe('Draft Append (calls store.appendToDraft)', () => {
-    it.skip('should append text to draft when draft is active', () => {
-      // Set up store to indicate draft exists
-      mockStore.draftItem = {
-        id: 'draft',
-        type: 'text',
-        content: 'Existing',
-        capturedAt: new Date().toISOString(),
-      }
+    it('should append text to draft when draft is active', () => {
+      // Create a draft first
+      useAppStore.getState().createDraft('Existing')
+      // Clear spies after setup
+      addItemsSpy.mockClear()
+      appendToDraftSpy.mockClear()
 
       renderHook(() => useGlobalPaste())
 
@@ -264,18 +254,17 @@ describe('useGlobalPaste', () => {
       })
       window.dispatchEvent(pasteEvent)
 
-      expect(mockStore.appendToDraft).toHaveBeenCalledTimes(1)
-      expect(mockStore.appendToDraft).toHaveBeenCalledWith('appended text')
-      expect(mockStore.addItems).not.toHaveBeenCalled()
+      expect(appendToDraftSpy).toHaveBeenCalledTimes(1)
+      expect(appendToDraftSpy).toHaveBeenCalledWith('appended text')
+      expect(addItemsSpy).not.toHaveBeenCalled()
     })
 
-    it.skip('should NOT append to draft when image is also pasted', () => {
-      mockStore.draftItem = {
-        id: 'draft',
-        type: 'text',
-        content: 'Existing',
-        capturedAt: new Date().toISOString(),
-      }
+    it('should NOT append to draft when image is also pasted', () => {
+      // Create a draft first
+      useAppStore.getState().createDraft('Existing')
+      // Clear spies after setup
+      addItemsSpy.mockClear()
+      appendToDraftSpy.mockClear()
 
       renderHook(() => useGlobalPaste())
 
@@ -289,14 +278,15 @@ describe('useGlobalPaste', () => {
       })
       window.dispatchEvent(pasteEvent)
 
-      expect(mockStore.addItems).toHaveBeenCalledTimes(1)
-      expect(mockStore.appendToDraft).not.toHaveBeenCalled()
-      const items = mockStore.addItems.mock.calls[0][0] as RawItem[]
+      expect(addItemsSpy).toHaveBeenCalledTimes(1)
+      expect(appendToDraftSpy).not.toHaveBeenCalled()
+      const items = addItemsSpy.mock.calls[0][0] as RawItem[]
       expect(items.length).toBeGreaterThanOrEqual(1)
     })
 
-    it.skip('should create new item when no draft is active', () => {
-      mockStore.draftItem = null
+    it('should create new item when no draft is active', () => {
+      // Ensure no draft
+      expect(useAppStore.getState().draftItem).toBeNull()
 
       renderHook(() => useGlobalPaste())
 
@@ -305,8 +295,8 @@ describe('useGlobalPaste', () => {
       })
       window.dispatchEvent(pasteEvent)
 
-      expect(mockStore.addItems).toHaveBeenCalledTimes(1)
-      expect(mockStore.appendToDraft).not.toHaveBeenCalled()
+      expect(addItemsSpy).toHaveBeenCalledTimes(1)
+      expect(appendToDraftSpy).not.toHaveBeenCalled()
     })
   })
 
@@ -324,7 +314,7 @@ describe('useGlobalPaste', () => {
       })
       window.dispatchEvent(pasteEvent)
 
-      expect(mockStore.addItems).not.toHaveBeenCalled()
+      expect(addItemsSpy).not.toHaveBeenCalled()
 
       document.body.removeChild(input)
     })
@@ -341,7 +331,7 @@ describe('useGlobalPaste', () => {
       })
       window.dispatchEvent(pasteEvent)
 
-      expect(mockStore.addItems).not.toHaveBeenCalled()
+      expect(addItemsSpy).not.toHaveBeenCalled()
 
       document.body.removeChild(textarea)
     })
@@ -359,13 +349,12 @@ describe('useGlobalPaste', () => {
       })
       window.dispatchEvent(pasteEvent)
 
-      expect(mockStore.addItems).not.toHaveBeenCalled()
+      expect(addItemsSpy).not.toHaveBeenCalled()
 
       document.body.removeChild(div)
     })
 
-    it.skip('should capture paste when no input is focused', () => {
-      // Module mock path resolution issue - behavior tested in integration tests
+    it('should capture paste when no input is focused', () => {
       // Ensure nothing is focused
       document.body.focus()
 
@@ -376,7 +365,7 @@ describe('useGlobalPaste', () => {
       })
       window.dispatchEvent(pasteEvent)
 
-      expect(mockStore.addItems).toHaveBeenCalledTimes(1)
+      expect(addItemsSpy).toHaveBeenCalledTimes(1)
     })
   })
 
@@ -387,7 +376,7 @@ describe('useGlobalPaste', () => {
       const pasteEvent = createMockPasteEvent({})
       window.dispatchEvent(pasteEvent)
 
-      expect(mockStore.addItems).not.toHaveBeenCalled()
+      expect(addItemsSpy).not.toHaveBeenCalled()
     })
 
     it('should silently ignore whitespace-only clipboard', () => {
@@ -398,7 +387,7 @@ describe('useGlobalPaste', () => {
       })
       window.dispatchEvent(pasteEvent)
 
-      expect(mockStore.addItems).not.toHaveBeenCalled()
+      expect(addItemsSpy).not.toHaveBeenCalled()
     })
 
     it('should silently ignore unsupported types', () => {
@@ -421,7 +410,7 @@ describe('useGlobalPaste', () => {
 
       window.dispatchEvent(pasteEvent)
 
-      expect(mockStore.addItems).not.toHaveBeenCalled()
+      expect(addItemsSpy).not.toHaveBeenCalled()
     })
   })
 
@@ -434,7 +423,7 @@ describe('useGlobalPaste', () => {
       })
       window.dispatchEvent(pasteEvent)
 
-      expect(mockStore.addItems).not.toHaveBeenCalled()
+      expect(addItemsSpy).not.toHaveBeenCalled()
     })
   })
 
@@ -449,14 +438,14 @@ describe('useGlobalPaste', () => {
       })
       window.dispatchEvent(pasteEvent)
 
-      expect(mockStore.addItems).not.toHaveBeenCalled()
+      expect(addItemsSpy).not.toHaveBeenCalled()
 
       document.body.classList.remove('drag-overlay-active')
     })
   })
 
   describe('Text with embedded URL renders as text block', () => {
-    it.skip('should create text item when URL appears within a sentence', () => {
+    it('should create text item when URL appears within a sentence', () => {
       renderHook(() => useGlobalPaste())
 
       const pasteEvent = createMockPasteEvent({
@@ -464,15 +453,15 @@ describe('useGlobalPaste', () => {
       })
       window.dispatchEvent(pasteEvent)
 
-      expect(mockStore.addItems).toHaveBeenCalledTimes(1)
+      expect(addItemsSpy).toHaveBeenCalledTimes(1)
 
-      const items = mockStore.addItems.mock.calls[0][0] as RawItem[]
+      const items = addItemsSpy.mock.calls[0][0] as RawItem[]
       expect(items).toHaveLength(1)
       expect(items[0].type).toBe('text')
       expect(items[0].metadata).toEqual({ kind: 'plain' })
     })
 
-    it.skip('should treat text with URL in middle as text type, not URL type', () => {
+    it('should treat text with URL in middle as text type, not URL type', () => {
       renderHook(() => useGlobalPaste())
 
       const pasteEvent = createMockPasteEvent({
@@ -480,11 +469,11 @@ describe('useGlobalPaste', () => {
       })
       window.dispatchEvent(pasteEvent)
 
-      const items = mockStore.addItems.mock.calls[0][0] as RawItem[]
+      const items = addItemsSpy.mock.calls[0][0] as RawItem[]
       expect(items[0].type).toBe('text')
     })
 
-    it.skip('should only create URL item when entire string is a URL', () => {
+    it('should only create URL item when entire string is a URL', () => {
       renderHook(() => useGlobalPaste())
 
       // This should be URL
@@ -493,10 +482,10 @@ describe('useGlobalPaste', () => {
       })
       window.dispatchEvent(urlEvent)
 
-      let items = mockStore.addItems.mock.calls[0][0] as RawItem[]
+      let items = addItemsSpy.mock.calls[0][0] as RawItem[]
       expect(items[0].type).toBe('url')
 
-      mockStore.addItems.mockClear()
+      addItemsSpy.mockClear()
 
       // This should be text (URL with trailing text)
       const textEvent = createMockPasteEvent({
@@ -504,11 +493,11 @@ describe('useGlobalPaste', () => {
       })
       window.dispatchEvent(textEvent)
 
-      items = mockStore.addItems.mock.calls[0][0] as RawItem[]
+      items = addItemsSpy.mock.calls[0][0] as RawItem[]
       expect(items[0].type).toBe('text')
     })
 
-    it.skip('should preserve full text content including embedded URL', () => {
+    it('should preserve full text content including embedded URL', () => {
       renderHook(() => useGlobalPaste())
 
       const fullText = 'Visit https://example.com/path?query=1 for details'
@@ -517,14 +506,14 @@ describe('useGlobalPaste', () => {
       })
       window.dispatchEvent(pasteEvent)
 
-      const items = mockStore.addItems.mock.calls[0][0] as RawItem[]
+      const items = addItemsSpy.mock.calls[0][0] as RawItem[]
       expect(items[0].type).toBe('text')
       expect(items[0].raw).toBe(fullText)
     })
   })
 
   describe('Item Structure', () => {
-    it.skip('should create items with correct structure', () => {
+    it('should create items with correct structure', () => {
       renderHook(() => useGlobalPaste())
 
       const pasteEvent = createMockPasteEvent({
@@ -532,9 +521,9 @@ describe('useGlobalPaste', () => {
       })
       window.dispatchEvent(pasteEvent)
 
-      expect(mockStore.addItems).toHaveBeenCalledTimes(1)
+      expect(addItemsSpy).toHaveBeenCalledTimes(1)
 
-      const items = mockStore.addItems.mock.calls[0][0] as RawItem[]
+      const items = addItemsSpy.mock.calls[0][0] as RawItem[]
       const item = items[0]
 
       // Check all required fields
