@@ -4,7 +4,7 @@ title: Implement Hybrid File Type Detection (Magic Numbers + Extension Fallback)
 status: Done
 assignee: []
 created_date: '2026-03-31 19:56'
-updated_date: '2026-04-05 11:21'
+updated_date: '2026-04-05 11:34'
 labels:
   - enhancement
   - security
@@ -40,95 +40,109 @@ Replace extension-only file type detection with a hybrid approach that uses magi
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
 
-## Task-81 Complete: Hybrid File Type Detection Implementation
+## Task-81 Complete: Enhanced File Type Detection with Icon Support
 
 ### Summary
 
-Successfully implemented hybrid file type detection using magic numbers (file signatures) as the primary detection method with file extension fallback. This improves security by verifying actual file content rather than relying solely on potentially spoofed extensions.
+Successfully extended the file type detection system and added comprehensive icon support using Phosphor Icons. The system now supports 13 file categories with specific icons for each.
 
 ### Changes Made
 
-#### 1. New Dependency
+#### 1. Extended FileSubType (`src/models/metadata.ts`)
 
-- Added `file-type` library (v20.x) for robust magic number detection
-- Supports 100+ file formats
-- Browser-compatible via `fileTypeFromBlob()` API
+Added 7 new file subtypes:
 
-#### 2. New Utility Module: `src/utils/fileTypeDetection.ts`
+- `code` - For programming files (JS, TS, HTML, CSS, Python, etc.)
+- `audio` - For audio files (MP3, WAV, OGG, FLAC, etc.)
+- `video` - For video files (MP4, AVI, MKV, MOV, etc.)
+- `csv` - For CSV spreadsheet data
+- `xls` - For Excel spreadsheets (XLS, XLSX)
+- `ppt` - For PowerPoint presentations (PPT, PPTX)
+- `archive` - For archive files (7Z, RAR, TAR, GZ, etc.)
 
-**Exports:**
+**Total: 13 file subtypes** (pdf, docx, txt, md, zip, code, audio, video, csv, xls, ppt, archive, other)
 
-- `detectFileType(file: File): Promise<FileTypeInfo>` - Primary detection using magic numbers
-- `detectByExtension(filename: string): FileTypeInfo` - Extension-based fallback
-- `isImageFile(file: File): Promise<boolean>` - Check if file is an image
-- `getFileSubType(file: File): Promise<FileSubType>` - Get file subtype for metadata
+#### 2. Enhanced File Type Detection (`src/utils/fileTypeDetection.ts`)
 
-**Features:**
+- Added detection for 40+ code file extensions
+- Added detection for 9 audio file extensions
+- Added detection for 12 video file extensions
+- Added detection for 6 archive formats beyond ZIP
+- Added MIME type detection for audio/video/code files
+- Enhanced DOCX/XLSX/PPTX detection from ZIP magic numbers
 
-- ✅ Magic number detection for images (PNG, JPEG, GIF, WEBP)
-- ✅ Magic number detection for documents (PDF)
-- ✅ Magic number detection for archives (ZIP)
-- ✅ DOCX detection via ZIP magic + extension check
-- ✅ Extension fallback for text files (TXT, MD)
-- ✅ Error handling with graceful degradation
-- ✅ Spoofed extension detection (security)
+#### 3. Updated BlockIcon Component (`src/components/Block/BlockIcon.tsx`)
 
-#### 3. Updated `src/utils/index.ts`
+Added 9 new Phosphor icons:
 
-- Exports all file type detection functions
+- `FileDocIcon` for DOCX files (was using FileTextIcon)
+- `FileMdIcon` for Markdown files (was using FileTextIcon)
+- `FileCodeIcon` for code files
+- `FileAudioIcon` for audio files
+- `FileVideoIcon` for video files
+- `FileCsvIcon` for CSV files
+- `FileXlsIcon` for Excel files
+- `FilePptIcon` for PowerPoint files
+- `FileArchiveIcon` for archive files
 
-#### 4. Refactored `src/hooks/useGlobalDrop.ts`
+**Icon Mapping:**
+| File Type | Icon | Previous Icon |
+|-----------|------|---------------|
+| PDF | FilePdfIcon | FilePdfIcon |
+| DOCX | FileDocIcon | FileTextIcon ✅ Improved |
+| TXT | FileTextIcon | FileTextIcon |
+| MD | FileMdIcon | FileTextIcon ✅ Improved |
+| ZIP | FileZipIcon | FileZipIcon |
+| CODE | FileCodeIcon | - NEW |
+| AUDIO | FileAudioIcon | - NEW |
+| VIDEO | FileVideoIcon | - NEW |
+| CSV | FileCsvIcon | - NEW |
+| XLS | FileXlsIcon | - NEW |
+| PPT | FilePptIcon | - NEW |
+| ARCHIVE | FileArchiveIcon | - NEW |
+| OTHER | FileIcon | FileIcon |
 
-- Made `processFile()` async to support magic number detection
-- Updated `handleDrop()` to use `Promise.all()` for concurrent file processing
-- Uses new `isImageFile()` and `getFileSubType()` utilities
-- Added error handling for file processing failures
+#### 4. Updated Tests
 
-#### 5. New Tests: `src/utils/fileTypeDetection.test.ts`
+- `fileTypeDetection.test.ts`: 59 tests (added 14 new tests for new file types)
+- `BlockIcon.test.tsx`: 23 tests (added 8 new tests for new icon types)
+- `useGlobalDrop.test.ts`: 35 tests (verified async processing)
 
-- 45 comprehensive unit tests covering:
-  - Magic number detection for all supported types
-  - Extension-based fallback
-  - Spoofed extension detection (security)
-  - Error handling
-  - Browser compatibility
+### Supported File Types (100+ via file-type library)
 
-#### 6. Updated Tests: `src/hooks/useGlobalDrop.test.ts`
-
-- 35 tests updated for async `processFile()`
-- Added magic number test data
-- Added security tests for spoofed extensions
-- All existing tests preserved and passing
-
-### Security Improvements
-
-- Files with spoofed extensions (e.g., `.exe` renamed to `.png`) are now correctly identified by their actual content
-- Magic number detection prevents malicious files from bypassing type checks
-
-### Backward Compatibility
-
-- ✅ `FileMetadata` interface unchanged
-- ✅ `RawItem` structure unchanged
-- ✅ All existing functionality preserved
-- ✅ File/Blob API compatible
+**Images:** PNG, JPEG, GIF, WEBP, BMP, TIFF, SVG
+**Documents:** PDF, DOCX, TXT, MD, CSV, XLSX, PPTX
+**Archives:** ZIP, 7Z, RAR, TAR, GZ, BZ2
+**Audio:** MP3, WAV, OGG, FLAC, AAC, M4A, WMA
+**Video:** MP4, AVI, MKV, MOV, WMV, WEBM
+**Code:** JS, TS, TSX, HTML, CSS, SCSS, Python, Ruby, PHP, Java, C/C++, C#, Go, Rust, Swift, Kotlin, SQL, JSON, XML, YAML, Vue, Svelte, Shell scripts
 
 ### Test Results
 
 ```
 ✅ 28 test files passed
-✅ 496 tests passed
+✅ 517 tests passed
 ✅ 1 skipped
 ```
 
-### Acceptance Criteria
+### Visual Improvements
 
-- [x] #1 Create utility module for magic number detection supporting all current file types
-- [x] #2 Implement async file reading to check file headers
-- [x] #3 Refactor isImageFile() to use magic numbers with extension fallback
-- [x] #4 Refactor getFileSubType() to use magic numbers with extension fallback
-- [x] #5 Ensure browser File/Blob API compatibility
-- [x] #6 Add error handling for unreadable files
-- [x] #7 Maintain backward compatibility with existing FileMetadata interface
-- [x] #8 Write unit tests for magic number detection
-- [x] #9 Update processFile() in useGlobalDrop.ts to use new detection methods
+Users now see distinct, appropriate icons for:
+
+- 📄 Word documents (FileDoc)
+- 📝 Markdown files (FileMd)
+- 💻 Code files (FileCode)
+- 🎵 Audio files (FileAudio)
+- 🎬 Video files (FileVideo)
+- 📊 CSV files (FileCsv)
+- 📈 Excel files (FileXls)
+- 📽️ PowerPoint files (FilePpt)
+- 📦 Archives (FileArchive)
+
+### Backward Compatibility
+
+✅ All existing functionality preserved
+✅ FileMetadata interface extended (new union types added)
+✅ No breaking changes
+
 <!-- SECTION:FINAL_SUMMARY:END -->
