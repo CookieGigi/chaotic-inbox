@@ -1,9 +1,10 @@
 ---
 id: TASK-81
 title: Implement Hybrid File Type Detection (Magic Numbers + Extension Fallback)
-status: To Do
+status: In Progress
 assignee: []
 created_date: '2026-03-31 19:56'
+updated_date: '2026-04-05 11:11'
 labels:
   - enhancement
   - security
