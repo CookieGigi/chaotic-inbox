@@ -1,4 +1,5 @@
 import { v4 as uuidv4 } from 'uuid'
+import { createISO8601Timestamp } from '@/types/branded'
 import type { RawItem } from './rawItem'
 import type {
   FileMetadata,
@@ -10,7 +11,7 @@ import type {
 function createBaseItem(): Pick<RawItem, 'id' | 'capturedAt'> {
   return {
     id: uuidv4(),
-    capturedAt: new Date().toISOString() as RawItem['capturedAt'],
+    capturedAt: createISO8601Timestamp(),
   }
 }
 
