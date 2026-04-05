@@ -1,6 +1,6 @@
 import { StrictMode, ReactNode } from 'react'
 import { render, RenderOptions, RenderResult } from '@testing-library/react'
-import { ErrorBoundary } from '@components/ErrorBoundary'
+import { ErrorBoundary } from '@/components/ErrorBoundary'
 
 interface ProviderConfig {
   errorBoundary?: boolean

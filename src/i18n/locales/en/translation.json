@@ -1,0 +1,31 @@
+{
+  "app": {
+    "dropFiles": "Drop files here"
+  },
+  "block": {
+    "draft": {
+      "label": "Draft",
+      "saveHint": "Ctrl+Enter to save, Escape to cancel",
+      "keyboardShortcuts": "Keyboard shortcuts:"
+    }
+  },
+  "feed": {
+    "ariaLabel": "Chronological feed",
+    "listAriaLabel": "Items in chronological order",
+    "empty": {
+      "message": "Start by pasting text, URLs, images, or dropping files"
+    }
+  },
+  "file": {
+    "size": "Size: {{size}}"
+  },
+  "error": {
+    "title": "Something went wrong",
+    "componentStack": "Component Stack",
+    "stackTrace": "Stack Trace",
+    "tryAgain": "Try again"
+  },
+  "url": {
+    "openLink": "Open link: {{url}}"
+  }
+}

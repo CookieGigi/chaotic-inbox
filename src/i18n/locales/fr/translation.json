@@ -1,0 +1,31 @@
+{
+  "app": {
+    "dropFiles": "Déposez des fichiers ici"
+  },
+  "block": {
+    "draft": {
+      "label": "Brouillon",
+      "saveHint": "Ctrl+Entrée pour enregistrer, Échap pour annuler",
+      "keyboardShortcuts": "Raccourcis clavier :"
+    }
+  },
+  "feed": {
+    "ariaLabel": "Flux chronologique",
+    "listAriaLabel": "Éléments dans l'ordre chronologique",
+    "empty": {
+      "message": "Commencez par coller du texte, des URLs, des images ou déposez des fichiers"
+    }
+  },
+  "file": {
+    "size": "Taille : {{size}}"
+  },
+  "error": {
+    "title": "Une erreur s'est produite",
+    "componentStack": "Pile des composants",
+    "stackTrace": "Trace de la pile",
+    "tryAgain": "Réessayer"
+  },
+  "url": {
+    "openLink": "Ouvrir le lien : {{url}}"
+  }
+}

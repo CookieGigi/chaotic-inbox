@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
 import { ArticleIcon } from '@phosphor-icons/react'
 import { TextBlockEdit } from '@/components/TextBlock/TextBlockEdit'
 import { Timestamp } from '@/components/Timestamp'
@@ -23,6 +24,7 @@ export interface DraftBlockProps {
  * Uses Zustand store for draft actions (update, submit, cancel).
  */
 export function DraftBlock({ draft }: DraftBlockProps) {
+  const { t } = useTranslation()
   const blockRef = useRef<HTMLDivElement>(null)
 
   // Subscribe to store actions
@@ -54,7 +56,9 @@ export function DraftBlock({ draft }: DraftBlockProps) {
             weight="regular"
             className="text-text-muted flex-shrink-0"
           />
-          <span className="text-label text-text-muted font-medium">Draft</span>
+          <span className="text-label text-text-muted font-medium">
+            {t('block.draft.label')}
+          </span>
         </div>
         <Timestamp value={draft.capturedAt as ISO8601Timestamp} />
       </header>
@@ -71,8 +75,8 @@ export function DraftBlock({ draft }: DraftBlockProps) {
 
       {/* Hint text */}
       <div data-testid="draft-block-hint" className="text-hint text-[#939ab7]">
-        <span className="sr-only">Keyboard shortcuts:</span>
-        Ctrl+Enter to save, Escape to cancel
+        <span className="sr-only">{t('block.draft.keyboardShortcuts')}</span>
+        {t('block.draft.saveHint')}
       </div>
     </article>
   )

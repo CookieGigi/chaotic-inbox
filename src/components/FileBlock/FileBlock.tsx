@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import type { RawItem } from '@/models/rawItem'
 
 export interface FileBlockProps {
@@ -21,12 +22,13 @@ function formatFileSize(bytes: number): string {
 }
 
 export function FileBlock({ item }: FileBlockProps) {
+  const { t } = useTranslation()
   const { filesize } = item.metadata
 
   return (
     <div className="flex flex-row items-center gap-2 leading-relaxed">
       <span className="text-sm text-text-muted">
-        Size: {formatFileSize(filesize)}
+        {t('file.size', { size: formatFileSize(filesize) })}
       </span>
     </div>
   )

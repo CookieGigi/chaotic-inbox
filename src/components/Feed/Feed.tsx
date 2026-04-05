@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
 import type { RawItem } from '@/models/rawItem'
 import { Block } from '@/components/Block'
 import { DraftBlock } from '@/components/DraftBlock'
@@ -22,6 +23,7 @@ function sortByCaptureTime(items: RawItem[]): RawItem[] {
 }
 
 export function Feed({ items, draftItem }: FeedProps) {
+  const { t } = useTranslation()
   const newestItemRef = useRef<HTMLDivElement>(null)
   const hasDoneInitialScroll = useRef(false)
   const previousItemsLength = useRef(items.length)
@@ -97,7 +99,7 @@ export function Feed({ items, draftItem }: FeedProps) {
     return (
       <div
         data-testid="feed"
-        aria-label="Chronological feed"
+        aria-label={t('feed.ariaLabel')}
         className="max-w-[720px] mx-auto px-4 py-6 min-h-[200px]"
       >
         <div
@@ -106,7 +108,7 @@ export function Feed({ items, draftItem }: FeedProps) {
           className="flex items-center justify-center h-full min-h-[200px]"
         >
           <p className="text-base text-text-faint text-center">
-            Start by pasting text, URLs, images, or dropping files
+            {t('feed.empty.message')}
           </p>
         </div>
       </div>
@@ -122,7 +124,7 @@ export function Feed({ items, draftItem }: FeedProps) {
       <div
         data-testid="feed-list"
         role="feed"
-        aria-label="Items in chronological order"
+        aria-label={t('feed.listAriaLabel')}
         className="divide-y divide-border"
       >
         {sortedItems.map((item, index) => (

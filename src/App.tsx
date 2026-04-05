@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Feed } from '@/components/Feed'
 import { useGlobalTyping, useGlobalPaste, useGlobalDrop } from '@/hooks'
 import { useAppStore } from '@/store/appStore'
@@ -18,6 +19,8 @@ import './App.css'
  * Uses Zustand for state management.
  */
 function App() {
+  const { t } = useTranslation()
+
   // Subscribe to store state
   const items = useAppStore((state) => state.items)
   const draftItem = useAppStore((state) => state.draftItem)
@@ -50,7 +53,9 @@ function App() {
               className="text-accent"
               weight="duotone"
             />
-            <p className="text-lg font-medium text-text">Drop files here</p>
+            <p className="text-lg font-medium text-text">
+              {t('app.dropFiles')}
+            </p>
           </div>
         </div>
       )}

@@ -17,7 +17,7 @@ describe('Timestamp', () => {
 
     it('formats today timestamps as HH:MM in local timezone', () => {
       const today = '2026-03-22T09:15:30.000Z' as ISO8601Timestamp
-      const result = formatTimestamp(today)
+      const result = formatTimestamp(today, 'en-US')
       const expected = new Date(today).toLocaleTimeString('en-US', {
         hour: '2-digit',
         minute: '2-digit',
@@ -29,7 +29,7 @@ describe('Timestamp', () => {
 
     it('formats this year timestamps as "Mon DD · HH:MM" in local timezone', () => {
       const thisYear = '2026-01-15T10:05:00.000Z' as ISO8601Timestamp
-      const result = formatTimestamp(thisYear)
+      const result = formatTimestamp(thisYear, 'en-US')
 
       const date = new Date(thisYear)
       const datePart = date.toLocaleDateString('en-US', {
@@ -47,7 +47,7 @@ describe('Timestamp', () => {
 
     it('formats older timestamps as "YYYY Mon DD · HH:MM" in local timezone', () => {
       const older = '2023-06-10T08:30:00.000Z' as ISO8601Timestamp
-      const result = formatTimestamp(older)
+      const result = formatTimestamp(older, 'en-US')
 
       const date = new Date(older)
       const yearPart = date.getFullYear()
@@ -66,7 +66,7 @@ describe('Timestamp', () => {
 
     it('formats yesterday (different day) with date and time', () => {
       const yesterday = '2026-03-21T14:30:00.000Z' as ISO8601Timestamp
-      const result = formatTimestamp(yesterday)
+      const result = formatTimestamp(yesterday, 'en-US')
 
       // Should include date since it's not today
       expect(result).toContain('·')
@@ -74,7 +74,7 @@ describe('Timestamp', () => {
 
     it('recognizes items from last year as older', () => {
       const lastYear = '2025-12-25T00:00:00.000Z' as ISO8601Timestamp
-      const result = formatTimestamp(lastYear)
+      const result = formatTimestamp(lastYear, 'en-US')
 
       // Should include year
       expect(result).toContain('2025')
@@ -83,7 +83,7 @@ describe('Timestamp', () => {
     it('handles end of day edge case correctly', () => {
       // Use early morning UTC which is still yesterday in any local timezone
       const earlyYesterday = '2026-03-21T02:00:00.000Z' as ISO8601Timestamp
-      const result = formatTimestamp(earlyYesterday)
+      const result = formatTimestamp(earlyYesterday, 'en-US')
 
       // Should not be treated as today (different date in local timezone)
       expect(result).toContain('·')
@@ -91,7 +91,7 @@ describe('Timestamp', () => {
 
     it('handles start of year edge case correctly', () => {
       const newYearsDay = '2026-01-01T00:00:00.000Z' as ISO8601Timestamp
-      const result = formatTimestamp(newYearsDay)
+      const result = formatTimestamp(newYearsDay, 'en-US')
 
       const date = new Date(newYearsDay)
       const datePart = date.toLocaleDateString('en-US', {
@@ -104,7 +104,7 @@ describe('Timestamp', () => {
 
     it('handles leap year correctly', () => {
       const leapDay = '2024-02-29T12:30:00.000Z' as ISO8601Timestamp
-      const result = formatTimestamp(leapDay)
+      const result = formatTimestamp(leapDay, 'en-US')
 
       // Should include year since it's older
       expect(result).toContain('2024')
@@ -117,7 +117,7 @@ describe('Timestamp', () => {
       const timestamp = '2026-03-22T14:30:00.000Z' as ISO8601Timestamp
       render(<Timestamp value={timestamp} />)
 
-      const timeElement = screen.getByText(formatTimestamp(timestamp))
+      const timeElement = screen.getByText(formatTimestamp(timestamp, 'en-US'))
       expect(timeElement.tagName).toBe('TIME')
       expect(timeElement).toHaveAttribute('datetime', timestamp)
     })
@@ -126,7 +126,7 @@ describe('Timestamp', () => {
       const timestamp = '2026-01-15T10:05:00.000Z' as ISO8601Timestamp
       render(<Timestamp value={timestamp} />)
 
-      const timeElement = screen.getByText(formatTimestamp(timestamp))
+      const timeElement = screen.getByText(formatTimestamp(timestamp, 'en-US'))
       expect(timeElement).toHaveAttribute('title')
       expect(timeElement.getAttribute('title')).toContain('UTC')
     })
@@ -135,7 +135,7 @@ describe('Timestamp', () => {
       const timestamp = '2023-06-10T08:30:00.000Z' as ISO8601Timestamp
       render(<Timestamp value={timestamp} />)
 
-      const timeElement = screen.getByText(formatTimestamp(timestamp))
+      const timeElement = screen.getByText(formatTimestamp(timestamp, 'en-US'))
       expect(timeElement.className).toContain('text-sm')
       expect(timeElement.className).toContain('text-text-muted')
     })
@@ -149,7 +149,7 @@ describe('Timestamp', () => {
 
       render(<Timestamp value={todayTimestamp} />)
 
-      const result = formatTimestamp(todayTimestamp)
+      const result = formatTimestamp(todayTimestamp, 'en-US')
       // Today format should not contain "·"
       expect(result).not.toContain('·')
 

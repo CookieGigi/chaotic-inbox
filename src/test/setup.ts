@@ -2,6 +2,9 @@ import '@testing-library/jest-dom/vitest'
 import { cleanup } from '@testing-library/react'
 import { afterEach, beforeAll, vi } from 'vitest'
 
+// Initialize i18n for tests
+import './i18n'
+
 // Define __DEV__ global for React and other libraries
 ;(globalThis as unknown as { __DEV__: boolean }).__DEV__ = true
 
