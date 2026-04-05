@@ -39,9 +39,9 @@ if (isImageItem(item)) {
 
 <!-- DOD:BEGIN -->
 
-- [ ] #1 Blob URLs are properly revoked when component unmounts or blob changes
-- [ ] #2 TypeScript types are correctly handled for ImageMetadata
-- [ ] #3 useMemo prevents unnecessary blob URL creation on re-renders
+- [x] #1 Blob URLs are properly revoked when component unmounts or blob changes
+- [x] #2 TypeScript types are correctly handled for ImageMetadata
+- [x] #3 useMemo prevents unnecessary blob URL creation on re-renders
 <!-- DOD:END -->
 
 ## Final Summary
