@@ -14,11 +14,15 @@ priority: medium
 ## Description
 
 <!-- SECTION:DESCRIPTION:BEGIN -->
+
 Set up initial project documentation including README, CONTRIBUTING guide, and architecture documentation. Create templates for future documentation.
+
 <!-- SECTION:DESCRIPTION:END -->
 
 ## Acceptance Criteria
+
 <!-- AC:BEGIN -->
+
 - [ ] #1 README with setup instructions
 - [ ] #2 CONTRIBUTING.md with guidelines
 - [ ] #3 Architecture decision records (ADRs) template
