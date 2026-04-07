@@ -1,9 +1,10 @@
 ---
 id: TASK-97
 title: Add Dexie database backup feature with settings modal
-status: To Do
+status: In Progress
 assignee: []
 created_date: '2026-04-07 17:15'
+updated_date: '2026-04-07 17:21'
 labels:
   - feature
   - backup
