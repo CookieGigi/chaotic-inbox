@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from 'uuid'
 import { createISO8601Timestamp } from '@/types/branded'
+import { extractHostname } from '@/utils'
 import type { RawItem } from './rawItem'
 import type {
   FileMetadata,
@@ -37,15 +38,6 @@ export function createTextItem(
     type: 'text',
     raw,
     metadata,
-  }
-}
-
-function extractHostname(url: string): string {
-  try {
-    const urlObj = new URL(url.startsWith('http') ? url : `https://${url}`)
-    return urlObj.hostname
-  } catch {
-    return url
   }
 }
 
