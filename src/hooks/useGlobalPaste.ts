@@ -1,4 +1,4 @@
-import { useEffect, useCallback, useRef } from 'react'
+import { useEffect, useCallback } from 'react'
 import { useAppStore } from '@/store/appStore'
 import type { RawItem } from '@/models/rawItem'
 import { isInputElement } from '@/utils'
@@ -14,14 +14,6 @@ import {
 interface UseGlobalPasteOptions {
   /** Whether paste capture is disabled */
   disabled?: boolean
-}
-
-/**
- * Hook return type
- */
-interface UseGlobalPasteReturn {
-  /** Whether a paste operation is in progress */
-  isPasting: boolean
 }
 
 /**
@@ -53,17 +45,13 @@ function isValidUrl(text: string): boolean {
  *
  * Uses Zustand store for state management.
  */
-export function useGlobalPaste(
-  options: UseGlobalPasteOptions = {}
-): UseGlobalPasteReturn {
+export function useGlobalPaste(options: UseGlobalPasteOptions = {}): void {
   const { disabled = false } = options
 
   // Subscribe to store state and actions
   const draftItem = useAppStore((state) => state.draftItem)
   const addItems = useAppStore((state) => state.addItems)
   const appendToDraft = useAppStore((state) => state.appendToDraft)
-
-  const isPastingRef = useRef(false)
 
   /**
    * Process a text string and create appropriate item
@@ -113,64 +101,58 @@ export function useGlobalPaste(
       const clipboardData = event.clipboardData
       if (!clipboardData) return
 
-      isPastingRef.current = true
+      const newItems: RawItem[] = []
+      let textContent = ''
+      let hasImage = false
 
-      try {
-        const newItems: RawItem[] = []
-        let textContent = ''
-        let hasImage = false
+      // Process all items in clipboard (multiple support)
+      const items = clipboardData.items
 
-        // Process all items in clipboard (multiple support)
-        const items = clipboardData.items
+      for (let i = 0; i < items.length; i++) {
+        const item = items[i]
 
-        for (let i = 0; i < items.length; i++) {
-          const item = items[i]
+        // Skip if item is undefined or doesn't have type
+        if (!item?.type) {
+          continue
+        }
 
-          // Skip if item is undefined or doesn't have type
-          if (!item?.type) {
-            continue
-          }
-
-          if (item.type.startsWith('image/')) {
-            // Handle image paste
-            const file = item.getAsFile()
-            if (file) {
-              const imageItem = processImage(file)
-              if (imageItem) {
-                newItems.push(imageItem)
-                hasImage = true
-              }
-            }
-          } else if (item.type === 'text/plain') {
-            // Handle text paste
-            const text = clipboardData.getData('text/plain')
-            if (text) {
-              textContent = text
-              // Don't create item yet - we'll decide if it goes to draft
+        if (item.type.startsWith('image/')) {
+          // Handle image paste
+          const file = item.getAsFile()
+          if (file) {
+            const imageItem = processImage(file)
+            if (imageItem) {
+              newItems.push(imageItem)
+              hasImage = true
             }
           }
-        }
-
-        // If we have text and no images, check if we should append to draft
-        if (textContent && !hasImage && draftItem) {
-          // Append to existing draft
-          appendToDraft(textContent)
-        } else if (textContent) {
-          // Create new text/URL item
-          const textItem = processText(textContent)
-          if (textItem) {
-            newItems.push(textItem)
+        } else if (item.type === 'text/plain') {
+          // Handle text paste
+          const text = clipboardData.getData('text/plain')
+          if (text) {
+            textContent = text
+            // Don't create item yet - we'll decide if it goes to draft
           }
         }
-
-        // Create items from paste
-        if (newItems.length > 0) {
-          addItems(newItems)
-        }
-        // If no items were created, silently ignore
-      } finally {
-        isPastingRef.current = false
       }
+
+      // If we have text and no images, check if we should append to draft
+      if (textContent && !hasImage && draftItem) {
+        // Append to existing draft
+        appendToDraft(textContent)
+      } else if (textContent) {
+        // Create new text/URL item
+        const textItem = processText(textContent)
+        if (textItem) {
+          newItems.push(textItem)
+        }
+      }
+
+      // Create items from paste
+      if (newItems.length > 0) {
+        addItems(newItems)
+      }
+      // If no items were created, silently ignore
     }
 
     window.addEventListener('paste', handlePaste)
@@ -179,8 +161,4 @@ export function useGlobalPaste(
       window.removeEventListener('paste', handlePaste)
     }
   }, [disabled, draftItem, processText, processImage, appendToDraft, addItems])
-
-  return {
-    isPasting: isPastingRef.current,
-  }
 }
