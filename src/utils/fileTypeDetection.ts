@@ -1,4 +1,5 @@
 import { fileTypeFromBlob } from 'file-type'
+import { showError } from '@/store/toastStore'
 import type { FileSubType } from '@/models/metadata'
 
 /**
@@ -311,9 +312,9 @@ export async function detectFileType(file: File): Promise<FileTypeInfo> {
 
     // Fallback to extension-based detection for files without magic numbers
     return detectByExtension(file.name)
-  } catch (error) {
+  } catch {
     // On error, try extension fallback or return safe defaults
-    console.warn('Error detecting file type:', error)
+    showError('Failed to detect file type. Using fallback detection.')
     return detectByExtension(file.name)
   }
 }

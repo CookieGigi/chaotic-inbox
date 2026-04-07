@@ -1,4 +1,5 @@
 import { Component, type ErrorInfo, type ReactNode } from 'react'
+import { showError } from '@/store/toastStore'
 
 declare const __DEV__: boolean
 
@@ -33,6 +34,9 @@ export class ErrorBoundaryClass extends Component<ErrorBoundaryProps, State> {
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     console.error('ErrorBoundary caught an error:', error, errorInfo)
+    showError(
+      'An unexpected error occurred. Please refresh the page and try again.'
+    )
     this.setState({ error, errorInfo })
   }
 

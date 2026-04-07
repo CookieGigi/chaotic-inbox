@@ -1,3 +1,5 @@
+import { showError } from '@/store/toastStore'
+
 /**
  * Extract hostname from a URL string
  *
@@ -12,6 +14,7 @@ export function extractHostname(url: string): string {
     const urlObj = new URL(url.startsWith('http') ? url : `https://${url}`)
     return urlObj.hostname
   } catch {
+    showError('Invalid URL format. Could not extract hostname.')
     return url
   }
 }

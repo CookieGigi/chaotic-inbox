@@ -1,5 +1,6 @@
 import { useEffect, useCallback, useRef, useState } from 'react'
 import { useAppStore } from '@/store/appStore'
+import { showError } from '@/store/toastStore'
 import type { RawItem } from '@/models/rawItem'
 import { createImageItem, createFileItem } from '@/models/itemFactories'
 import { isImageFile, getFileSubType } from '@/utils/fileTypeDetection'
@@ -49,8 +50,8 @@ async function processFile(file: File): Promise<RawItem | null> {
         mimetype: file.type || 'application/octet-stream',
       })
     }
-  } catch (error) {
-    console.error('Error processing file:', error)
+  } catch {
+    showError('Failed to process file. Please try again.')
     return null
   }
 }
