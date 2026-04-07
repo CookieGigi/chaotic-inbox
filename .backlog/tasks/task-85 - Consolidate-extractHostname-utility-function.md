@@ -1,9 +1,10 @@
 ---
 id: TASK-85
 title: Consolidate extractHostname utility function
-status: To Do
+status: In Progress
 assignee: []
 created_date: '2026-04-01 16:30'
+updated_date: '2026-04-07 16:44'
 labels:
   - refactor
   - code-duplication
