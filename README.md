@@ -29,3 +29,14 @@ pnpm build
 - `pnpm test` - Run tests with Vitest
 - `pnpm test:coverage` - Run tests with coverage
 - `pnpm storybook` - Start Storybook development server
+
+## Deployment
+
+For production deployment instructions, see the [Deployment Guide](./docs/deployment.md).
+
+Quick start:
+
+```bash
+pnpm build
+# Serve the dist/ folder with any static file server
+```
