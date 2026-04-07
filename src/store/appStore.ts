@@ -2,6 +2,7 @@ import { create } from 'zustand'
 import { db } from '@/storage/local_db'
 import type { RawItem } from '@/models/rawItem'
 import { createTextItem } from '@/models/itemFactories'
+import { showError } from '@/store/toastStore'
 
 /**
  * Draft item type for in-progress text capture
@@ -85,6 +86,7 @@ export const useAppStore = create<AppStore>((set, get) => ({
       set({ items: allItems, isLoading: false })
     } catch (error) {
       console.error('Failed to load items:', error)
+      showError('Failed to load items. Please refresh the page to try again.')
       set({ isLoading: false })
     }
   },
@@ -107,6 +109,7 @@ export const useAppStore = create<AppStore>((set, get) => ({
       }))
     } catch (error) {
       console.error('Failed to add items:', error)
+      showError('Failed to save items. Please try again.')
     }
   },
 
@@ -181,6 +184,10 @@ export const useAppStore = create<AppStore>((set, get) => ({
       })
     } catch (error) {
       console.error('Failed to submit draft:', error)
+      showError(
+        'Failed to save draft. Your content is preserved - please try again.'
+      )
+      // Note: draftItem and draftContent are preserved so user can retry
     }
   },
 
