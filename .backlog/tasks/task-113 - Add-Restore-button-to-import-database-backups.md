@@ -1,9 +1,10 @@
 ---
 id: TASK-113
 title: Add Restore button to import database backups
-status: To Do
+status: In Progress
 assignee: []
 created_date: '2026-04-08 04:47'
+updated_date: '2026-04-08 04:58'
 labels:
   - feature
   - backup
@@ -37,7 +38,7 @@ Technical approach:
 
 <!-- AC:BEGIN -->
 
-- [ ] #1 Restore button visible in SettingsModal Data Management section next to Backup button
+- [x] #1 Restore button visible in SettingsModal Data Management section next to Backup button
 - [ ] #2 File picker allows selecting `.json` backup files only
 - [ ] #3 Confirmation dialog shown before importing (warns about overwriting existing data)
 - [ ] #4 Successful import restores all items to database using importDB()
