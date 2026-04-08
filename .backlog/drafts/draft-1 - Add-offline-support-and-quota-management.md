@@ -1,16 +1,25 @@
 ---
-id: TASK-93
+id: DRAFT-1
 title: Add offline support and quota management
-status: To Do
+status: Draft
 assignee: []
 created_date: '2026-04-04 06:02'
+updated_date: '2026-04-08 04:45'
 labels:
   - offline
   - storage
   - quota
   - ux
 milestone: m-0
-dependencies: []
+dependencies:
+  - TASK-101
+  - TASK-102
+  - TASK-103
+  - TASK-104
+  - TASK-105
+  - TASK-106
+  - TASK-107
+  - TASK-108
 priority: medium
 ---
 
