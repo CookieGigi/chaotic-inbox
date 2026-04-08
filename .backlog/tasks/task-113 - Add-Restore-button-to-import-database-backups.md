@@ -4,7 +4,7 @@ title: Add Restore button to import database backups
 status: Done
 assignee: []
 created_date: '2026-04-08 04:47'
-updated_date: '2026-04-08 05:10'
+updated_date: '2026-04-08 05:11'
 labels:
   - feature
   - backup
@@ -46,8 +46,8 @@ Technical approach:
 - [x] #6 Corrupted backup data shows error toast
 - [x] #7 Feed refreshes automatically after successful restore
 - [x] #8 All UI strings have i18n translations (en/fr)
-- [ ] #9 Storybook stories updated with restore functionality
-- [ ] #10 Comprehensive test coverage for restore functionality (minimum 80%)
+- [x] #9 Storybook stories updated with restore functionality
+- [x] #10 Comprehensive test coverage for restore functionality (minimum 80%)
 - [x] #11 Focus trap in modal includes restore button
 <!-- AC:END -->
 
@@ -89,4 +89,9 @@ Successfully implemented the restore database functionality:
 - All 642 tests pass
 - 29 new tests for restoreBackup service
 - 30 tests for SettingsModal (including restore functionality)
+
+✅ Storybook stories updated with restore functionality (added Open, Closed, BackupOnly, Interactive, WithToastNotification stories)
+
+✅ Comprehensive test coverage achieved - 29 tests for restoreBackup service, 30 tests for SettingsModal (all passing)
+
 <!-- SECTION:FINAL_SUMMARY:END -->
