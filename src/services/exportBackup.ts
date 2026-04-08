@@ -39,9 +39,9 @@ export async function exportDatabase(): Promise<void> {
     URL.revokeObjectURL(url)
 
     // Show success notification
-    showSuccess('settings.export.success')
+    showSuccess('settings.backup.success')
   } catch (error) {
     console.error('Failed to export database:', error)
-    showError('settings.export.error')
+    showError('settings.backup.error')
   }
 }

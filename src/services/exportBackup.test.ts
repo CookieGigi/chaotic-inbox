@@ -120,7 +120,7 @@ describe('exportDatabase', () => {
 
       await exportDatabase()
 
-      expect(showSuccess).toHaveBeenCalledWith('settings.export.success')
+      expect(showSuccess).toHaveBeenCalledWith('settings.backup.success')
     })
   })
 
@@ -130,11 +130,11 @@ describe('exportDatabase', () => {
 
       await exportDatabase()
 
-      expect(showError).toHaveBeenCalledWith('settings.export.error')
+      expect(showError).toHaveBeenCalledWith('settings.backup.error')
     })
 
-    it('does not attempt download when export fails', async () => {
-      mockExportDB.mockRejectedValue(new Error('Export failed'))
+    it('does not attempt download when backup fails', async () => {
+      mockExportDB.mockRejectedValue(new Error('Backup failed'))
 
       await exportDatabase()
 
@@ -149,7 +149,7 @@ describe('exportDatabase', () => {
 
       await exportDatabase()
 
-      expect(showError).toHaveBeenCalledWith('settings.export.error')
+      expect(showError).toHaveBeenCalledWith('settings.backup.error')
     })
   })
 

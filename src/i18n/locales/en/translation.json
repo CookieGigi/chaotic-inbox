@@ -35,12 +35,25 @@
     "sections": {
       "dataManagement": "Data Management"
     },
-    "export": {
-      "title": "Export Backup",
+    "backup": {
+      "title": "Backup Data",
       "description": "Download a backup of all your data as a JSON file",
-      "button": "Export",
-      "success": "Backup exported successfully",
-      "error": "Failed to export backup. Please try again."
+      "button": "Backup",
+      "success": "Backup created successfully",
+      "error": "Failed to create backup. Please try again."
+    },
+    "restore": {
+      "title": "Restore Data",
+      "description": "Import data from a previously exported backup file",
+      "button": "Restore",
+      "confirmTitle": "Restore Data?",
+      "confirmMessage": "This will replace all your current data with the backup. This action cannot be undone.",
+      "confirmButton": "Restore",
+      "cancelButton": "Cancel",
+      "success": "Data restored successfully",
+      "error": "Failed to restore data. Please try again.",
+      "errorInvalidFile": "Invalid backup file. Please select a valid .json file.",
+      "errorVersion": "Backup version is incompatible with current database version."
     }
   }
 }

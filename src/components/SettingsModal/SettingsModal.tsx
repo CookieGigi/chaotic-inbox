@@ -1,38 +1,113 @@
-import { useEffect, useRef, useCallback } from 'react'
+import { useEffect, useRef, useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { XIcon, DownloadIcon } from '@phosphor-icons/react'
+import {
+  XIcon,
+  DownloadIcon,
+  UploadIcon,
+  WarningIcon,
+} from '@phosphor-icons/react'
 
 interface SettingsModalProps {
   isOpen: boolean
   onClose: () => void
-  onExport: () => void
+  onBackup: () => void
+  onRestore?: (file: File) => Promise<boolean>
 }
 
 export function SettingsModal({
   isOpen,
   onClose,
-  onExport,
+  onBackup,
+  onRestore,
 }: SettingsModalProps) {
   const { t } = useTranslation()
   const dialogRef = useRef<HTMLDivElement>(null)
   const closeButtonRef = useRef<HTMLButtonElement>(null)
-  const exportButtonRef = useRef<HTMLButtonElement>(null)
+  const backupButtonRef = useRef<HTMLButtonElement>(null)
+  const restoreButtonRef = useRef<HTMLButtonElement>(null)
+  const confirmRestoreButtonRef = useRef<HTMLButtonElement>(null)
+  const cancelRestoreButtonRef = useRef<HTMLButtonElement>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
   const titleId = 'settings-modal-title'
+
+  // State for confirmation dialog
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false)
+  const showConfirmDialogRef = useRef(showConfirmDialog)
+  const [selectedFile, setSelectedFile] = useState<File | null>(null)
+
+  // Keep ref in sync with state for event handlers
+  useEffect(() => {
+    showConfirmDialogRef.current = showConfirmDialog
+  }, [showConfirmDialog])
+
+  // Handle file selection
+  const handleFileSelect = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const file = event.target.files?.[0]
+      if (file && onRestore) {
+        setSelectedFile(file)
+        setShowConfirmDialog(true)
+      }
+      // Reset input so same file can be selected again
+      event.target.value = ''
+    },
+    [onRestore]
+  )
+
+  // Handle restore button click
+  const handleRestoreClick = useCallback(() => {
+    fileInputRef.current?.click()
+  }, [])
+
+  // Handle confirm restore
+  const handleConfirmRestore = useCallback(async () => {
+    if (selectedFile && onRestore) {
+      setShowConfirmDialog(false)
+      const success = await onRestore(selectedFile)
+      if (success) {
+        onClose()
+      }
+      setSelectedFile(null)
+    }
+  }, [selectedFile, onRestore, onClose])
+
+  // Handle cancel restore
+  const handleCancelRestore = useCallback(() => {
+    setShowConfirmDialog(false)
+    setSelectedFile(null)
+  }, [])
 
   // Focus trap implementation
   const handleKeyDown = useCallback(
     (event: KeyboardEvent) => {
+      // Use ref to get latest state value
+      const isConfirmDialogOpen = showConfirmDialogRef.current
+
       if (event.key === 'Escape') {
-        onClose()
+        if (isConfirmDialogOpen) {
+          handleCancelRestore()
+        } else {
+          onClose()
+        }
         return
       }
 
       if (event.key !== 'Tab') return
 
-      const focusableElements = [
-        closeButtonRef.current,
-        exportButtonRef.current,
-      ].filter(Boolean) as HTMLElement[]
+      // Determine which focusable elements to use based on dialog state
+      let focusableElements: HTMLElement[]
+      if (isConfirmDialogOpen) {
+        focusableElements = [
+          cancelRestoreButtonRef.current,
+          confirmRestoreButtonRef.current,
+        ].filter(Boolean) as HTMLElement[]
+      } else {
+        focusableElements = [
+          closeButtonRef.current,
+          backupButtonRef.current,
+          restoreButtonRef.current,
+        ].filter(Boolean) as HTMLElement[]
+      }
 
       if (focusableElements.length === 0) return
 
@@ -51,15 +126,19 @@ export function SettingsModal({
         }
       }
     },
-    [onClose]
+    [onClose, handleCancelRestore]
   )
 
   // Set up event listeners and focus management
   useEffect(() => {
     if (!isOpen) return
 
-    // Focus close button when opened
-    closeButtonRef.current?.focus()
+    // Focus appropriate element when opened or dialog state changes
+    if (showConfirmDialog) {
+      cancelRestoreButtonRef.current?.focus()
+    } else {
+      closeButtonRef.current?.focus()
+    }
 
     // Add keyboard event listener
     document.addEventListener('keydown', handleKeyDown)
@@ -67,10 +146,12 @@ export function SettingsModal({
     return () => {
       document.removeEventListener('keydown', handleKeyDown)
     }
-  }, [isOpen, handleKeyDown])
+  }, [isOpen, handleKeyDown, showConfirmDialog])
 
   const handleBackdropClick = () => {
-    onClose()
+    if (!showConfirmDialog) {
+      onClose()
+    }
   }
 
   if (!isOpen) return null
@@ -121,29 +202,107 @@ export function SettingsModal({
             {t('settings.sections.dataManagement')}
           </h3>
 
-          <div className="bg-bg rounded-lg p-4">
+          {/* Backup Option */}
+          <div className="bg-bg rounded-lg p-4 mb-3">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-text font-medium">
-                  {t('settings.export.title')}
+                  {t('settings.backup.title')}
                 </p>
                 <p className="text-sm text-text-secondary mt-1">
-                  {t('settings.export.description')}
+                  {t('settings.backup.description')}
                 </p>
               </div>
               <button
-                ref={exportButtonRef}
+                ref={backupButtonRef}
                 type="button"
-                data-testid="export-button"
-                onClick={onExport}
+                data-testid="backup-button"
+                onClick={onBackup}
                 className="flex items-center gap-2 bg-accent hover:bg-accent-hover text-white px-4 py-2 rounded-lg transition-colors duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface cursor-pointer"
               >
                 <DownloadIcon size={18} weight="bold" />
-                <span>{t('settings.export.button')}</span>
+                <span>{t('settings.backup.button')}</span>
               </button>
             </div>
           </div>
+
+          {/* Restore Option */}
+          {onRestore && (
+            <div className="bg-bg rounded-lg p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-text font-medium">
+                    {t('settings.restore.title')}
+                  </p>
+                  <p className="text-sm text-text-secondary mt-1">
+                    {t('settings.restore.description')}
+                  </p>
+                </div>
+                <button
+                  ref={restoreButtonRef}
+                  type="button"
+                  data-testid="restore-button"
+                  onClick={handleRestoreClick}
+                  className="flex items-center gap-2 bg-surface border border-border hover:bg-bg text-text px-4 py-2 rounded-lg transition-colors duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface cursor-pointer"
+                >
+                  <UploadIcon size={18} weight="bold" />
+                  <span>{t('settings.restore.button')}</span>
+                </button>
+              </div>
+            </div>
+          )}
         </section>
+
+        {/* Hidden File Input */}
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept=".json"
+          data-testid="restore-file-input"
+          onChange={handleFileSelect}
+          className="hidden"
+          aria-label={t('settings.restore.button')}
+        />
+
+        {/* Confirmation Dialog */}
+        {showConfirmDialog && (
+          <div
+            data-testid="restore-confirm-dialog"
+            className="absolute inset-0 bg-surface rounded-lg flex flex-col items-center justify-center p-6"
+          >
+            <WarningIcon
+              size={48}
+              className="text-warning mb-4"
+              weight="fill"
+            />
+            <h3 className="text-lg font-semibold text-text mb-2">
+              {t('settings.restore.confirmTitle')}
+            </h3>
+            <p className="text-text-secondary text-center mb-6">
+              {t('settings.restore.confirmMessage')}
+            </p>
+            <div className="flex gap-3">
+              <button
+                ref={cancelRestoreButtonRef}
+                type="button"
+                data-testid="restore-cancel-button"
+                onClick={handleCancelRestore}
+                className="px-4 py-2 border border-border rounded-lg text-text hover:bg-bg transition-colors duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent cursor-pointer"
+              >
+                {t('settings.restore.cancelButton')}
+              </button>
+              <button
+                ref={confirmRestoreButtonRef}
+                type="button"
+                data-testid="restore-confirm-button"
+                onClick={handleConfirmRestore}
+                className="px-4 py-2 bg-warning hover:bg-warning-hover text-white rounded-lg transition-colors duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-warning cursor-pointer"
+              >
+                {t('settings.restore.confirmButton')}
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   )
