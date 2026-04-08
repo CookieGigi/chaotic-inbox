@@ -94,6 +94,18 @@ describe('SettingsModal', () => {
       expect(title).toBeInTheDocument()
     })
 
+    it('renders status section', () => {
+      renderWithProviders(
+        <SettingsModal
+          isOpen={true}
+          onClose={mockOnClose}
+          onExport={mockOnExport}
+        />
+      )
+
+      expect(screen.getByText('Status')).toBeInTheDocument()
+    })
+
     it('renders data management section', () => {
       renderWithProviders(
         <SettingsModal
@@ -131,6 +143,112 @@ describe('SettingsModal', () => {
 
       const closeButton = screen.getByTestId('modal-close-button')
       expect(closeButton).toBeInTheDocument()
+    })
+  })
+
+  describe('Status Section - Online/Offline', () => {
+    it('shows online status when isOnline is true', () => {
+      renderWithProviders(
+        <SettingsModal
+          isOpen={true}
+          onClose={mockOnClose}
+          onExport={mockOnExport}
+          isOnline={true}
+        />
+      )
+
+      expect(screen.getByText('Online')).toBeInTheDocument()
+    })
+
+    it('shows offline status when isOnline is false', () => {
+      renderWithProviders(
+        <SettingsModal
+          isOpen={true}
+          onClose={mockOnClose}
+          onExport={mockOnExport}
+          isOnline={false}
+        />
+      )
+
+      expect(screen.getByText('Offline')).toBeInTheDocument()
+    })
+
+    it('defaults to online when isOnline prop is not provided', () => {
+      renderWithProviders(
+        <SettingsModal
+          isOpen={true}
+          onClose={mockOnClose}
+          onExport={mockOnExport}
+        />
+      )
+
+      expect(screen.getByText('Online')).toBeInTheDocument()
+    })
+  })
+
+  describe('Status Section - Quota Display', () => {
+    it('shows quota info when provided', () => {
+      renderWithProviders(
+        <SettingsModal
+          isOpen={true}
+          onClose={mockOnClose}
+          onExport={mockOnExport}
+          quotaInfo={{
+            used: 120000000,
+            quota: 250000000,
+            percent: 48,
+            itemCount: 10,
+          }}
+        />
+      )
+
+      expect(screen.getByText('120MB of 250MB used')).toBeInTheDocument()
+      expect(screen.getByText('10 items stored')).toBeInTheDocument()
+    })
+
+    it('does not show quota section when quotaInfo is null', () => {
+      renderWithProviders(
+        <SettingsModal
+          isOpen={true}
+          onClose={mockOnClose}
+          onExport={mockOnExport}
+          quotaInfo={null}
+        />
+      )
+
+      expect(screen.queryByText(/MB of/)).not.toBeInTheDocument()
+    })
+
+    it('does not show quota section when quotaInfo is undefined', () => {
+      renderWithProviders(
+        <SettingsModal
+          isOpen={true}
+          onClose={mockOnClose}
+          onExport={mockOnExport}
+        />
+      )
+
+      expect(screen.queryByText(/MB of/)).not.toBeInTheDocument()
+    })
+
+    it('shows progress bar when quota info is provided', () => {
+      renderWithProviders(
+        <SettingsModal
+          isOpen={true}
+          onClose={mockOnClose}
+          onExport={mockOnExport}
+          quotaInfo={{
+            used: 120000000,
+            quota: 250000000,
+            percent: 48,
+            itemCount: 10,
+          }}
+        />
+      )
+
+      const progressBar = screen.getByRole('progressbar')
+      expect(progressBar).toBeInTheDocument()
+      expect(progressBar).toHaveAttribute('aria-valuenow', '48')
     })
   })
 

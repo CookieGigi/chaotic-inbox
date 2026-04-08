@@ -5,6 +5,22 @@ import { createTextItem } from '@/models/itemFactories'
 import { showError } from '@/store/toastStore'
 
 /**
+ * Threshold for triggering immediate quota check (1MB in bytes)
+ */
+const LARGE_FILE_THRESHOLD = 1_000_000
+
+/**
+ * Check if an item exceeds the large file threshold
+ */
+function isLargeFile(item: RawItem): boolean {
+  if (item.type === 'image' || item.type === 'file') {
+    const blob = item.raw as Blob
+    return blob.size > LARGE_FILE_THRESHOLD
+  }
+  return false
+}
+
+/**
  * Draft item type for in-progress text capture
  * Temporary ID, not persisted until submitted
  */
@@ -107,6 +123,13 @@ export const useAppStore = create<AppStore>((set, get) => ({
       set((state) => ({
         items: [...state.items, ...newItems],
       }))
+
+      // Trigger quota check if any item is large (>1MB)
+      const hasLargeFile = newItems.some(isLargeFile)
+      if (hasLargeFile) {
+        // Dispatch custom event for quota monitor to pick up
+        window.dispatchEvent(new CustomEvent('quotacheck:trigger'))
+      }
     } catch (error) {
       console.error('Failed to add items:', error)
       showError('Failed to save items. Please try again.')

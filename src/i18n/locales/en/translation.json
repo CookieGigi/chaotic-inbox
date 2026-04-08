@@ -2,6 +2,18 @@
   "app": {
     "dropFiles": "Drop files here"
   },
+  "offline": {
+    "status": {
+      "offline": "You're offline",
+      "online": "Back online"
+    }
+  },
+  "quota": {
+    "percent80": "Storage 80% full",
+    "percent90": "Storage 90% full - consider cleaning up",
+    "percent95": "Storage 95% full - clean up now",
+    "percent99": "Storage almost full - clean up immediately"
+  },
   "block": {
     "draft": {
       "label": "Draft",
@@ -33,7 +45,14 @@
     "buttonLabel": "Settings",
     "closeButton": "Close settings",
     "sections": {
+      "status": "Status",
       "dataManagement": "Data Management"
+    },
+    "status": {
+      "online": "Online",
+      "offline": "Offline",
+      "storageUsed": "{{used}} of {{total}} used",
+      "itemsCount": "{{count}} items stored"
     },
     "export": {
       "title": "Export Backup",

@@ -3,7 +3,13 @@ import { useTranslation } from 'react-i18next'
 import { Feed } from '@/components/Feed'
 import { SettingsMenu } from '@/components/SettingsMenu'
 import { SettingsModal } from '@/components/SettingsModal'
-import { useGlobalTyping, useGlobalPaste, useGlobalDrop } from '@/hooks'
+import {
+  useGlobalTyping,
+  useGlobalPaste,
+  useGlobalDrop,
+  useOnlineStatus,
+  useQuotaMonitor,
+} from '@/hooks'
 import { useAppStore } from '@/store/appStore'
 import { exportDatabase } from '@/services'
 import { UploadSimpleIcon } from '@phosphor-icons/react'
@@ -42,6 +48,10 @@ function App() {
   useGlobalPaste()
   useGlobalDrop()
 
+  // Monitor online status and quota
+  const { isOnline } = useOnlineStatus()
+  const { quotaInfo } = useQuotaMonitor()
+
   // Settings handlers
   const handleOpenSettings = useCallback(() => {
     setIsSettingsOpen(true)
@@ -67,6 +77,8 @@ function App() {
         isOpen={isSettingsOpen}
         onClose={handleCloseSettings}
         onExport={handleExport}
+        isOnline={isOnline}
+        quotaInfo={quotaInfo}
       />
 
       {/* Drop overlay */}

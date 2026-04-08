@@ -1,17 +1,40 @@
 import { useEffect, useRef, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { XIcon, DownloadIcon } from '@phosphor-icons/react'
+import {
+  XIcon,
+  DownloadIcon,
+  CloudCheckIcon,
+  CloudSlashIcon,
+} from '@phosphor-icons/react'
+import type { QuotaInfo } from '@/services/quotaService'
 
 interface SettingsModalProps {
   isOpen: boolean
   onClose: () => void
   onExport: () => void
+  isOnline?: boolean
+  quotaInfo?: QuotaInfo | null
+}
+
+/**
+ * Format bytes to human-readable string
+ */
+function formatBytes(bytes: number): string {
+  const mb = bytes / 1000000
+  if (mb >= 1000) {
+    const gb = mb / 1000
+    const formatted = gb % 1 === 0 ? gb.toFixed(0) : gb.toFixed(1)
+    return `${formatted}GB`
+  }
+  return `${Math.round(mb)}MB`
 }
 
 export function SettingsModal({
   isOpen,
   onClose,
   onExport,
+  isOnline = true,
+  quotaInfo,
 }: SettingsModalProps) {
   const { t } = useTranslation()
   const dialogRef = useRef<HTMLDivElement>(null)
@@ -75,6 +98,13 @@ export function SettingsModal({
 
   if (!isOpen) return null
 
+  // Determine progress bar color based on percentage
+  const getProgressColor = (percent: number): string => {
+    if (percent >= 90) return 'bg-error'
+    if (percent >= 80) return 'bg-warning'
+    return 'bg-accent'
+  }
+
   return (
     <div
       data-testid="settings-modal"
@@ -114,6 +144,77 @@ export function SettingsModal({
             <XIcon size={24} />
           </button>
         </div>
+
+        {/* Status Section */}
+        <section className="mb-6">
+          <h3 className="text-sm font-medium text-text-secondary uppercase tracking-wide mb-4">
+            {t('settings.sections.status')}
+          </h3>
+
+          <div className="bg-bg rounded-lg p-4 space-y-3">
+            {/* Online/Offline Status */}
+            <div className="flex items-center gap-2">
+              {isOnline ? (
+                <>
+                  <CloudCheckIcon
+                    size={20}
+                    className="text-success"
+                    weight="fill"
+                  />
+                  <span className="text-text">
+                    {t('settings.status.online')}
+                  </span>
+                </>
+              ) : (
+                <>
+                  <CloudSlashIcon
+                    size={20}
+                    className="text-warning"
+                    weight="fill"
+                  />
+                  <span className="text-text">
+                    {t('settings.status.offline')}
+                  </span>
+                </>
+              )}
+            </div>
+
+            {/* Quota Info */}
+            {quotaInfo && (
+              <div className="space-y-2">
+                {/* Progress Bar */}
+                <div
+                  role="progressbar"
+                  aria-valuenow={quotaInfo.percent}
+                  aria-valuemin={0}
+                  aria-valuemax={100}
+                  aria-label={`Storage ${quotaInfo.percent}% full`}
+                  className="w-full bg-overlay rounded-full h-2 overflow-hidden"
+                >
+                  <div
+                    className={`h-full ${getProgressColor(quotaInfo.percent)} transition-all duration-300`}
+                    style={{ width: `${quotaInfo.percent}%` }}
+                  />
+                </div>
+
+                {/* Storage Text */}
+                <p className="text-sm text-text-secondary">
+                  {t('settings.status.storageUsed', {
+                    used: formatBytes(quotaInfo.used),
+                    total: formatBytes(quotaInfo.quota),
+                  })}
+                </p>
+
+                {/* Items Count */}
+                <p className="text-sm text-text-secondary">
+                  {t('settings.status.itemsCount', {
+                    count: quotaInfo.itemCount,
+                  })}
+                </p>
+              </div>
+            )}
+          </div>
+        </section>
 
         {/* Data Management Section */}
         <section className="mb-6">
