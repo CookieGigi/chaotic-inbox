@@ -4,7 +4,7 @@ title: Add offline support and quota management
 status: Draft
 assignee: []
 created_date: '2026-04-04 06:02'
-updated_date: '2026-04-08 04:45'
+updated_date: '2026-04-08 04:47'
 labels:
   - offline
   - storage
@@ -12,14 +12,9 @@ labels:
   - ux
 milestone: m-0
 dependencies:
-  - TASK-101
-  - TASK-102
-  - TASK-103
-  - TASK-104
-  - TASK-105
-  - TASK-106
-  - TASK-107
-  - TASK-108
+  - TASK-109
+  - TASK-110
+  - TASK-111
 priority: medium
 ---
 
