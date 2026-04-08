@@ -1,8 +1,11 @@
-import { useEffect } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Feed } from '@/components/Feed'
+import { SettingsMenu } from '@/components/SettingsMenu'
+import { SettingsModal } from '@/components/SettingsModal'
 import { useGlobalTyping, useGlobalPaste, useGlobalDrop } from '@/hooks'
 import { useAppStore } from '@/store/appStore'
+import { exportDatabase } from '@/services'
 import { UploadSimpleIcon } from '@phosphor-icons/react'
 import './App.css'
 
@@ -15,11 +18,13 @@ import './App.css'
  * - Draft block at bottom of feed for text entry
  * - Ctrl+Enter to persist, Escape to cancel
  * - Automatic persistence to local storage
+ * - Settings menu with backup export functionality
  *
  * Uses Zustand for state management.
  */
 function App() {
   const { t } = useTranslation()
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false)
 
   // Subscribe to store state
   const items = useAppStore((state) => state.items)
@@ -37,9 +42,32 @@ function App() {
   useGlobalPaste()
   useGlobalDrop()
 
+  // Settings handlers
+  const handleOpenSettings = useCallback(() => {
+    setIsSettingsOpen(true)
+  }, [])
+
+  const handleCloseSettings = useCallback(() => {
+    setIsSettingsOpen(false)
+  }, [])
+
+  const handleExport = useCallback(() => {
+    exportDatabase()
+  }, [])
+
   return (
     <div className="min-h-screen bg-bg relative">
       <Feed items={items} draftItem={draftItem} />
+
+      {/* Settings Menu */}
+      <SettingsMenu onOpen={handleOpenSettings} />
+
+      {/* Settings Modal */}
+      <SettingsModal
+        isOpen={isSettingsOpen}
+        onClose={handleCloseSettings}
+        onExport={handleExport}
+      />
 
       {/* Drop overlay */}
       {isDragging && (

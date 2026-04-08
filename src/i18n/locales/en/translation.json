@@ -27,5 +27,20 @@
   },
   "url": {
     "openLink": "Open link: {{url}}"
+  },
+  "settings": {
+    "title": "Settings",
+    "buttonLabel": "Settings",
+    "closeButton": "Close settings",
+    "sections": {
+      "dataManagement": "Data Management"
+    },
+    "export": {
+      "title": "Export Backup",
+      "description": "Download a backup of all your data as a JSON file",
+      "button": "Export",
+      "success": "Backup exported successfully",
+      "error": "Failed to export backup. Please try again."
+    }
   }
 }

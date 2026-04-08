@@ -24,6 +24,7 @@
     "@tailwindcss/vite": "^4.2.2",
     "consola": "^3.4.2",
     "dexie": "^4.3.0",
+    "dexie-export-import": "^4.4.0",
     "dexie-react-hooks": "^4.2.0",
     "eslint-import-resolver-typescript": "^4.4.4",
     "eslint-plugin-import": "^2.32.0",

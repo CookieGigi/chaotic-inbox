@@ -27,5 +27,20 @@
   },
   "url": {
     "openLink": "Ouvrir le lien : {{url}}"
+  },
+  "settings": {
+    "title": "Paramètres",
+    "buttonLabel": "Paramètres",
+    "closeButton": "Fermer les paramètres",
+    "sections": {
+      "dataManagement": "Gestion des données"
+    },
+    "export": {
+      "title": "Exporter une sauvegarde",
+      "description": "Téléchargez une sauvegarde de toutes vos données au format JSON",
+      "button": "Exporter",
+      "success": "Sauvegarde exportée avec succès",
+      "error": "Échec de l'exportation de la sauvegarde. Veuillez réessayer."
+    }
   }
 }
