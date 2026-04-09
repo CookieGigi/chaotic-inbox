@@ -7,7 +7,8 @@ import { ToastContainer } from '@/components/Toast'
 
 describe('SettingsModal', () => {
   const mockOnClose = vi.fn()
-  const mockOnExport = vi.fn()
+  const mockOnBackup = vi.fn()
+  const mockOnRestore = vi.fn()
 
   beforeEach(() => {
     vi.clearAllMocks()
@@ -32,7 +33,8 @@ describe('SettingsModal', () => {
         <SettingsModal
           isOpen={false}
           onClose={mockOnClose}
-          onExport={mockOnExport}
+          onBackup={mockOnBackup}
+          onRestore={mockOnRestore}
         />
       )
 
@@ -44,7 +46,8 @@ describe('SettingsModal', () => {
         <SettingsModal
           isOpen={true}
           onClose={mockOnClose}
-          onExport={mockOnExport}
+          onBackup={mockOnBackup}
+          onRestore={mockOnRestore}
         />
       )
 
@@ -56,7 +59,8 @@ describe('SettingsModal', () => {
         <SettingsModal
           isOpen={true}
           onClose={mockOnClose}
-          onExport={mockOnExport}
+          onBackup={mockOnBackup}
+          onRestore={mockOnRestore}
         />
       )
 
@@ -69,7 +73,8 @@ describe('SettingsModal', () => {
         <SettingsModal
           isOpen={true}
           onClose={mockOnClose}
-          onExport={mockOnExport}
+          onBackup={mockOnBackup}
+          onRestore={mockOnRestore}
         />
       )
 
@@ -82,7 +87,8 @@ describe('SettingsModal', () => {
         <SettingsModal
           isOpen={true}
           onClose={mockOnClose}
-          onExport={mockOnExport}
+          onBackup={mockOnBackup}
+          onRestore={mockOnRestore}
         />
       )
 
@@ -99,7 +105,7 @@ describe('SettingsModal', () => {
         <SettingsModal
           isOpen={true}
           onClose={mockOnClose}
-          onExport={mockOnExport}
+          onBackup={mockOnBackup}
         />
       )
 
@@ -111,25 +117,70 @@ describe('SettingsModal', () => {
         <SettingsModal
           isOpen={true}
           onClose={mockOnClose}
-          onExport={mockOnExport}
+          onBackup={mockOnBackup}
+          onRestore={mockOnRestore}
         />
       )
 
       expect(screen.getByText('Data Management')).toBeInTheDocument()
     })
 
-    it('renders export button', () => {
+    it('renders backup button', () => {
       renderWithProviders(
         <SettingsModal
           isOpen={true}
           onClose={mockOnClose}
-          onExport={mockOnExport}
+          onBackup={mockOnBackup}
+          onRestore={mockOnRestore}
         />
       )
 
-      const exportButton = screen.getByTestId('export-button')
-      expect(exportButton).toBeInTheDocument()
-      expect(exportButton).toHaveTextContent('Export')
+      const backupButton = screen.getByTestId('backup-button')
+      expect(backupButton).toBeInTheDocument()
+      expect(backupButton).toHaveTextContent('Backup')
+    })
+
+    it('renders restore button when onRestore is provided', () => {
+      renderWithProviders(
+        <SettingsModal
+          isOpen={true}
+          onClose={mockOnClose}
+          onBackup={mockOnBackup}
+          onRestore={mockOnRestore}
+        />
+      )
+
+      const restoreButton = screen.getByTestId('restore-button')
+      expect(restoreButton).toBeInTheDocument()
+      expect(restoreButton).toHaveTextContent('Restore')
+    })
+
+    it('does not render restore button when onRestore is not provided', () => {
+      renderWithProviders(
+        <SettingsModal
+          isOpen={true}
+          onClose={mockOnClose}
+          onBackup={mockOnBackup}
+        />
+      )
+
+      expect(screen.queryByTestId('restore-button')).not.toBeInTheDocument()
+    })
+
+    it('renders restore file input', () => {
+      renderWithProviders(
+        <SettingsModal
+          isOpen={true}
+          onClose={mockOnClose}
+          onBackup={mockOnBackup}
+          onRestore={mockOnRestore}
+        />
+      )
+
+      const fileInput = screen.getByTestId('restore-file-input')
+      expect(fileInput).toBeInTheDocument()
+      expect(fileInput).toHaveAttribute('type', 'file')
+      expect(fileInput).toHaveAttribute('accept', '.json')
     })
 
     it('renders close button', () => {
@@ -137,7 +188,8 @@ describe('SettingsModal', () => {
         <SettingsModal
           isOpen={true}
           onClose={mockOnClose}
-          onExport={mockOnExport}
+          onBackup={mockOnBackup}
+          onRestore={mockOnRestore}
         />
       )
 
@@ -152,7 +204,7 @@ describe('SettingsModal', () => {
         <SettingsModal
           isOpen={true}
           onClose={mockOnClose}
-          onExport={mockOnExport}
+          onBackup={mockOnBackup}
           isOnline={true}
         />
       )
@@ -165,7 +217,7 @@ describe('SettingsModal', () => {
         <SettingsModal
           isOpen={true}
           onClose={mockOnClose}
-          onExport={mockOnExport}
+          onBackup={mockOnBackup}
           isOnline={false}
         />
       )
@@ -178,7 +230,7 @@ describe('SettingsModal', () => {
         <SettingsModal
           isOpen={true}
           onClose={mockOnClose}
-          onExport={mockOnExport}
+          onBackup={mockOnBackup}
         />
       )
 
@@ -192,7 +244,7 @@ describe('SettingsModal', () => {
         <SettingsModal
           isOpen={true}
           onClose={mockOnClose}
-          onExport={mockOnExport}
+          onBackup={mockOnBackup}
           quotaInfo={{
             used: 120000000,
             quota: 250000000,
@@ -211,7 +263,7 @@ describe('SettingsModal', () => {
         <SettingsModal
           isOpen={true}
           onClose={mockOnClose}
-          onExport={mockOnExport}
+          onBackup={mockOnBackup}
           quotaInfo={null}
         />
       )
@@ -224,7 +276,7 @@ describe('SettingsModal', () => {
         <SettingsModal
           isOpen={true}
           onClose={mockOnClose}
-          onExport={mockOnExport}
+          onBackup={mockOnBackup}
         />
       )
 
@@ -236,7 +288,7 @@ describe('SettingsModal', () => {
         <SettingsModal
           isOpen={true}
           onClose={mockOnClose}
-          onExport={mockOnExport}
+          onBackup={mockOnBackup}
           quotaInfo={{
             used: 120000000,
             quota: 250000000,
@@ -258,7 +310,8 @@ describe('SettingsModal', () => {
         <SettingsModal
           isOpen={true}
           onClose={mockOnClose}
-          onExport={mockOnExport}
+          onBackup={mockOnBackup}
+          onRestore={mockOnRestore}
         />
       )
 
@@ -273,7 +326,8 @@ describe('SettingsModal', () => {
         <SettingsModal
           isOpen={true}
           onClose={mockOnClose}
-          onExport={mockOnExport}
+          onBackup={mockOnBackup}
+          onRestore={mockOnRestore}
         />
       )
 
@@ -288,7 +342,8 @@ describe('SettingsModal', () => {
         <SettingsModal
           isOpen={true}
           onClose={mockOnClose}
-          onExport={mockOnExport}
+          onBackup={mockOnBackup}
+          onRestore={mockOnRestore}
         />
       )
 
@@ -299,19 +354,239 @@ describe('SettingsModal', () => {
       expect(mockOnClose).toHaveBeenCalledTimes(1)
     })
 
-    it('calls onExport when export button is clicked', () => {
+    it('calls onBackup when backup button is clicked', () => {
       renderWithProviders(
         <SettingsModal
           isOpen={true}
           onClose={mockOnClose}
-          onExport={mockOnExport}
+          onBackup={mockOnBackup}
+          onRestore={mockOnRestore}
         />
       )
 
-      const exportButton = screen.getByTestId('export-button')
-      fireEvent.click(exportButton)
+      const backupButton = screen.getByTestId('backup-button')
+      fireEvent.click(backupButton)
 
-      expect(mockOnExport).toHaveBeenCalledTimes(1)
+      expect(mockOnBackup).toHaveBeenCalledTimes(1)
+    })
+
+    it('opens file picker when restore button is clicked', () => {
+      renderWithProviders(
+        <SettingsModal
+          isOpen={true}
+          onClose={mockOnClose}
+          onBackup={mockOnBackup}
+          onRestore={mockOnRestore}
+        />
+      )
+
+      const fileInput = screen.getByTestId('restore-file-input')
+      const clickSpy = vi.spyOn(fileInput, 'click')
+
+      const restoreButton = screen.getByTestId('restore-button')
+      fireEvent.click(restoreButton)
+
+      expect(clickSpy).toHaveBeenCalledTimes(1)
+    })
+  })
+
+  describe('Restore Confirmation Dialog', () => {
+    it('shows confirmation dialog when file is selected', () => {
+      renderWithProviders(
+        <SettingsModal
+          isOpen={true}
+          onClose={mockOnClose}
+          onBackup={mockOnBackup}
+          onRestore={mockOnRestore}
+        />
+      )
+
+      const fileInput = screen.getByTestId('restore-file-input')
+      const file = new File(['{"test": "data"}'], 'backup.json', {
+        type: 'application/json',
+      })
+
+      fireEvent.change(fileInput, { target: { files: [file] } })
+
+      expect(screen.getByTestId('restore-confirm-dialog')).toBeInTheDocument()
+    })
+
+    it('displays confirmation title and message', () => {
+      renderWithProviders(
+        <SettingsModal
+          isOpen={true}
+          onClose={mockOnClose}
+          onBackup={mockOnBackup}
+          onRestore={mockOnRestore}
+        />
+      )
+
+      const fileInput = screen.getByTestId('restore-file-input')
+      const file = new File(['{"test": "data"}'], 'backup.json', {
+        type: 'application/json',
+      })
+
+      fireEvent.change(fileInput, { target: { files: [file] } })
+
+      expect(screen.getByText('Restore Data?')).toBeInTheDocument()
+      expect(
+        screen.getByText(/This will replace all your current data/)
+      ).toBeInTheDocument()
+    })
+
+    it('renders confirm and cancel buttons in dialog', () => {
+      renderWithProviders(
+        <SettingsModal
+          isOpen={true}
+          onClose={mockOnClose}
+          onBackup={mockOnBackup}
+          onRestore={mockOnRestore}
+        />
+      )
+
+      const fileInput = screen.getByTestId('restore-file-input')
+      const file = new File(['{"test": "data"}'], 'backup.json', {
+        type: 'application/json',
+      })
+
+      fireEvent.change(fileInput, { target: { files: [file] } })
+
+      expect(screen.getByTestId('restore-confirm-button')).toBeInTheDocument()
+      expect(screen.getByTestId('restore-cancel-button')).toBeInTheDocument()
+    })
+
+    it('hides confirmation dialog when cancel is clicked', () => {
+      renderWithProviders(
+        <SettingsModal
+          isOpen={true}
+          onClose={mockOnClose}
+          onBackup={mockOnBackup}
+          onRestore={mockOnRestore}
+        />
+      )
+
+      const fileInput = screen.getByTestId('restore-file-input')
+      const file = new File(['{"test": "data"}'], 'backup.json', {
+        type: 'application/json',
+      })
+
+      fireEvent.change(fileInput, { target: { files: [file] } })
+
+      const cancelButton = screen.getByTestId('restore-cancel-button')
+      fireEvent.click(cancelButton)
+
+      expect(
+        screen.queryByTestId('restore-confirm-dialog')
+      ).not.toBeInTheDocument()
+    })
+
+    it('calls onRestore when confirm is clicked', async () => {
+      mockOnRestore.mockResolvedValue(true)
+
+      renderWithProviders(
+        <SettingsModal
+          isOpen={true}
+          onClose={mockOnClose}
+          onBackup={mockOnBackup}
+          onRestore={mockOnRestore}
+        />
+      )
+
+      const fileInput = screen.getByTestId('restore-file-input')
+      const file = new File(['{"test": "data"}'], 'backup.json', {
+        type: 'application/json',
+      })
+
+      fireEvent.change(fileInput, { target: { files: [file] } })
+
+      const confirmButton = screen.getByTestId('restore-confirm-button')
+      fireEvent.click(confirmButton)
+
+      await waitFor(() => {
+        expect(mockOnRestore).toHaveBeenCalledTimes(1)
+      })
+    })
+
+    it('closes modal on successful restore', async () => {
+      mockOnRestore.mockResolvedValue(true)
+
+      renderWithProviders(
+        <SettingsModal
+          isOpen={true}
+          onClose={mockOnClose}
+          onBackup={mockOnBackup}
+          onRestore={mockOnRestore}
+        />
+      )
+
+      const fileInput = screen.getByTestId('restore-file-input')
+      const file = new File(['{"test": "data"}'], 'backup.json', {
+        type: 'application/json',
+      })
+
+      fireEvent.change(fileInput, { target: { files: [file] } })
+
+      const confirmButton = screen.getByTestId('restore-confirm-button')
+      fireEvent.click(confirmButton)
+
+      await waitFor(() => {
+        expect(mockOnClose).toHaveBeenCalledTimes(1)
+      })
+    })
+
+    it('keeps modal open on failed restore', async () => {
+      mockOnRestore.mockResolvedValue(false)
+
+      renderWithProviders(
+        <SettingsModal
+          isOpen={true}
+          onClose={mockOnClose}
+          onBackup={mockOnBackup}
+          onRestore={mockOnRestore}
+        />
+      )
+
+      const fileInput = screen.getByTestId('restore-file-input')
+      const file = new File(['{"test": "data"}'], 'backup.json', {
+        type: 'application/json',
+      })
+
+      fireEvent.change(fileInput, { target: { files: [file] } })
+
+      const confirmButton = screen.getByTestId('restore-confirm-button')
+      fireEvent.click(confirmButton)
+
+      await waitFor(() => {
+        expect(mockOnRestore).toHaveBeenCalledTimes(1)
+        expect(mockOnClose).not.toHaveBeenCalled()
+      })
+    })
+
+    it('closes confirmation dialog on Escape key', async () => {
+      renderWithProviders(
+        <SettingsModal
+          isOpen={true}
+          onClose={mockOnClose}
+          onBackup={mockOnBackup}
+          onRestore={mockOnRestore}
+        />
+      )
+
+      const fileInput = screen.getByTestId('restore-file-input')
+      const file = new File(['{"test": "data"}'], 'backup.json', {
+        type: 'application/json',
+      })
+
+      fireEvent.change(fileInput, { target: { files: [file] } })
+
+      const event = new KeyboardEvent('keydown', { key: 'Escape' })
+      document.dispatchEvent(event)
+
+      await waitFor(() => {
+        expect(
+          screen.queryByTestId('restore-confirm-dialog')
+        ).not.toBeInTheDocument()
+      })
     })
   })
 
@@ -321,7 +596,8 @@ describe('SettingsModal', () => {
         <SettingsModal
           isOpen={true}
           onClose={mockOnClose}
-          onExport={mockOnExport}
+          onBackup={mockOnBackup}
+          onRestore={mockOnRestore}
         />
       )
 
@@ -336,16 +612,19 @@ describe('SettingsModal', () => {
         <SettingsModal
           isOpen={true}
           onClose={mockOnClose}
-          onExport={mockOnExport}
+          onBackup={mockOnBackup}
+          onRestore={mockOnRestore}
         />
       )
 
       const closeButton = screen.getByTestId('modal-close-button')
-      const exportButton = screen.getByTestId('export-button')
+      const backupButton = screen.getByTestId('backup-button')
+      const restoreButton = screen.getByTestId('restore-button')
 
-      // Both buttons should be focusable
+      // All buttons should be focusable
       expect(closeButton.tagName.toLowerCase()).toBe('button')
-      expect(exportButton.tagName.toLowerCase()).toBe('button')
+      expect(backupButton.tagName.toLowerCase()).toBe('button')
+      expect(restoreButton.tagName.toLowerCase()).toBe('button')
     })
 
     it('modal has keyboard event handler for Tab key', () => {
@@ -353,13 +632,37 @@ describe('SettingsModal', () => {
         <SettingsModal
           isOpen={true}
           onClose={mockOnClose}
-          onExport={mockOnExport}
+          onBackup={mockOnBackup}
+          onRestore={mockOnRestore}
         />
       )
 
       // Verify the modal implements focus trap by checking for keydown listener setup
       const dialog = screen.getByRole('dialog')
       expect(dialog).toBeInTheDocument()
+    })
+
+    it('focuses cancel button when confirmation dialog opens', async () => {
+      renderWithProviders(
+        <SettingsModal
+          isOpen={true}
+          onClose={mockOnClose}
+          onBackup={mockOnBackup}
+          onRestore={mockOnRestore}
+        />
+      )
+
+      const fileInput = screen.getByTestId('restore-file-input')
+      const file = new File(['{"test": "data"}'], 'backup.json', {
+        type: 'application/json',
+      })
+
+      fireEvent.change(fileInput, { target: { files: [file] } })
+
+      await waitFor(() => {
+        const cancelButton = screen.getByTestId('restore-cancel-button')
+        expect(document.activeElement).toBe(cancelButton)
+      })
     })
   })
 
@@ -369,7 +672,8 @@ describe('SettingsModal', () => {
         <SettingsModal
           isOpen={true}
           onClose={mockOnClose}
-          onExport={mockOnExport}
+          onBackup={mockOnBackup}
+          onRestore={mockOnRestore}
         />
       )
 
@@ -382,7 +686,8 @@ describe('SettingsModal', () => {
         <SettingsModal
           isOpen={true}
           onClose={mockOnClose}
-          onExport={mockOnExport}
+          onBackup={mockOnBackup}
+          onRestore={mockOnRestore}
         />
       )
 

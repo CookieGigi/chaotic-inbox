@@ -28,6 +28,9 @@ importers:
       eslint-plugin-import:
         specifier: ^2.32.0
         version: 2.32.0(@typescript-eslint/parser@8.57.1(eslint@10.0.3(jiti@2.6.1))(typescript@5.9.3))(eslint-import-resolver-typescript@4.4.4)(eslint@10.0.3(jiti@2.6.1))
+      file-type:
+        specifier: ^22.0.0
+        version: 22.0.0
       i18next:
         specifier: ^26.0.3
         version: 26.0.3(typescript@5.9.3)
@@ -331,6 +334,12 @@ packages:
     resolution:
       {
         integrity: sha512-ehg3jIkYKulZh+8om/O25vkvSsXXwC+skXmyA87FFx6A/45eqOkZsBltMw/TVteb0mloiGT8oGRTcjRAz66zaA==,
+      }
+
+  '@borewit/text-codec@0.2.2':
+    resolution:
+      {
+        integrity: sha512-DDaRehssg1aNrH4+2hnj1B7vnUGEjU6OIlyRdkMd0aUdIUvKXrJfXsy8LVtXAy7DRvYVluWbMspsRhz2lcW0mQ==,
       }
 
   '@bramus/specificity@2.4.2':
@@ -1550,6 +1559,19 @@ packages:
     engines: { node: '>=12', npm: '>=6' }
     peerDependencies:
       '@testing-library/dom': '>=7.21.4'
+
+  '@tokenizer/inflate@0.4.1':
+    resolution:
+      {
+        integrity: sha512-2mAv+8pkG6GIZiF1kNg1jAjh27IDxEPKwdGul3snfztFerfPGI1LjDezZp3i7BElXompqEtPmoPx6c2wgtWsOA==,
+      }
+    engines: { node: '>=18' }
+
+  '@tokenizer/token@0.3.0':
+    resolution:
+      {
+        integrity: sha512-OvjF+z51L3ov0OyAU0duzsYuvO01PH7x4t6DJx+guahgTnBHkhJdG7soQeTSFLWN3efnHyibZ4Z8l2EuWwJN3A==,
+      }
 
   '@tybys/wasm-util@0.10.1':
     resolution:
@@ -2978,6 +3000,13 @@ packages:
       }
     engines: { node: '>=16.0.0' }
 
+  file-type@22.0.0:
+    resolution:
+      {
+        integrity: sha512-cmBmnYo8Zymabm2+qAP7jTFbKF10bQpYmxoGfuZbRFRcq00BRddJdGNH/P7GA1EMpJy5yQbqa9B7yROb3z8Ziw==,
+      }
+    engines: { node: '>=22' }
+
   filesize@10.1.6:
     resolution:
       {
@@ -3245,6 +3274,12 @@ packages:
     peerDependenciesMeta:
       typescript:
         optional: true
+
+  ieee754@1.2.1:
+    resolution:
+      {
+        integrity: sha512-dcyqhDvX1C46lXZcVqCpK+FtMRQVdIMN6/Df5js2zouUsqG7I6sFxitIC+7KYK29KdXOLHdu9zL4sFnoVQnqaA==,
+      }
 
   ignore@5.3.2:
     resolution:
@@ -4604,6 +4639,13 @@ packages:
       }
     engines: { node: '>=12' }
 
+  strtok3@10.3.5:
+    resolution:
+      {
+        integrity: sha512-ki4hZQfh5rX0QDLLkOCj+h+CVNkqmp/CMf8v8kZpkNVK6jGQooMytqzLZYUVYIZcFZ6yDB70EfD8POcFXiF5oA==,
+      }
+    engines: { node: '>=18' }
+
   supports-color@7.2.0:
     resolution:
       {
@@ -4703,6 +4745,13 @@ packages:
         integrity: sha512-WiGwQjr0qYdNNG8KpMKlSvpxz652lqa3Rd+/hSaDcY4Uo6SKWZq2LAF+hsAhUewTtYhXlorBKgNF3Kk8hnjGoQ==,
       }
     hasBin: true
+
+  token-types@6.1.2:
+    resolution:
+      {
+        integrity: sha512-dRXchy+C0IgK8WPC6xvCHFRIWYUbqqdEIKPaKo/AcTUNzwLTK6AH7RjdLWsEZcAN/TBdtfUw3PYEgPr5VPr6ww==,
+      }
+    engines: { node: '>=14.16' }
 
   totalist@3.0.1:
     resolution:
@@ -4812,6 +4861,13 @@ packages:
       }
     engines: { node: '>=14.17' }
     hasBin: true
+
+  uint8array-extras@1.5.0:
+    resolution:
+      {
+        integrity: sha512-rvKSBiC5zqCCiDZ9kAOszZcDvdAHwwIKJG33Ykj43OKcWsnmcBRL09YTU4nOeHZ8Y2a7l1MgTd08SBe9A8Qj6A==,
+      }
+    engines: { node: '>=18' }
 
   unbox-primitive@1.1.0:
     resolution:
@@ -5278,6 +5334,8 @@ snapshots:
   '@bcoe/v8-coverage@1.0.2': {}
 
   '@blazediff/core@1.9.1': {}
+
+  '@borewit/text-codec@0.2.2': {}
 
   '@bramus/specificity@2.4.2':
     dependencies:
@@ -5868,6 +5926,15 @@ snapshots:
   '@testing-library/user-event@14.6.1(@testing-library/dom@10.4.1)':
     dependencies:
       '@testing-library/dom': 10.4.1
+
+  '@tokenizer/inflate@0.4.1':
+    dependencies:
+      debug: 4.4.3
+      token-types: 6.1.2
+    transitivePeerDependencies:
+      - supports-color
+
+  '@tokenizer/token@0.3.0': {}
 
   '@tybys/wasm-util@0.10.1':
     dependencies:
@@ -6891,6 +6958,15 @@ snapshots:
     dependencies:
       flat-cache: 4.0.1
 
+  file-type@22.0.0:
+    dependencies:
+      '@tokenizer/inflate': 0.4.1
+      strtok3: 10.3.5
+      token-types: 6.1.2
+      uint8array-extras: 1.5.0
+    transitivePeerDependencies:
+      - supports-color
+
   filesize@10.1.6: {}
 
   find-up@5.0.0:
@@ -7036,6 +7112,8 @@ snapshots:
       '@babel/runtime': 7.29.2
     optionalDependencies:
       typescript: 5.9.3
+
+  ieee754@1.2.1: {}
 
   ignore@5.3.2: {}
 
@@ -7927,6 +8005,10 @@ snapshots:
 
   strip-indent@4.1.1: {}
 
+  strtok3@10.3.5:
+    dependencies:
+      '@tokenizer/token': 0.3.0
+
   supports-color@7.2.0:
     dependencies:
       has-flag: 4.0.0
@@ -7965,6 +8047,12 @@ snapshots:
   tldts@7.0.26:
     dependencies:
       tldts-core: 7.0.26
+
+  token-types@6.1.2:
+    dependencies:
+      '@borewit/text-codec': 0.2.2
+      '@tokenizer/token': 0.3.0
+      ieee754: 1.2.1
 
   totalist@3.0.1: {}
 
@@ -8046,6 +8134,8 @@ snapshots:
       - supports-color
 
   typescript@5.9.3: {}
+
+  uint8array-extras@1.5.0: {}
 
   unbox-primitive@1.1.0:
     dependencies:

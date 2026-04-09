@@ -7,3 +7,4 @@ export {
   checkThresholds,
   type QuotaInfo,
 } from './quotaService'
+export { restoreDatabase } from './restoreBackup'

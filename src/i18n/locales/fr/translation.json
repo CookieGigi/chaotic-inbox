@@ -35,12 +35,25 @@
     "sections": {
       "dataManagement": "Gestion des données"
     },
-    "export": {
-      "title": "Exporter une sauvegarde",
+    "backup": {
+      "title": "Sauvegarder les données",
       "description": "Téléchargez une sauvegarde de toutes vos données au format JSON",
-      "button": "Exporter",
-      "success": "Sauvegarde exportée avec succès",
-      "error": "Échec de l'exportation de la sauvegarde. Veuillez réessayer."
+      "button": "Sauvegarder",
+      "success": "Sauvegarde créée avec succès",
+      "error": "Échec de la création de la sauvegarde. Veuillez réessayer."
+    },
+    "restore": {
+      "title": "Restaurer les données",
+      "description": "Importez des données depuis une sauvegarde précédemment exportée",
+      "button": "Restaurer",
+      "confirmTitle": "Restaurer les données ?",
+      "confirmMessage": "Cela remplacera toutes vos données actuelles par la sauvegarde. Cette action ne peut pas être annulée.",
+      "confirmButton": "Restaurer",
+      "cancelButton": "Annuler",
+      "success": "Données restaurées avec succès",
+      "error": "Échec de la restauration des données. Veuillez réessayer.",
+      "errorInvalidFile": "Fichier de sauvegarde invalide. Veuillez sélectionner un fichier .json valide.",
+      "errorVersion": "La version de la sauvegarde est incompatible avec la version actuelle de la base de données."
     }
   }
 }

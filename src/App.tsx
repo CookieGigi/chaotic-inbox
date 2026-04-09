@@ -11,7 +11,7 @@ import {
   useQuotaMonitor,
 } from '@/hooks'
 import { useAppStore } from '@/store/appStore'
-import { exportDatabase } from '@/services'
+import { exportDatabase, restoreDatabase } from '@/services'
 import { UploadSimpleIcon } from '@phosphor-icons/react'
 import './App.css'
 
@@ -61,9 +61,21 @@ function App() {
     setIsSettingsOpen(false)
   }, [])
 
-  const handleExport = useCallback(() => {
+  const handleBackup = useCallback(() => {
     exportDatabase()
   }, [])
+
+  const handleRestore = useCallback(
+    async (file: File): Promise<boolean> => {
+      const success = await restoreDatabase(file)
+      if (success) {
+        // Reload items after successful restore
+        await loadItems()
+      }
+      return success
+    },
+    [loadItems]
+  )
 
   return (
     <div className="min-h-screen bg-bg relative">
@@ -76,9 +88,10 @@ function App() {
       <SettingsModal
         isOpen={isSettingsOpen}
         onClose={handleCloseSettings}
-        onExport={handleExport}
         isOnline={isOnline}
         quotaInfo={quotaInfo}
+        onBackup={handleBackup}
+        onRestore={handleRestore}
       />
 
       {/* Drop overlay */}
