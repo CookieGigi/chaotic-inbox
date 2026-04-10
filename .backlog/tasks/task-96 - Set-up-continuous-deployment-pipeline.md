@@ -1,9 +1,10 @@
 ---
 id: TASK-96
 title: Set up continuous deployment pipeline
-status: To Do
+status: Done
 assignee: []
 created_date: '2026-04-04 06:02'
+updated_date: '2026-04-10 10:27'
 labels:
   - deployment
   - ci-cd
