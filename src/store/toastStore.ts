@@ -6,6 +6,14 @@ import { create } from 'zustand'
 export type ToastType = 'error' | 'warning' | 'info' | 'success'
 
 /**
+ * Toast action interface for interactive toasts (e.g., Undo)
+ */
+export interface ToastAction {
+  label: string
+  onClick: () => void
+}
+
+/**
  * Toast item interface
  */
 export interface Toast {
@@ -13,6 +21,7 @@ export interface Toast {
   message: string
   type: ToastType
   duration?: number // Duration in ms, undefined = no auto-dismiss
+  action?: ToastAction // Optional action button (e.g., Undo)
 }
 
 /**
@@ -141,5 +150,30 @@ export function showSuccess(message: string, duration?: number): string {
     message,
     type: 'success',
     duration,
+  })
+}
+
+/**
+ * Helper function to show a toast with an undo action
+ * Used for reversible actions like delete
+ *
+ * @param message - The toast message (e.g., "Block deleted")
+ * @param onUndo - Callback when undo is clicked
+ * @param duration - How long to show the toast (default: 5000ms)
+ * @returns The toast ID
+ */
+export function showUndoable(
+  message: string,
+  onUndo: () => void,
+  duration?: number
+): string {
+  return useToastStore.getState().addToast({
+    message,
+    type: 'warning',
+    duration,
+    action: {
+      label: 'Undo',
+      onClick: onUndo,
+    },
   })
 }

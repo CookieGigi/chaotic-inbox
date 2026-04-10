@@ -1,4 +1,8 @@
-import { useToastStore, type ToastType } from '@/store/toastStore'
+import {
+  useToastStore,
+  type ToastType,
+  type ToastAction,
+} from '@/store/toastStore'
 import {
   WarningIcon,
   XIcon,
@@ -10,6 +14,7 @@ export interface ToastProps {
   id: string
   message: string
   type: ToastType
+  action?: ToastAction
 }
 
 /**
@@ -57,10 +62,15 @@ function getBorderColorClass(type: ToastType): string {
  * - Accessible with proper ARIA attributes
  * - Uses design system tokens
  */
-export function Toast({ id, message, type }: ToastProps) {
+export function Toast({ id, message, type, action }: ToastProps) {
   const removeToast = useToastStore((state) => state.removeToast)
 
   const handleDismiss = () => {
+    removeToast(id)
+  }
+
+  const handleAction = () => {
+    action?.onClick()
     removeToast(id)
   }
 
@@ -87,6 +97,21 @@ export function Toast({ id, message, type }: ToastProps) {
       <div className="flex-1 min-w-0">
         <p className="text-sm text-text leading-relaxed">{message}</p>
       </div>
+
+      {action && (
+        <button
+          type="button"
+          onClick={handleAction}
+          className="
+            flex-shrink-0
+            text-sm font-medium text-accent hover:text-accent-hover
+            transition-colors
+            focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2
+          "
+        >
+          {action.label}
+        </button>
+      )}
 
       <button
         type="button"

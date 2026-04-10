@@ -30,7 +30,12 @@ export function ToastContainer() {
     >
       {toasts.map((toast) => (
         <div key={toast.id} className="pointer-events-auto">
-          <Toast id={toast.id} message={toast.message} type={toast.type} />
+          <Toast
+            id={toast.id}
+            message={toast.message}
+            type={toast.type}
+            action={toast.action}
+          />
         </div>
       ))}
     </section>

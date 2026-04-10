@@ -62,20 +62,23 @@ export function formatTimestamp(
  * Maps i18n language codes to BCP 47 locale strings for date formatting.
  * Handles both full codes (e.g., 'fr-FR') and short codes (e.g., 'fr').
  */
-function getLocale(i18nLanguage: string): string {
+function getLocale(i18nLanguage: string | undefined): string {
   // Map of supported languages to their full locale codes
   const localeMap: Record<string, string> = {
     en: 'en-US',
     fr: 'fr-FR',
   }
 
+  // Fallback to 'en' if i18nLanguage is not defined
+  const lang = i18nLanguage ?? 'en'
+
   // If it's already a full code with region, use it directly
-  if (i18nLanguage.includes('-')) {
-    return i18nLanguage
+  if (lang.includes('-')) {
+    return lang
   }
 
   // Otherwise, map the short code to full locale
-  return localeMap[i18nLanguage] ?? 'en-US'
+  return localeMap[lang] ?? 'en-US'
 }
 
 export function Timestamp({ value }: TimestampProps) {

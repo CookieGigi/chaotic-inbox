@@ -1,3 +1,4 @@
+import React from 'react'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { Toast } from './Toast'
 import { ToastContainer } from './ToastContainer'
@@ -7,6 +8,7 @@ import {
   showWarning,
   showInfo,
   showSuccess,
+  showUndoable,
 } from '@/store/toastStore'
 
 const meta: Meta<typeof Toast> = {
@@ -226,6 +228,93 @@ export const PersistenceErrorExample: StoryObj<typeof ToastContainer> = {
               <p className="text-text-muted text-sm mt-2">
                 The draft content remains in the editor for the user to retry.
               </p>
+            </div>
+          </div>
+          <Story />
+        </div>
+      )
+    },
+  ],
+}
+
+export const WithUndoAction: Story = {
+  args: {
+    id: 'undo-1',
+    message: 'Block deleted',
+    type: 'warning',
+    action: {
+      label: 'Undo',
+      onClick: () => alert('Undo clicked!'),
+    },
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Toast with an undo action button. Used for reversible actions like delete. Clicking Undo triggers the action and dismisses the toast.',
+      },
+    },
+  },
+}
+
+export const UndoToastDemo: StoryObj<typeof ToastContainer> = {
+  render: () => <ToastContainer />,
+  parameters: {
+    layout: 'fullscreen',
+    docs: {
+      description: {
+        story:
+          'Demonstrates the undo toast pattern for delete operations. The toast appears with an Undo button that restores the deleted item.',
+      },
+    },
+  },
+  decorators: [
+    (Story) => {
+      const [deletedItems, setDeletedItems] = React.useState<string[]>([])
+
+      const handleDelete = (itemId: string) => {
+        setDeletedItems((prev) => [...prev, itemId])
+        showUndoable(`Block ${itemId} deleted`, () => {
+          setDeletedItems((prev) => prev.filter((id) => id !== itemId))
+          showSuccess(`Block ${itemId} restored`)
+        })
+      }
+
+      return (
+        <div className="min-h-screen bg-bg p-8">
+          <div className="max-w-2xl mx-auto">
+            <h1 className="text-2xl font-bold text-text mb-6">
+              Undo Toast Demo
+            </h1>
+            <p className="text-text-muted mb-8">
+              Click delete buttons to see undo toasts. You have 5 seconds to
+              undo the deletion before it becomes permanent.
+            </p>
+
+            <div className="space-y-4">
+              {['A', 'B', 'C'].map(
+                (id) =>
+                  !deletedItems.includes(id) && (
+                    <div
+                      key={id}
+                      className="flex items-center justify-between p-4 bg-surface border border-border rounded-lg"
+                    >
+                      <span className="text-text">Block {id}</span>
+                      <button
+                        type="button"
+                        onClick={() => handleDelete(id)}
+                        className="px-3 py-1 text-sm text-error hover:bg-error/10 rounded transition-colors"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  )
+              )}
+              {deletedItems.length === 3 && (
+                <p className="text-text-muted text-center py-8">
+                  All blocks deleted. Refresh to reset.
+                </p>
+              )}
             </div>
           </div>
           <Story />
