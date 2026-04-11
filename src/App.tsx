@@ -37,6 +37,7 @@ function App() {
   const draftItem = useAppStore((state) => state.draftItem)
   const isDragging = useAppStore((state) => state.isDragging)
   const loadItems = useAppStore((state) => state.loadItems)
+  const deleteItem = useAppStore((state) => state.deleteItem)
 
   // Load items from storage on mount
   useEffect(() => {
@@ -79,7 +80,7 @@ function App() {
 
   return (
     <div className="min-h-screen bg-bg relative">
-      <Feed items={items} draftItem={draftItem} />
+      <Feed items={items} draftItem={draftItem} onDeleteItem={deleteItem} />
 
       {/* Settings Menu */}
       <SettingsMenu onOpen={handleOpenSettings} />

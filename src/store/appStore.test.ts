@@ -8,6 +8,13 @@ import {
   createImageItem,
 } from '@/models/itemFactories'
 
+// Mock toast store
+const mockShowUndoable = vi.fn()
+vi.mock('@/store/toastStore', () => ({
+  showUndoable: (...args: unknown[]) => mockShowUndoable(...args),
+  showError: vi.fn(),
+}))
+
 /**
  * Mock the store module to test with fresh state
  * We need to reset the store between tests
@@ -23,6 +30,8 @@ const createMockStore = () => {
     capturedAt: string
   } | null = null
   let isDragging = false
+  let recentlyDeleted: RawItem | null = null
+  let undoCallback: (() => void) | null = null
 
   // Track listeners
   const listeners = new Set<() => void>()
@@ -38,6 +47,7 @@ const createMockStore = () => {
     getDraftContent: () => draftContent,
     getDraftItem: () => draftItem,
     getIsDragging: () => isDragging,
+    getRecentlyDeleted: () => recentlyDeleted,
 
     // Actions
     loadItems: async () => {
@@ -57,6 +67,44 @@ const createMockStore = () => {
       // Update state
       items = [...items, ...newItems]
       notify()
+    },
+
+    deleteItem: async (id: string) => {
+      const itemToDelete = items.find((item) => item.id === id)
+      if (!itemToDelete) return
+
+      // Store for potential undo
+      recentlyDeleted = itemToDelete
+
+      // Delete from database
+      await db.items.delete(id)
+
+      // Update state
+      items = items.filter((item) => item.id !== id)
+
+      // Store undo callback for test access
+      undoCallback = async () => {
+        if (recentlyDeleted) {
+          await db.items.add(recentlyDeleted)
+          items = [...items, recentlyDeleted]
+          recentlyDeleted = null
+          notify()
+        }
+      }
+
+      // Show undoable toast
+      mockShowUndoable('Block deleted', undoCallback, 5000)
+
+      notify()
+    },
+
+    undoDelete: async () => {
+      if (recentlyDeleted) {
+        await db.items.add(recentlyDeleted)
+        items = [...items, recentlyDeleted]
+        recentlyDeleted = null
+        notify()
+      }
     },
 
     createDraft: (content: string) => {
@@ -119,6 +167,8 @@ const createMockStore = () => {
       draftContent = ''
       draftItem = null
       isDragging = false
+      recentlyDeleted = null
+      undoCallback = null
       listeners.clear()
     },
   }
@@ -408,6 +458,170 @@ describe('AppStore', () => {
       store.setIsDragging(true)
 
       expect(listener).not.toHaveBeenCalled()
+    })
+  })
+
+  describe('AC: TASK-100 - Delete item with undo', () => {
+    it('removes item from state when deleted', async () => {
+      const item = createTextItem('To be deleted', { kind: 'plain' })
+      await store.addItems([item])
+      expect(store.getItems()).toHaveLength(1)
+
+      await store.deleteItem(item.id as string)
+
+      expect(store.getItems()).toHaveLength(0)
+    })
+
+    it('removes item from database when deleted', async () => {
+      const item = createTextItem('To be deleted', { kind: 'plain' })
+      await store.addItems([item])
+      let dbItems = await db.items.toArray()
+      expect(dbItems).toHaveLength(1)
+
+      await store.deleteItem(item.id as string)
+
+      dbItems = await db.items.toArray()
+      expect(dbItems).toHaveLength(0)
+    })
+
+    it('stores deleted item in recentlyDeleted for undo', async () => {
+      const item = createTextItem('To be deleted', { kind: 'plain' })
+      await store.addItems([item])
+
+      await store.deleteItem(item.id as string)
+
+      expect(store.getRecentlyDeleted()).toEqual(item)
+    })
+
+    it('shows undoable toast when deleting item', async () => {
+      mockShowUndoable.mockClear()
+      const item = createTextItem('To be deleted', { kind: 'plain' })
+      await store.addItems([item])
+
+      await store.deleteItem(item.id as string)
+
+      expect(mockShowUndoable).toHaveBeenCalledWith(
+        'Block deleted',
+        expect.any(Function),
+        5000
+      )
+    })
+
+    it('restores item to state when undoDelete is called', async () => {
+      const item = createTextItem('To be deleted', { kind: 'plain' })
+      await store.addItems([item])
+      await store.deleteItem(item.id as string)
+      expect(store.getItems()).toHaveLength(0)
+
+      await store.undoDelete()
+
+      expect(store.getItems()).toHaveLength(1)
+      expect(store.getItems()[0].id).toBe(item.id)
+    })
+
+    it('restores item to database when undoDelete is called', async () => {
+      const item = createTextItem('To be deleted', { kind: 'plain' })
+      await store.addItems([item])
+      await store.deleteItem(item.id as string)
+
+      await store.undoDelete()
+
+      const dbItems = await db.items.toArray()
+      expect(dbItems).toHaveLength(1)
+      expect(dbItems[0].id).toBe(item.id)
+    })
+
+    it('clears recentlyDeleted after undo', async () => {
+      const item = createTextItem('To be deleted', { kind: 'plain' })
+      await store.addItems([item])
+      await store.deleteItem(item.id as string)
+      expect(store.getRecentlyDeleted()).not.toBeNull()
+
+      await store.undoDelete()
+
+      expect(store.getRecentlyDeleted()).toBeNull()
+    })
+
+    it('calls undo callback when toast action is triggered', async () => {
+      mockShowUndoable.mockClear()
+      const item = createTextItem('To be deleted', { kind: 'plain' })
+      await store.addItems([item])
+
+      await store.deleteItem(item.id as string)
+
+      // Extract the undo callback passed to showUndoable
+      const undoCallback = mockShowUndoable.mock.calls[0][1]
+      expect(typeof undoCallback).toBe('function')
+
+      // Reset state to simulate clicking undo from toast
+      store.reset()
+      await store.addItems([item])
+      await store.deleteItem(item.id as string)
+
+      // Call the undo callback
+      await undoCallback()
+
+      expect(store.getItems()).toHaveLength(1)
+    })
+
+    it('handles deleting non-existent item gracefully', async () => {
+      const item = createTextItem('Exists', { kind: 'plain' })
+      await store.addItems([item])
+
+      // Try to delete item with different ID
+      await store.deleteItem('non-existent-id')
+
+      expect(store.getItems()).toHaveLength(1)
+      expect(store.getItems()[0].id).toBe(item.id)
+    })
+
+    it('handles multiple items - deletes only specified item', async () => {
+      const item1 = createTextItem('Keep me', { kind: 'plain' })
+      const item2 = createTextItem('Delete me', { kind: 'plain' })
+      await store.addItems([item1, item2])
+
+      await store.deleteItem(item2.id as string)
+
+      expect(store.getItems()).toHaveLength(1)
+      expect(store.getItems()[0].id).toBe(item1.id)
+    })
+
+    it('replaces recentlyDeleted when deleting multiple items sequentially', async () => {
+      const item1 = createTextItem('First', { kind: 'plain' })
+      const item2 = createTextItem('Second', { kind: 'plain' })
+      await store.addItems([item1, item2])
+
+      await store.deleteItem(item1.id as string)
+      expect(store.getRecentlyDeleted()?.id).toBe(item1.id)
+
+      await store.deleteItem(item2.id as string)
+      expect(store.getRecentlyDeleted()?.id).toBe(item2.id)
+    })
+
+    it('notifies listeners when item is deleted', async () => {
+      const listener = vi.fn()
+      store.subscribe(listener)
+
+      const item = createTextItem('To be deleted', { kind: 'plain' })
+      await store.addItems([item])
+      listener.mockClear()
+
+      await store.deleteItem(item.id as string)
+
+      expect(listener).toHaveBeenCalled()
+    })
+
+    it('notifies listeners when item is restored via undo', async () => {
+      const item = createTextItem('To be deleted', { kind: 'plain' })
+      await store.addItems([item])
+      await store.deleteItem(item.id as string)
+
+      const listener = vi.fn()
+      store.subscribe(listener)
+
+      await store.undoDelete()
+
+      expect(listener).toHaveBeenCalled()
     })
   })
 })

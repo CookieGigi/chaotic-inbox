@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { render, screen, fireEvent } from '@testing-library/react'
 import type { RawItem } from '@/models/rawItem'
 import { Block } from './Block'
 
@@ -97,21 +97,21 @@ describe('Block', () => {
   describe('AC #6: Block dispatcher routes items to correct component by type', () => {
     it('dispatches text items to TextBlock', () => {
       const item = createTextItem()
-      render(<Block item={item} />)
+      render(<Block item={item} onDelete={vi.fn()} />)
 
       expect(screen.getByText('This is test text content')).toBeInTheDocument()
     })
 
     it('dispatches URL items to UrlBlock', () => {
       const item = createUrlItem()
-      render(<Block item={item} />)
+      render(<Block item={item} onDelete={vi.fn()} />)
 
       expect(screen.getByText('https://example.com/path')).toBeInTheDocument()
     })
 
     it('dispatches image items to ImageBlock', () => {
       const item = createImageItem()
-      render(<Block item={item} />)
+      render(<Block item={item} onDelete={vi.fn()} />)
 
       const img = screen.getByRole('img')
       expect(img).toBeInTheDocument()
@@ -119,7 +119,7 @@ describe('Block', () => {
 
     it('dispatches file items to FileBlock', () => {
       const item = createFileItem()
-      render(<Block item={item} />)
+      render(<Block item={item} onDelete={vi.fn()} />)
 
       // FileBlock shows size only (filename shown in header)
       expect(screen.getByText(/Size:/)).toBeInTheDocument()
@@ -130,7 +130,7 @@ describe('Block', () => {
       const item = createTextItem({
         raw: 'Check out https://example.com for more info',
       })
-      render(<Block item={item} />)
+      render(<Block item={item} onDelete={vi.fn()} />)
 
       // Should render as text block (body font), not as clickable URL button
       const textElement = screen.getByText(/Check out/)
@@ -138,16 +138,18 @@ describe('Block', () => {
       expect(textElement).toHaveClass('text-base')
       expect(textElement).toHaveClass('leading-relaxed')
 
-      // Should NOT have a button role (which UrlBlock uses)
-      const button = screen.queryByRole('button')
-      expect(button).not.toBeInTheDocument()
+      // Should NOT have a URL link button (UrlBlock uses button role for the whole URL)
+      // The delete button is expected now, so we check the content area doesn't have URL buttons
+      const content = screen.getByTestId('block-content')
+      const urlButton = content.querySelector('[role="button"]')
+      expect(urlButton).not.toBeInTheDocument()
     })
 
     it('TASK-19: renders embedded URL as plain text in body font', () => {
       const item = createTextItem({
         raw: 'Visit https://example.com/path?query=1 for details',
       })
-      render(<Block item={item} />)
+      render(<Block item={item} onDelete={vi.fn()} />)
 
       const content = screen.getByTestId('block-content')
       expect(content.textContent).toContain('https://example.com/path?query=1')
@@ -162,7 +164,7 @@ describe('Block', () => {
   describe('Block header structure', () => {
     it('renders timestamp in header for text items', () => {
       const item = createTextItem()
-      render(<Block item={item} />)
+      render(<Block item={item} onDelete={vi.fn()} />)
 
       // Timestamp is formatted in local timezone (e.g., "Mar 24 · 11:00" in Europe/Paris)
       const timeElement = screen
@@ -173,7 +175,7 @@ describe('Block', () => {
 
     it('renders timestamp in header for URL items', () => {
       const item = createUrlItem()
-      render(<Block item={item} />)
+      render(<Block item={item} onDelete={vi.fn()} />)
 
       const timeElement = screen
         .getByTestId('block-header')
@@ -183,7 +185,7 @@ describe('Block', () => {
 
     it('renders timestamp in header for image items', () => {
       const item = createImageItem()
-      render(<Block item={item} />)
+      render(<Block item={item} onDelete={vi.fn()} />)
 
       const timeElement = screen
         .getByTestId('block-header')
@@ -193,7 +195,7 @@ describe('Block', () => {
 
     it('renders timestamp in header for file items', () => {
       const item = createFileItem()
-      render(<Block item={item} />)
+      render(<Block item={item} onDelete={vi.fn()} />)
 
       const timeElement = screen
         .getByTestId('block-header')
@@ -205,7 +207,7 @@ describe('Block', () => {
   describe('Block header labels', () => {
     it('text blocks show no label', () => {
       const item = createTextItem()
-      render(<Block item={item} />)
+      render(<Block item={item} onDelete={vi.fn()} />)
 
       const header = screen.getByTestId('block-header')
       const label = header.querySelector('[data-testid="block-label"]')
@@ -217,14 +219,14 @@ describe('Block', () => {
         raw: 'https://example.com/path',
         title: 'example.com',
       })
-      render(<Block item={item} />)
+      render(<Block item={item} onDelete={vi.fn()} />)
 
       expect(screen.getByText('example.com')).toBeInTheDocument()
     })
 
     it('image blocks show no label when no alt text', () => {
       const item = createImageItem()
-      render(<Block item={item} />)
+      render(<Block item={item} onDelete={vi.fn()} />)
 
       const header = screen.getByTestId('block-header')
       const label = header.querySelector('[data-testid="block-label"]')
@@ -241,7 +243,7 @@ describe('Block', () => {
         },
         title: 'Test image alt',
       })
-      render(<Block item={item} />)
+      render(<Block item={item} onDelete={vi.fn()} />)
 
       expect(screen.getByText('Test image alt')).toBeInTheDocument()
     })
@@ -255,7 +257,7 @@ describe('Block', () => {
           mimetype: 'application/pdf',
         },
       })
-      render(<Block item={item} />)
+      render(<Block item={item} onDelete={vi.fn()} />)
 
       // Filename appears in header label only (not in FileBlock content)
       const header = screen.getByTestId('block-header')
@@ -266,7 +268,7 @@ describe('Block', () => {
   describe('Design system compliance', () => {
     it('uses correct padding', () => {
       const item = createTextItem()
-      const { container } = render(<Block item={item} />)
+      const { container } = render(<Block item={item} onDelete={vi.fn()} />)
 
       const block = container.firstChild
       expect(block).toHaveClass('py-3')
@@ -275,7 +277,7 @@ describe('Block', () => {
 
     it('block has transparent background', () => {
       const item = createTextItem()
-      const { container } = render(<Block item={item} />)
+      const { container } = render(<Block item={item} onDelete={vi.fn()} />)
 
       const block = container.firstChild
       expect(block).toHaveClass('bg-transparent')
@@ -283,7 +285,7 @@ describe('Block', () => {
 
     it('timestamp uses text-sm and text-muted styling', () => {
       const item = createTextItem()
-      render(<Block item={item} />)
+      render(<Block item={item} onDelete={vi.fn()} />)
 
       const timeElement = screen
         .getByTestId('block-header')
@@ -294,7 +296,7 @@ describe('Block', () => {
 
     it('header uses baseline alignment for better text rhythm', () => {
       const item = createTextItem()
-      render(<Block item={item} />)
+      render(<Block item={item} onDelete={vi.fn()} />)
 
       const header = screen.getByTestId('block-header')
       expect(header).toHaveClass('items-baseline')
@@ -304,7 +306,7 @@ describe('Block', () => {
   describe('Block structure', () => {
     it('has header row with icon and timestamp', () => {
       const item = createTextItem()
-      render(<Block item={item} />)
+      render(<Block item={item} onDelete={vi.fn()} />)
 
       const header = screen.getByTestId('block-header')
       expect(header).toBeInTheDocument()
@@ -312,7 +314,7 @@ describe('Block', () => {
 
     it('has content area below header', () => {
       const item = createTextItem()
-      render(<Block item={item} />)
+      render(<Block item={item} onDelete={vi.fn()} />)
 
       const content = screen.getByTestId('block-content')
       expect(content).toBeInTheDocument()
@@ -322,7 +324,7 @@ describe('Block', () => {
   describe('Accessibility', () => {
     it('has semantic article element for block', () => {
       const item = createTextItem()
-      const { container } = render(<Block item={item} />)
+      const { container } = render(<Block item={item} onDelete={vi.fn()} />)
 
       const article = container.querySelector('article')
       expect(article).toBeInTheDocument()
@@ -332,7 +334,7 @@ describe('Block', () => {
       const item = createTextItem({
         capturedAt: '2026-03-24T10:30:00.000Z' as RawItem['capturedAt'],
       })
-      render(<Block item={item} />)
+      render(<Block item={item} onDelete={vi.fn()} />)
 
       const timeElement = screen
         .getByTestId('block-header')
@@ -341,6 +343,122 @@ describe('Block', () => {
         'datetime',
         '2026-03-24T10:30:00.000Z'
       )
+    })
+  })
+
+  describe('AC: TASK-100 - Delete button integration', () => {
+    it('renders delete button in action menu for text blocks', () => {
+      const item = createTextItem()
+      const mockOnDelete = vi.fn()
+      render(<Block item={item} onDelete={mockOnDelete} />)
+
+      const deleteButton = screen.getByRole('button', { name: /delete block/i })
+      expect(deleteButton).toBeInTheDocument()
+    })
+
+    it('renders delete button in action menu for URL blocks', () => {
+      const item = createUrlItem()
+      const mockOnDelete = vi.fn()
+      render(<Block item={item} onDelete={mockOnDelete} />)
+
+      const deleteButton = screen.getByRole('button', { name: /delete block/i })
+      expect(deleteButton).toBeInTheDocument()
+    })
+
+    it('renders delete button in action menu for image blocks', () => {
+      const item = createImageItem()
+      const mockOnDelete = vi.fn()
+      render(<Block item={item} onDelete={mockOnDelete} />)
+
+      const deleteButton = screen.getByRole('button', { name: /delete block/i })
+      expect(deleteButton).toBeInTheDocument()
+    })
+
+    it('renders delete button in action menu for file blocks', () => {
+      const item = createFileItem()
+      const mockOnDelete = vi.fn()
+      render(<Block item={item} onDelete={mockOnDelete} />)
+
+      const deleteButton = screen.getByRole('button', { name: /delete block/i })
+      expect(deleteButton).toBeInTheDocument()
+    })
+
+    it('calls onDelete with item ID when delete button is clicked', () => {
+      const item = createTextItem({ id: 'block-to-delete' })
+      const mockOnDelete = vi.fn()
+      render(<Block item={item} onDelete={mockOnDelete} />)
+
+      const deleteButton = screen.getByRole('button', { name: /delete block/i })
+      fireEvent.click(deleteButton)
+
+      expect(mockOnDelete).toHaveBeenCalledWith('block-to-delete')
+      expect(mockOnDelete).toHaveBeenCalledTimes(1)
+    })
+
+    it('does not propagate click event when delete button is clicked', () => {
+      const item = createTextItem()
+      const mockOnDelete = vi.fn()
+      const { container } = render(
+        <Block item={item} onDelete={mockOnDelete} />
+      )
+
+      // Get the inner content div, not the article (which has flex layout now)
+      const contentDiv = container.querySelector(
+        '[data-testid="block-content"]'
+      )
+      const clickHandler = vi.fn()
+      contentDiv?.addEventListener('click', clickHandler)
+
+      const deleteButton = screen.getByRole('button', { name: /delete block/i })
+      fireEvent.click(deleteButton)
+
+      expect(clickHandler).not.toHaveBeenCalled()
+      contentDiv?.removeEventListener('click', clickHandler)
+    })
+
+    it('block container has group class for hover behavior', () => {
+      const item = createTextItem()
+      const mockOnDelete = vi.fn()
+      const { container } = render(
+        <Block item={item} onDelete={mockOnDelete} />
+      )
+
+      const block = container.firstChild
+      expect(block).toHaveClass('group')
+    })
+
+    it('action menu has opacity-0 by default and group-hover:opacity-100', () => {
+      const item = createTextItem()
+      const mockOnDelete = vi.fn()
+      const { container } = render(
+        <Block item={item} onDelete={mockOnDelete} />
+      )
+
+      const actionMenu = container.querySelector(
+        '[data-testid="block-action-menu"]'
+      )
+      expect(actionMenu).toHaveClass('opacity-0')
+      expect(actionMenu).toHaveClass('group-hover:opacity-100')
+    })
+
+    it('delete button has accessible label', () => {
+      const item = createTextItem()
+      const mockOnDelete = vi.fn()
+      render(<Block item={item} onDelete={mockOnDelete} />)
+
+      const deleteButton = screen.getByRole('button', { name: /delete block/i })
+      expect(deleteButton).toHaveAttribute('aria-label', 'Delete block')
+    })
+
+    it('delete button uses Trash icon', () => {
+      const item = createTextItem()
+      const mockOnDelete = vi.fn()
+      render(<Block item={item} onDelete={mockOnDelete} />)
+
+      // Trash icon is rendered as an SVG within the button
+      const deleteButton = screen.getByRole('button', { name: /delete block/i })
+      const svg = deleteButton.querySelector('svg')
+      expect(svg).toBeInTheDocument()
     })
   })
 })

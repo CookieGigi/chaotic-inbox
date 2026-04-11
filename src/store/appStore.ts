@@ -2,7 +2,8 @@ import { create } from 'zustand'
 import { db } from '@/storage/local_db'
 import type { RawItem } from '@/models/rawItem'
 import { createTextItem } from '@/models/itemFactories'
-import { showError } from '@/store/toastStore'
+import { showError, showUndoable } from '@/store/toastStore'
+import i18n from '@/i18n/config'
 
 /**
  * Threshold for triggering immediate quota check (1MB in bytes)
@@ -41,6 +42,7 @@ interface AppState {
   draftContent: string
   isDragging: boolean
   isLoading: boolean
+  recentlyDeleted: RawItem | null
 }
 
 /**
@@ -50,6 +52,8 @@ interface AppActions {
   // Item actions
   loadItems: () => Promise<void>
   addItems: (items: RawItem[]) => Promise<void>
+  deleteItem: (id: string) => Promise<void>
+  undoDelete: () => Promise<void>
 
   // Draft actions
   createDraft: (content: string) => void
@@ -79,6 +83,7 @@ export const createInitialState = (): AppState => ({
   draftContent: '',
   isDragging: false,
   isLoading: false,
+  recentlyDeleted: null,
 })
 
 /**
@@ -133,6 +138,60 @@ export const useAppStore = create<AppStore>((set, get) => ({
     } catch (error) {
       console.error('Failed to add items:', error)
       showError('Failed to save items. Please try again.')
+    }
+  },
+
+  /**
+   * Delete an item from state and database with undo support
+   */
+  deleteItem: async (id: string) => {
+    const { items } = get()
+    const itemToDelete = items.find((item) => item.id === id)
+
+    if (!itemToDelete) return
+
+    try {
+      // Store for potential undo
+      set({ recentlyDeleted: itemToDelete })
+
+      // Delete from database
+      await db.items.delete(id)
+
+      // Update state
+      set((state) => ({
+        items: state.items.filter((item) => item.id !== id),
+      }))
+
+      // Show undoable toast
+      showUndoable(i18n.t('toast.blockDeleted'), () => {
+        get().undoDelete()
+      })
+    } catch (error) {
+      console.error('Failed to delete item:', error)
+      showError('Failed to delete block. Please try again.')
+    }
+  },
+
+  /**
+   * Undo the last delete operation
+   */
+  undoDelete: async () => {
+    const { recentlyDeleted } = get()
+
+    if (!recentlyDeleted) return
+
+    try {
+      // Re-add to database
+      await db.items.add(recentlyDeleted)
+
+      // Update state
+      set((state) => ({
+        items: [...state.items, recentlyDeleted],
+        recentlyDeleted: null,
+      }))
+    } catch (error) {
+      console.error('Failed to undo delete:', error)
+      showError('Failed to restore block. Please try again.')
     }
   },
 
@@ -265,6 +324,8 @@ export const useItemActions = () =>
   useAppStore((state) => ({
     loadItems: state.loadItems,
     addItems: state.addItems,
+    deleteItem: state.deleteItem,
+    undoDelete: state.undoDelete,
   }))
 
 export const useDragActions = () =>

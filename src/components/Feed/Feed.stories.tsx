@@ -15,6 +15,9 @@ const meta = {
     },
   },
   tags: ['autodocs'],
+  args: {
+    onDeleteItem: () => {},
+  },
 } satisfies Meta<typeof Feed>
 
 export default meta

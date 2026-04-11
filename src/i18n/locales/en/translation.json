@@ -40,6 +40,9 @@
   "url": {
     "openLink": "Open link: {{url}}"
   },
+  "toast": {
+    "blockDeleted": "Block deleted"
+  },
   "settings": {
     "title": "Settings",
     "buttonLabel": "Settings",

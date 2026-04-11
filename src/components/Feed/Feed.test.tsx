@@ -64,10 +64,13 @@ const createUrlItem = (
 })
 
 describe('Feed', () => {
+  const mockOnDeleteItem = vi.fn()
+
   beforeEach(() => {
     vi.clearAllMocks()
     mockScrollIntoView.mockClear()
     mockScrollTo.mockClear()
+    mockOnDeleteItem.mockClear()
   })
 
   describe('AC: Items in chronological order (oldest top, newest bottom)', () => {
@@ -86,7 +89,7 @@ describe('Feed', () => {
         createTextItem('item-2', '2026-03-27T12:00:00.000Z', 'Second item'),
       ]
 
-      render(<Feed items={items} />)
+      render(<Feed items={items} onDeleteItem={mockOnDeleteItem} />)
 
       const blocks = screen.getAllByTestId('block')
       expect(blocks).toHaveLength(3)
@@ -102,7 +105,7 @@ describe('Feed', () => {
         createTextItem('item-1', '2026-03-27T10:00:00.000Z', 'Only item'),
       ]
 
-      render(<Feed items={items} />)
+      render(<Feed items={items} onDeleteItem={mockOnDeleteItem} />)
 
       const blocks = screen.getAllByTestId('block')
       expect(blocks).toHaveLength(1)
@@ -117,7 +120,7 @@ describe('Feed', () => {
         createTextItem('item-2', '2026-03-27T11:00:00.000Z', 'Second'),
       ]
 
-      render(<Feed items={items} />)
+      render(<Feed items={items} onDeleteItem={mockOnDeleteItem} />)
 
       await waitFor(() => {
         expect(mockScrollIntoView).toHaveBeenCalled()
@@ -129,7 +132,9 @@ describe('Feed', () => {
         createTextItem('item-1', '2026-03-27T10:00:00.000Z', 'First'),
       ]
 
-      const { rerender } = render(<Feed items={initialItems} />)
+      const { rerender } = render(
+        <Feed items={initialItems} onDeleteItem={mockOnDeleteItem} />
+      )
 
       // Wait for initial scroll
       await waitFor(() => {
@@ -144,7 +149,7 @@ describe('Feed', () => {
         createTextItem('item-2', '2026-03-27T11:00:00.000Z', 'Second'),
       ]
 
-      rerender(<Feed items={updatedItems} />)
+      rerender(<Feed items={updatedItems} onDeleteItem={mockOnDeleteItem} />)
 
       await waitFor(() => {
         expect(mockScrollIntoView).toHaveBeenCalled()
@@ -154,7 +159,7 @@ describe('Feed', () => {
 
   describe('AC: Empty state with prompt', () => {
     it('displays empty state when no items', () => {
-      render(<Feed items={[]} />)
+      render(<Feed items={[]} onDeleteItem={mockOnDeleteItem} />)
 
       expect(
         screen.getByText(
@@ -168,7 +173,7 @@ describe('Feed', () => {
         createTextItem('item-1', '2026-03-27T10:00:00.000Z', 'Content'),
       ]
 
-      render(<Feed items={items} />)
+      render(<Feed items={items} onDeleteItem={mockOnDeleteItem} />)
 
       expect(
         screen.queryByText(
@@ -178,7 +183,7 @@ describe('Feed', () => {
     })
 
     it('does not render blocks in empty state', () => {
-      render(<Feed items={[]} />)
+      render(<Feed items={[]} onDeleteItem={mockOnDeleteItem} />)
 
       expect(screen.queryByTestId('block')).not.toBeInTheDocument()
     })
@@ -196,7 +201,7 @@ describe('Feed', () => {
         createTextItem('item-3', '2026-03-27T12:00:00.000Z', 'Another text'),
       ]
 
-      render(<Feed items={items} />)
+      render(<Feed items={items} onDeleteItem={mockOnDeleteItem} />)
 
       const blocks = screen.getAllByTestId('block')
       expect(blocks).toHaveLength(3)
@@ -212,7 +217,7 @@ describe('Feed', () => {
         ),
       ]
 
-      render(<Feed items={items} />)
+      render(<Feed items={items} onDeleteItem={mockOnDeleteItem} />)
 
       const blocks = screen.getAllByTestId('block')
       expect(blocks[0]).toHaveAttribute('data-item-type', 'text')
@@ -226,7 +231,9 @@ describe('Feed', () => {
         createTextItem('item-1', '2026-03-27T10:00:00.000Z', 'Content'),
       ]
 
-      const { container } = render(<Feed items={items} />)
+      const { container } = render(
+        <Feed items={items} onDeleteItem={mockOnDeleteItem} />
+      )
 
       const feedContainer = container.querySelector('[data-testid="feed"]')
       expect(feedContainer).toHaveClass('max-w-[720px]')
@@ -238,7 +245,9 @@ describe('Feed', () => {
         createTextItem('item-1', '2026-03-27T10:00:00.000Z', 'Content'),
       ]
 
-      const { container } = render(<Feed items={items} />)
+      const { container } = render(
+        <Feed items={items} onDeleteItem={mockOnDeleteItem} />
+      )
 
       const feedContainer = container.querySelector('[data-testid="feed"]')
       expect(feedContainer).toHaveClass('px-4')
@@ -249,7 +258,9 @@ describe('Feed', () => {
         createTextItem('item-1', '2026-03-27T10:00:00.000Z', 'Content'),
       ]
 
-      const { container } = render(<Feed items={items} />)
+      const { container } = render(
+        <Feed items={items} onDeleteItem={mockOnDeleteItem} />
+      )
 
       const feedContainer = container.querySelector('[data-testid="feed"]')
       expect(feedContainer).toHaveClass('py-6')
@@ -261,7 +272,9 @@ describe('Feed', () => {
         createTextItem('item-2', '2026-03-27T11:00:00.000Z', 'Second'),
       ]
 
-      const { container } = render(<Feed items={items} />)
+      const { container } = render(
+        <Feed items={items} onDeleteItem={mockOnDeleteItem} />
+      )
 
       const listElement = container.querySelector('[data-testid="feed-list"]')
       expect(listElement).toHaveClass('divide-y')
@@ -269,7 +282,7 @@ describe('Feed', () => {
     })
 
     it('empty state uses correct text styling', () => {
-      render(<Feed items={[]} />)
+      render(<Feed items={[]} onDeleteItem={mockOnDeleteItem} />)
 
       const emptyMessage = screen.getByText(
         'Start by pasting text, URLs, images, or dropping files'
@@ -280,7 +293,9 @@ describe('Feed', () => {
     })
 
     it('empty state is vertically and horizontally centered', () => {
-      const { container } = render(<Feed items={[]} />)
+      const { container } = render(
+        <Feed items={[]} onDeleteItem={mockOnDeleteItem} />
+      )
 
       const emptyContainer = container.querySelector(
         '[data-testid="feed-empty"]'
@@ -297,14 +312,18 @@ describe('Feed', () => {
         createTextItem('item-1', '2026-03-27T10:00:00.000Z', 'Content'),
       ]
 
-      const { container } = render(<Feed items={items} />)
+      const { container } = render(
+        <Feed items={items} onDeleteItem={mockOnDeleteItem} />
+      )
 
       const feedContainer = container.querySelector('[data-testid="feed"]')
       expect(feedContainer).toHaveAttribute('aria-label', 'Chronological feed')
     })
 
     it('empty state has appropriate aria-live for dynamic content', () => {
-      const { container } = render(<Feed items={[]} />)
+      const { container } = render(
+        <Feed items={[]} onDeleteItem={mockOnDeleteItem} />
+      )
 
       const emptyContainer = container.querySelector(
         '[data-testid="feed-empty"]'
@@ -317,7 +336,9 @@ describe('Feed', () => {
         createTextItem('item-1', '2026-03-27T10:00:00.000Z', 'Content'),
       ]
 
-      const { container } = render(<Feed items={items} />)
+      const { container } = render(
+        <Feed items={items} onDeleteItem={mockOnDeleteItem} />
+      )
 
       const listElement = container.querySelector('[data-testid="feed-list"]')
       expect(listElement).toHaveAttribute('role', 'feed')
@@ -339,7 +360,7 @@ describe('Feed', () => {
         createTextItem('item-2', '2026-03-27T11:00:00.000Z', 'Second'),
       ]
 
-      render(<Feed items={items} />)
+      render(<Feed items={items} onDeleteItem={mockOnDeleteItem} />)
 
       await waitFor(() => {
         expect(mockScrollTo).toHaveBeenCalledWith({
@@ -358,7 +379,7 @@ describe('Feed', () => {
         createTextItem('item-2', '2026-03-27T11:00:00.000Z', 'Second'),
       ]
 
-      render(<Feed items={items} />)
+      render(<Feed items={items} onDeleteItem={mockOnDeleteItem} />)
 
       await waitFor(() => {
         // Should scroll to newest item instead of restoring position
@@ -379,7 +400,9 @@ describe('Feed', () => {
         createTextItem('item-1', '2026-03-27T10:00:00.000Z', 'First'),
       ]
 
-      const { rerender } = render(<Feed items={initialItems} />)
+      const { rerender } = render(
+        <Feed items={initialItems} onDeleteItem={mockOnDeleteItem} />
+      )
 
       // Wait for initial mount scroll
       await waitFor(() => {
@@ -394,7 +417,7 @@ describe('Feed', () => {
         createTextItem('item-2', '2026-03-27T11:00:00.000Z', 'Second'),
       ]
 
-      rerender(<Feed items={updatedItems} />)
+      rerender(<Feed items={updatedItems} onDeleteItem={mockOnDeleteItem} />)
 
       await waitFor(() => {
         expect(mockScrollIntoView).toHaveBeenCalled()
@@ -429,7 +452,13 @@ describe('Feed', () => {
         capturedAt: new Date().toISOString(),
       }
 
-      render(<Feed items={items} draftItem={draftItem} />)
+      render(
+        <Feed
+          items={items}
+          draftItem={draftItem}
+          onDeleteItem={mockOnDeleteItem}
+        />
+      )
 
       // Should not auto-scroll when draft is active
       await new Promise((resolve) => setTimeout(resolve, 100))
