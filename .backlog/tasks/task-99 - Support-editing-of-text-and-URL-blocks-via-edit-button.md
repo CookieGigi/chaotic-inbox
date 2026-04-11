@@ -1,10 +1,10 @@
 ---
 id: TASK-99
 title: Support editing of text and URL blocks via edit button
-status: To Do
+status: In Progress
 assignee: []
 created_date: '2026-04-08 04:29'
-updated_date: '2026-04-08 04:32'
+updated_date: '2026-04-11 16:54'
 labels:
   - feature
   - block-editing
