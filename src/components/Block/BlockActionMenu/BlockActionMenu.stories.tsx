@@ -162,7 +162,7 @@ export const StickyBehavior: Story = {
             Scroll down to see sticky behavior:
           </p>
           {blocks.map((block) => (
-            <div key={block.id} className="group flex w-80">
+            <div key={block.id} className="group flex w-[90%]">
               <div className="flex-1 p-6 bg-surface border border-border rounded-lg min-h-[300px]">
                 <p className="text-text text-lg">{block.title}</p>
                 <p className="text-text-muted text-base mt-4">
