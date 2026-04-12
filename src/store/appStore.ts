@@ -52,6 +52,7 @@ interface AppActions {
   // Item actions
   loadItems: () => Promise<void>
   addItems: (items: RawItem[]) => Promise<void>
+  updateItem: (id: string, updates: Partial<RawItem>) => Promise<void>
   deleteItem: (id: string) => Promise<void>
   undoDelete: () => Promise<void>
 
@@ -138,6 +139,31 @@ export const useAppStore = create<AppStore>((set, get) => ({
     } catch (error) {
       console.error('Failed to add items:', error)
       showError('Failed to save items. Please try again.')
+    }
+  },
+
+  /**
+   * Update an item in state and database
+   */
+  updateItem: async (id: string, updates: Partial<RawItem>) => {
+    const { items } = get()
+    const itemToUpdate = items.find((item) => item.id === id)
+
+    if (!itemToUpdate) return
+
+    try {
+      // Update in database
+      await db.items.update(id, updates)
+
+      // Update in state
+      set((state) => ({
+        items: state.items.map((item) =>
+          item.id === id ? ({ ...item, ...updates } as RawItem) : item
+        ),
+      }))
+    } catch (error) {
+      console.error('Failed to update item:', error)
+      showError('Failed to update block. Please try again.')
     }
   },
 
@@ -324,6 +350,7 @@ export const useItemActions = () =>
   useAppStore((state) => ({
     loadItems: state.loadItems,
     addItems: state.addItems,
+    updateItem: state.updateItem,
     deleteItem: state.deleteItem,
     undoDelete: state.undoDelete,
   }))

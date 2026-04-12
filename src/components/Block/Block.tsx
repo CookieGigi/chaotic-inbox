@@ -1,4 +1,4 @@
-import { useMemo, useEffect } from 'react'
+import { useMemo, useEffect, useState, useCallback } from 'react'
 import type { RawItem } from '@/models/rawItem'
 import type { ImageMetadata } from '@/models/metadata'
 import {
@@ -9,11 +9,14 @@ import {
 } from '@/models/metadata'
 import { Timestamp } from '@/components/Timestamp'
 import { TextBlock } from '@/components/TextBlock/TextBlock'
+import { TextBlockEdit } from '@/components/TextBlock/TextBlockEdit'
 import { UrlBlock } from '@/components/UrlBlock/UrlBlock'
+import { UrlBlockEdit } from '@/components/UrlBlock/UrlBlockEdit'
 import { ImageBlock } from '@/components/ImageBlock/ImageBlock'
 import { FileBlock } from '@/components/FileBlock/FileBlock'
 import { BlockActionMenu } from './BlockActionMenu/BlockActionMenu'
 import { DeleteButton } from './BlockActionMenu/DeleteButton'
+import { EditButton } from './BlockActionMenu/EditButton'
 import { BlockIcon } from './BlockIcon'
 import { BlockTitle } from './BlockTitle'
 
@@ -21,6 +24,8 @@ export interface BlockProps {
   item: RawItem
   /** Callback when block should be deleted */
   onDelete: (id: string) => void
+  /** Callback when block should be updated */
+  onUpdate?: (id: string, updates: Partial<RawItem>) => Promise<void>
 }
 
 // Component for rendering image blocks with proper blob URL cleanup
@@ -62,9 +67,69 @@ function renderBlockContent(item: RawItem) {
   return null
 }
 
-export function Block({ item, onDelete }: BlockProps) {
+// Check if a block type is editable
+function isEditableBlock(item: RawItem): boolean {
+  return isTextItem(item) || isUrlItem(item)
+}
+
+export function Block({ item, onDelete, onUpdate }: BlockProps) {
+  const [isEditing, setIsEditing] = useState(false)
+  const [editContent, setEditContent] = useState('')
+
   const handleDelete = () => {
     onDelete(item.id as string)
+  }
+
+  const handleEdit = useCallback(() => {
+    setEditContent(item.raw as string)
+    setIsEditing(true)
+  }, [item.raw])
+
+  const handleSave = useCallback(async () => {
+    if (editContent !== item.raw && onUpdate) {
+      await onUpdate(item.id as string, { raw: editContent })
+    }
+    setIsEditing(false)
+  }, [editContent, item.id, item.raw, onUpdate])
+
+  const handleCancel = useCallback(() => {
+    setIsEditing(false)
+    setEditContent('')
+  }, [])
+
+  // Render edit mode or content based on state
+  const renderContent = () => {
+    if (isEditing && isTextItem(item)) {
+      return (
+        <>
+          <TextBlockEdit
+            initialContent={editContent}
+            onChange={setEditContent}
+            onSubmit={handleSave}
+            onCancel={handleCancel}
+          />
+          <div className="text-hint text-text-faint mt-2">
+            Ctrl+Enter to save, Escape to cancel
+          </div>
+        </>
+      )
+    }
+    if (isEditing && isUrlItem(item)) {
+      return (
+        <>
+          <UrlBlockEdit
+            initialUrl={editContent}
+            onChange={setEditContent}
+            onSubmit={handleSave}
+            onCancel={handleCancel}
+          />
+          <div className="text-hint text-text-faint mt-2">
+            Ctrl+Enter to save, Escape to cancel
+          </div>
+        </>
+      )
+    }
+    return renderBlockContent(item)
   }
 
   return (
@@ -86,11 +151,14 @@ export function Block({ item, onDelete }: BlockProps) {
         </header>
 
         {/* Content */}
-        <div data-testid="block-content">{renderBlockContent(item)}</div>
+        <div data-testid="block-content">{renderContent()}</div>
       </div>
 
       {/* Action Menu */}
       <BlockActionMenu testId="block-action-menu">
+        {isEditableBlock(item) && onUpdate && (
+          <EditButton onEdit={handleEdit} testId="edit-button" />
+        )}
         <DeleteButton onDelete={handleDelete} testId="delete-button" />
       </BlockActionMenu>
     </article>

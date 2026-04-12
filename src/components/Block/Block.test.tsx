@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import type { RawItem } from '@/models/rawItem'
 import { Block } from './Block'
 
@@ -459,6 +460,312 @@ describe('Block', () => {
       const deleteButton = screen.getByRole('button', { name: /delete block/i })
       const svg = deleteButton.querySelector('svg')
       expect(svg).toBeInTheDocument()
+    })
+  })
+
+  describe('AC #1: Edit button appears for text and URL blocks', () => {
+    it('renders edit button in action menu for text blocks', () => {
+      const item = createTextItem()
+      render(<Block item={item} onDelete={vi.fn()} onUpdate={vi.fn()} />)
+
+      const editButton = screen.getByRole('button', { name: /edit block/i })
+      expect(editButton).toBeInTheDocument()
+    })
+
+    it('renders edit button in action menu for URL blocks', () => {
+      const item = createUrlItem()
+      render(<Block item={item} onDelete={vi.fn()} onUpdate={vi.fn()} />)
+
+      const editButton = screen.getByRole('button', { name: /edit block/i })
+      expect(editButton).toBeInTheDocument()
+    })
+  })
+
+  describe('AC #8: Edit button does NOT appear for image and file blocks', () => {
+    it('does not render edit button for image blocks', () => {
+      const item = createImageItem()
+      render(<Block item={item} onDelete={vi.fn()} />)
+
+      const editButton = screen.queryByRole('button', { name: /edit block/i })
+      expect(editButton).not.toBeInTheDocument()
+    })
+
+    it('does not render edit button for file blocks', () => {
+      const item = createFileItem()
+      render(<Block item={item} onDelete={vi.fn()} />)
+
+      const editButton = screen.queryByRole('button', { name: /edit block/i })
+      expect(editButton).not.toBeInTheDocument()
+    })
+
+    it('still renders delete button for non-editable blocks', () => {
+      const item = createImageItem()
+      render(<Block item={item} onDelete={vi.fn()} />)
+
+      const deleteButton = screen.getByRole('button', { name: /delete block/i })
+      expect(deleteButton).toBeInTheDocument()
+    })
+  })
+
+  describe('AC #2: Clicking edit button enters inline edit mode', () => {
+    it('enters edit mode when edit button is clicked for text blocks', async () => {
+      const item = createTextItem()
+      render(<Block item={item} onDelete={vi.fn()} onUpdate={vi.fn()} />)
+
+      const editButton = screen.getByRole('button', { name: /edit block/i })
+      await userEvent.click(editButton)
+
+      const textarea = screen.getByTestId('text-block-edit-textarea')
+      expect(textarea).toBeInTheDocument()
+    })
+
+    it('enters edit mode when edit button is clicked for URL blocks', async () => {
+      const item = createUrlItem()
+      render(<Block item={item} onDelete={vi.fn()} onUpdate={vi.fn()} />)
+
+      const editButton = screen.getByRole('button', { name: /edit block/i })
+      await userEvent.click(editButton)
+
+      const input = screen.getByTestId('url-block-edit-input')
+      expect(input).toBeInTheDocument()
+    })
+  })
+
+  describe('AC #3: Text blocks show a textarea for editing', () => {
+    it('renders textarea with initial content when editing text block', async () => {
+      const item = createTextItem({ raw: 'Initial text content' })
+      render(<Block item={item} onDelete={vi.fn()} onUpdate={vi.fn()} />)
+
+      const editButton = screen.getByRole('button', { name: /edit block/i })
+      await userEvent.click(editButton)
+
+      const textarea = screen.getByTestId('text-block-edit-textarea')
+      expect(textarea).toHaveValue('Initial text content')
+    })
+  })
+
+  describe('AC #4: URL blocks show an input field for editing', () => {
+    it('renders input with initial URL when editing URL block', async () => {
+      const item = createUrlItem({ raw: 'https://example.com' })
+      render(<Block item={item} onDelete={vi.fn()} onUpdate={vi.fn()} />)
+
+      const editButton = screen.getByRole('button', { name: /edit block/i })
+      await userEvent.click(editButton)
+
+      const input = screen.getByTestId('url-block-edit-input')
+      expect(input).toHaveValue('https://example.com')
+    })
+
+    it('uses text input type for URL editing', async () => {
+      const item = createUrlItem()
+      render(<Block item={item} onDelete={vi.fn()} onUpdate={vi.fn()} />)
+
+      const editButton = screen.getByRole('button', { name: /edit block/i })
+      await userEvent.click(editButton)
+
+      const input = screen.getByTestId('url-block-edit-input')
+      expect(input).toHaveAttribute('type', 'text')
+    })
+  })
+
+  describe('AC #5: Ctrl+Enter saves the changes and exits edit mode', () => {
+    it('saves text changes when Ctrl+Enter is pressed', async () => {
+      const mockOnUpdate = vi.fn()
+      const item = createTextItem({ id: 'text-block-1', raw: 'Original text' })
+      render(<Block item={item} onDelete={vi.fn()} onUpdate={mockOnUpdate} />)
+
+      // Enter edit mode
+      const editButton = screen.getByRole('button', { name: /edit block/i })
+      await userEvent.click(editButton)
+
+      // Edit content
+      const textarea = screen.getByTestId('text-block-edit-textarea')
+      await userEvent.clear(textarea)
+      await userEvent.type(textarea, 'Updated text')
+
+      // Submit with Ctrl+Enter
+      await userEvent.keyboard('{Control>}{Enter}{/Control}')
+
+      // Wait for async update to complete
+      await new Promise((resolve) => setTimeout(resolve, 50))
+
+      // Verify update was called
+      expect(mockOnUpdate).toHaveBeenCalledWith('text-block-1', {
+        raw: 'Updated text',
+      })
+    })
+
+    it('exits edit mode after saving with Ctrl+Enter', async () => {
+      const mockOnUpdate = vi.fn()
+      const item = createTextItem({ raw: 'Original text' })
+      render(<Block item={item} onDelete={vi.fn()} onUpdate={mockOnUpdate} />)
+
+      // Enter edit mode
+      const editButton = screen.getByRole('button', { name: /edit block/i })
+      await userEvent.click(editButton)
+
+      // Submit with Ctrl+Enter
+      await userEvent.keyboard('{Control>}{Enter}{/Control}')
+
+      // Wait for async update to complete
+      await new Promise((resolve) => setTimeout(resolve, 50))
+
+      // Verify exited edit mode (textarea no longer present)
+      expect(
+        screen.queryByTestId('text-block-edit-textarea')
+      ).not.toBeInTheDocument()
+    })
+
+    it('saves URL changes when Ctrl+Enter is pressed', async () => {
+      const mockOnUpdate = vi.fn()
+      const item = createUrlItem({ id: 'url-block-1', raw: 'https://old.com' })
+      render(<Block item={item} onDelete={vi.fn()} onUpdate={mockOnUpdate} />)
+
+      // Enter edit mode
+      const editButton = screen.getByRole('button', { name: /edit block/i })
+      await userEvent.click(editButton)
+
+      // Edit URL
+      const input = screen.getByTestId('url-block-edit-input')
+      await userEvent.clear(input)
+      await userEvent.type(input, 'https://new.com')
+
+      // Submit with Ctrl+Enter
+      await userEvent.keyboard('{Control>}{Enter}{/Control}')
+
+      // Wait for async update to complete
+      await new Promise((resolve) => setTimeout(resolve, 50))
+
+      // Verify update was called
+      expect(mockOnUpdate).toHaveBeenCalledWith('url-block-1', {
+        raw: 'https://new.com',
+      })
+    })
+  })
+
+  describe('AC #6: Escape cancels the edit and restores original content', () => {
+    it('exits edit mode when Escape is pressed without saving', async () => {
+      const item = createTextItem({ raw: 'Original text' })
+      render(<Block item={item} onDelete={vi.fn()} onUpdate={vi.fn()} />)
+
+      // Enter edit mode
+      const editButton = screen.getByRole('button', { name: /edit block/i })
+      await userEvent.click(editButton)
+
+      // Edit content (but don't save)
+      const textarea = screen.getByTestId('text-block-edit-textarea')
+      await userEvent.type(textarea, ' - unsaved changes')
+
+      // Cancel with Escape
+      await userEvent.keyboard('{Escape}')
+
+      // Verify exited edit mode
+      expect(
+        screen.queryByTestId('text-block-edit-textarea')
+      ).not.toBeInTheDocument()
+    })
+
+    it('does not call onUpdate when edit is cancelled', async () => {
+      const mockOnUpdate = vi.fn()
+      const item = createTextItem({ raw: 'Original text' })
+      render(<Block item={item} onDelete={vi.fn()} onUpdate={mockOnUpdate} />)
+
+      // Enter edit mode
+      const editButton = screen.getByRole('button', { name: /edit block/i })
+      await userEvent.click(editButton)
+
+      // Edit content
+      const textarea = screen.getByTestId('text-block-edit-textarea')
+      await userEvent.type(textarea, ' - unsaved changes')
+
+      // Cancel with Escape
+      await userEvent.keyboard('{Escape}')
+
+      // Verify update was NOT called
+      expect(mockOnUpdate).not.toHaveBeenCalled()
+    })
+
+    it('restores original content when cancelled for URL blocks', async () => {
+      const item = createUrlItem({ raw: 'https://example.com' })
+      render(<Block item={item} onDelete={vi.fn()} onUpdate={vi.fn()} />)
+
+      // Enter edit mode
+      const editButton = screen.getByRole('button', { name: /edit block/i })
+      await userEvent.click(editButton)
+
+      // Edit content
+      const input = screen.getByTestId('url-block-edit-input')
+      await userEvent.clear(input)
+      await userEvent.type(input, 'https://different.com')
+
+      // Cancel with Escape
+      await userEvent.keyboard('{Escape}')
+
+      // Verify original URL is displayed
+      expect(screen.getByText('https://example.com')).toBeInTheDocument()
+    })
+  })
+
+  describe('AC #9: Edit button follows existing design system patterns', () => {
+    it('edit button has same size as delete button', () => {
+      const item = createTextItem()
+      render(<Block item={item} onDelete={vi.fn()} onUpdate={vi.fn()} />)
+
+      const editButton = screen.getByRole('button', { name: /edit block/i })
+      const deleteButton = screen.getByRole('button', { name: /delete block/i })
+
+      expect(editButton).toHaveClass('w-8', 'h-8')
+      expect(deleteButton).toHaveClass('w-8', 'h-8')
+    })
+
+    it('edit button has focus ring for accessibility', () => {
+      const item = createTextItem()
+      render(<Block item={item} onDelete={vi.fn()} onUpdate={vi.fn()} />)
+
+      const editButton = screen.getByRole('button', { name: /edit block/i })
+      expect(editButton).toHaveClass('focus-visible:ring-accent')
+    })
+
+    it('edit button uses accent color on hover', () => {
+      const item = createTextItem()
+      render(<Block item={item} onDelete={vi.fn()} onUpdate={vi.fn()} />)
+
+      const editButton = screen.getByRole('button', { name: /edit block/i })
+      expect(editButton).toHaveClass('hover:text-accent')
+    })
+  })
+
+  describe('AC #11: Edit mode is accessible via keyboard', () => {
+    it('edit button can be focused via keyboard', async () => {
+      const item = createTextItem()
+      render(<Block item={item} onDelete={vi.fn()} onUpdate={vi.fn()} />)
+
+      const editButton = screen.getByRole('button', { name: /edit block/i })
+      editButton.focus()
+
+      expect(editButton).toHaveFocus()
+    })
+
+    it('textarea has focus when entering edit mode for text blocks', async () => {
+      const item = createTextItem()
+      render(<Block item={item} onDelete={vi.fn()} onUpdate={vi.fn()} />)
+
+      const editButton = screen.getByRole('button', { name: /edit block/i })
+      await userEvent.click(editButton)
+
+      const textarea = screen.getByTestId('text-block-edit-textarea')
+      expect(textarea).toHaveFocus()
+    })
+
+    it('input has focus when entering edit mode for URL blocks', async () => {
+      const item = createUrlItem()
+      render(<Block item={item} onDelete={vi.fn()} onUpdate={vi.fn()} />)
+
+      const editButton = screen.getByRole('button', { name: /edit block/i })
+      await userEvent.click(editButton)
+
+      const input = screen.getByTestId('url-block-edit-input')
+      expect(input).toHaveFocus()
     })
   })
 })

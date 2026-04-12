@@ -37,7 +37,8 @@ export function TextBlockEdit({
       // Position cursor at end of content
       textarea.setSelectionRange(initialContent.length, initialContent.length)
     }
-  }, [initialContent.length])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []) // Only run on mount
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLTextAreaElement>) => {

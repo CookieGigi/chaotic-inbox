@@ -11,6 +11,8 @@ export interface FeedProps {
   draftItem?: DraftTextItem | null
   /** Callback when an item should be deleted */
   onDeleteItem: (id: string) => void
+  /** Callback when an item should be updated */
+  onUpdateItem?: (id: string, updates: Partial<RawItem>) => Promise<void>
 }
 
 /**
@@ -23,7 +25,12 @@ function sortByCaptureTime(items: RawItem[]): RawItem[] {
   )
 }
 
-export function Feed({ items, draftItem, onDeleteItem }: FeedProps) {
+export function Feed({
+  items,
+  draftItem,
+  onDeleteItem,
+  onUpdateItem,
+}: FeedProps) {
   const { t } = useTranslation()
 
   // Use feed scroll hook for all scroll orchestration
@@ -78,7 +85,11 @@ export function Feed({ items, draftItem, onDeleteItem }: FeedProps) {
                 : undefined
             }
           >
-            <Block item={item} onDelete={onDeleteItem} />
+            <Block
+              item={item}
+              onDelete={onDeleteItem}
+              onUpdate={onUpdateItem}
+            />
           </div>
         ))}
 
