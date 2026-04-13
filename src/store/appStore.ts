@@ -4,6 +4,7 @@ import type { RawItem } from '@/models/rawItem'
 import { createTextItem } from '@/models/itemFactories'
 import { showError, showUndoable } from '@/store/toastStore'
 import i18n from '@/i18n/config'
+import { markStart, markEnd, PerformanceMarkers } from '@/utils/performance'
 
 /**
  * Threshold for triggering immediate quota check (1MB in bytes)
@@ -102,6 +103,7 @@ export const useAppStore = create<AppStore>((set, get) => ({
    * Load items from database on app mount
    */
   loadItems: async () => {
+    markStart(PerformanceMarkers.STORE_LOAD_ITEMS)
     set({ isLoading: true })
     try {
       const allItems = await db.items.orderBy('capturedAt').toArray()
@@ -110,6 +112,8 @@ export const useAppStore = create<AppStore>((set, get) => ({
       console.error('Failed to load items:', error)
       showError('Failed to load items. Please refresh the page to try again.')
       set({ isLoading: false })
+    } finally {
+      markEnd(PerformanceMarkers.STORE_LOAD_ITEMS)
     }
   },
 
@@ -119,11 +123,14 @@ export const useAppStore = create<AppStore>((set, get) => ({
   addItems: async (newItems: RawItem[]) => {
     if (newItems.length === 0) return
 
+    markStart(PerformanceMarkers.STORE_ADD_ITEMS)
     try {
       // Persist to database
+      markStart(PerformanceMarkers.DB_ADD)
       for (const item of newItems) {
         await db.items.add(item)
       }
+      markEnd(PerformanceMarkers.DB_ADD)
 
       // Update state
       set((state) => ({
@@ -139,6 +146,8 @@ export const useAppStore = create<AppStore>((set, get) => ({
     } catch (error) {
       console.error('Failed to add items:', error)
       showError('Failed to save items. Please try again.')
+    } finally {
+      markEnd(PerformanceMarkers.STORE_ADD_ITEMS)
     }
   },
 
@@ -151,9 +160,12 @@ export const useAppStore = create<AppStore>((set, get) => ({
 
     if (!itemToUpdate) return
 
+    markStart(PerformanceMarkers.STORE_UPDATE_ITEM)
     try {
       // Update in database
+      markStart(PerformanceMarkers.DB_UPDATE)
       await db.items.update(id, updates)
+      markEnd(PerformanceMarkers.DB_UPDATE)
 
       // Update in state
       set((state) => ({
@@ -164,6 +176,8 @@ export const useAppStore = create<AppStore>((set, get) => ({
     } catch (error) {
       console.error('Failed to update item:', error)
       showError('Failed to update block. Please try again.')
+    } finally {
+      markEnd(PerformanceMarkers.STORE_UPDATE_ITEM)
     }
   },
 
@@ -176,12 +190,15 @@ export const useAppStore = create<AppStore>((set, get) => ({
 
     if (!itemToDelete) return
 
+    markStart(PerformanceMarkers.STORE_DELETE_ITEM)
     try {
       // Store for potential undo
       set({ recentlyDeleted: itemToDelete })
 
       // Delete from database
+      markStart(PerformanceMarkers.DB_DELETE)
       await db.items.delete(id)
+      markEnd(PerformanceMarkers.DB_DELETE)
 
       // Update state
       set((state) => ({
@@ -195,6 +212,8 @@ export const useAppStore = create<AppStore>((set, get) => ({
     } catch (error) {
       console.error('Failed to delete item:', error)
       showError('Failed to delete block. Please try again.')
+    } finally {
+      markEnd(PerformanceMarkers.STORE_DELETE_ITEM)
     }
   },
 
@@ -206,6 +225,7 @@ export const useAppStore = create<AppStore>((set, get) => ({
 
     if (!recentlyDeleted) return
 
+    markStart(PerformanceMarkers.STORE_DELETE_ITEM)
     try {
       // Re-add to database
       await db.items.add(recentlyDeleted)
@@ -218,6 +238,8 @@ export const useAppStore = create<AppStore>((set, get) => ({
     } catch (error) {
       console.error('Failed to undo delete:', error)
       showError('Failed to restore block. Please try again.')
+    } finally {
+      markEnd(PerformanceMarkers.STORE_DELETE_ITEM)
     }
   },
 
@@ -279,6 +301,7 @@ export const useAppStore = create<AppStore>((set, get) => ({
       return
     }
 
+    markStart(PerformanceMarkers.DRAFT_SUBMIT)
     try {
       // Create text item and persist
       const textItem = createTextItem(draftContent.trim(), { kind: 'plain' })
@@ -296,6 +319,8 @@ export const useAppStore = create<AppStore>((set, get) => ({
         'Failed to save draft. Your content is preserved - please try again.'
       )
       // Note: draftItem and draftContent are preserved so user can retry
+    } finally {
+      markEnd(PerformanceMarkers.DRAFT_SUBMIT)
     }
   },
 

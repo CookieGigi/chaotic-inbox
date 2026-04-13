@@ -4,6 +4,7 @@ import { showError } from '@/store/toastStore'
 import type { RawItem } from '@/models/rawItem'
 import { createImageItem, createFileItem } from '@/models/itemFactories'
 import { isImageFile, getFileSubType } from '@/utils/fileTypeDetection'
+import { markStart, markEnd, PerformanceMarkers } from '@/utils/performance'
 
 /**
  * Hook options for useGlobalDrop
@@ -131,32 +132,38 @@ export function useGlobalDrop(
    */
   const handleDrop = useCallback(
     async (event: DragEvent) => {
-      event.preventDefault()
+      markStart(PerformanceMarkers.DROP_FILES)
 
-      // Reset drag state
-      dragCounterRef.current = 0
-      setLocalIsDragging(false)
-      setIsDragging(false)
+      try {
+        event.preventDefault()
 
-      // Only process file drops
-      if (!hasFiles(event.dataTransfer)) {
-        return
-      }
+        // Reset drag state
+        dragCounterRef.current = 0
+        setLocalIsDragging(false)
+        setIsDragging(false)
 
-      const files = event.dataTransfer?.files
-      if (!files || files.length === 0) {
-        return
-      }
+        // Only process file drops
+        if (!hasFiles(event.dataTransfer)) {
+          return
+        }
 
-      // Process all files concurrently
-      const itemPromises = Array.from(files).map(processFile)
-      const items = (await Promise.all(itemPromises)).filter(
-        Boolean
-      ) as RawItem[]
+        const files = event.dataTransfer?.files
+        if (!files || files.length === 0) {
+          return
+        }
 
-      // Create items from drop
-      if (items.length > 0) {
-        addItems(items)
+        // Process all files concurrently
+        const itemPromises = Array.from(files).map(processFile)
+        const items = (await Promise.all(itemPromises)).filter(
+          Boolean
+        ) as RawItem[]
+
+        // Create items from drop
+        if (items.length > 0) {
+          await addItems(items)
+        }
+      } finally {
+        markEnd(PerformanceMarkers.DROP_FILES)
       }
     },
     [addItems, setIsDragging]

@@ -1,0 +1,208 @@
+{
+  "$schema": "./performance-budget.schema.json",
+  "version": "1.0.0",
+  "description": "Performance budgets for chaotic-inbox application",
+  "notes": "These budgets are based on stress testing with up to 10,000 items and 30MB files. Update values after running tests in target browsers.",
+  "browsers": ["Chrome", "Firefox"],
+
+  "budgets": {
+    "itemOperations": {
+      "add100Items": {
+        "description": "Add 100 items to the database",
+        "target": "< 5000ms",
+        "measured": null,
+        "status": "pending"
+      },
+      "add1000Items": {
+        "description": "Add 1,000 items to the database",
+        "target": "< 30000ms",
+        "measured": null,
+        "status": "pending"
+      },
+      "add5000Items": {
+        "description": "Add 5,000 items to the database",
+        "target": "< 120000ms",
+        "measured": null,
+        "status": "pending"
+      },
+      "add10000Items": {
+        "description": "Add 10,000 items to the database",
+        "target": "< 300000ms",
+        "measured": null,
+        "status": "pending"
+      },
+      "load1000Items": {
+        "description": "Load 1,000 items from database",
+        "target": "< 10000ms",
+        "measured": null,
+        "status": "pending"
+      },
+      "load10000Items": {
+        "description": "Load 10,000 items from database",
+        "target": "< 60000ms",
+        "measured": null,
+        "status": "pending"
+      }
+    },
+
+    "fileOperations": {
+      "store30MBFile": {
+        "description": "Store a single 30MB file",
+        "target": "< 10000ms",
+        "measured": null,
+        "status": "pending"
+      },
+      "store100MBTotal": {
+        "description": "Store 10 x 10MB files",
+        "target": "< 60000ms",
+        "measured": null,
+        "status": "pending"
+      },
+      "store250MBTotal": {
+        "description": "Store 50 x 5MB files",
+        "target": "< 300000ms",
+        "measured": null,
+        "status": "pending"
+      },
+      "load30MBFile": {
+        "description": "Load a 30MB file from database",
+        "target": "< 5000ms",
+        "measured": null,
+        "status": "pending"
+      },
+      "delete30MBFile": {
+        "description": "Delete a 30MB file",
+        "target": "< 2000ms",
+        "measured": null,
+        "status": "pending"
+      }
+    },
+
+    "bulkOperations": {
+      "paste1000Items": {
+        "description": "Paste 1,000 text items at once",
+        "target": "< 30000ms",
+        "measured": null,
+        "status": "pending"
+      },
+      "paste5000Items": {
+        "description": "Paste 5,000 text items at once",
+        "target": "< 120000ms",
+        "measured": null,
+        "status": "pending"
+      },
+      "paste100KBText": {
+        "description": "Paste 100KB of text",
+        "target": "< 2000ms",
+        "measured": null,
+        "status": "pending"
+      },
+      "paste500KBText": {
+        "description": "Paste 500KB of text",
+        "target": "< 5000ms",
+        "measured": null,
+        "status": "pending"
+      },
+      "drop20Files": {
+        "description": "Drop 20 files simultaneously",
+        "target": "< 30000ms",
+        "measured": null,
+        "status": "pending"
+      }
+    },
+
+    "memoryUsage": {
+      "with1000Items": {
+        "description": "Memory usage with 1,000 items loaded",
+        "target": "< 500MB",
+        "measured": null,
+        "status": "pending"
+      },
+      "with5000Items": {
+        "description": "Memory usage with 5,000 items loaded",
+        "target": "< 1000MB",
+        "measured": null,
+        "status": "pending"
+      },
+      "with10000Items": {
+        "description": "Memory usage with 10,000 items loaded",
+        "target": "< 2000MB",
+        "measured": null,
+        "status": "pending"
+      },
+      "withLargeFile": {
+        "description": "Memory usage with 10,000 items + 30MB file",
+        "target": "< 3000MB",
+        "measured": null,
+        "status": "pending"
+      },
+      "memoryLeakThreshold": {
+        "description": "Acceptable memory growth per operation",
+        "target": "< 50MB",
+        "measured": null,
+        "status": "pending"
+      }
+    },
+
+    "interactionLatency": {
+      "pasteOperation": {
+        "description": "Time to process a paste operation",
+        "target": "< 100ms",
+        "measured": null,
+        "status": "pending"
+      },
+      "dropOperation": {
+        "description": "Time to process a file drop",
+        "target": "< 100ms",
+        "measured": null,
+        "status": "pending"
+      },
+      "deleteOperation": {
+        "description": "Time to delete an item",
+        "target": "< 50ms",
+        "measured": null,
+        "status": "pending"
+      },
+      "loadOperation": {
+        "description": "Time to load items from database",
+        "target": "< 1000ms",
+        "measured": null,
+        "status": "pending"
+      }
+    },
+
+    "rendering": {
+      "fps": {
+        "description": "Frames per second during operations",
+        "target": ">= 30",
+        "measured": null,
+        "status": "pending"
+      },
+      "timeToInteractive": {
+        "description": "Time to interactive on app load",
+        "target": "< 3000ms",
+        "measured": null,
+        "status": "pending"
+      },
+      "render1000Items": {
+        "description": "Time to render 1,000 items",
+        "target": "< 1000ms",
+        "measured": null,
+        "status": "pending"
+      }
+    }
+  },
+
+  "scaling": {
+    "maxRecommendedItems": 10000,
+    "maxRecommendedFileSize": 30,
+    "warningThresholdItems": 5000,
+    "warningThresholdFileSize": 10
+  },
+
+  "ci": {
+    "enabled": false,
+    "failOnBudgetViolation": true,
+    "reportArtifacts": true
+  }
+}

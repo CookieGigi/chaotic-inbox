@@ -2,6 +2,7 @@ import { useEffect, useCallback } from 'react'
 import { useAppStore } from '@/store/appStore'
 import type { RawItem } from '@/models/rawItem'
 import { isInputElement } from '@/utils'
+import { markStart, markEnd, PerformanceMarkers } from '@/utils/performance'
 import {
   createTextItem,
   createUrlItem,
@@ -80,79 +81,91 @@ export function useGlobalPaste(options: UseGlobalPasteOptions = {}): void {
     if (disabled) return
 
     const handlePaste = async (event: ClipboardEvent) => {
-      // Skip if window doesn't have focus
-      if (!document.hasFocus()) {
-        return
-      }
+      markStart(PerformanceMarkers.PASTE_MULTIPLE)
 
-      // Skip if drag overlay is active
-      if (isDragOverlayActive()) {
-        return
-      }
-
-      // Skip if any input is focused
-      if (isInputElement(document.activeElement)) {
-        return
-      }
-
-      // Prevent default to stop browser from handling paste
-      event.preventDefault()
-
-      const clipboardData = event.clipboardData
-      if (!clipboardData) return
-
-      const newItems: RawItem[] = []
-      let textContent = ''
-      let hasImage = false
-
-      // Process all items in clipboard (multiple support)
-      const items = clipboardData.items
-
-      for (let i = 0; i < items.length; i++) {
-        const item = items[i]
-
-        // Skip if item is undefined or doesn't have type
-        if (!item?.type) {
-          continue
+      try {
+        // Skip if window doesn't have focus
+        if (!document.hasFocus()) {
+          return
         }
 
-        if (item.type.startsWith('image/')) {
-          // Handle image paste
-          const file = item.getAsFile()
-          if (file) {
-            const imageItem = processImage(file)
-            if (imageItem) {
-              newItems.push(imageItem)
-              hasImage = true
+        // Skip if drag overlay is active
+        if (isDragOverlayActive()) {
+          return
+        }
+
+        // Skip if any input is focused
+        if (isInputElement(document.activeElement)) {
+          return
+        }
+
+        // Prevent default to stop browser from handling paste
+        event.preventDefault()
+
+        const clipboardData = event.clipboardData
+        if (!clipboardData) return
+
+        const newItems: RawItem[] = []
+        let textContent = ''
+        let hasImage = false
+
+        // Process all items in clipboard (multiple support)
+        const items = clipboardData.items
+
+        for (let i = 0; i < items.length; i++) {
+          const item = items[i]
+
+          // Skip if item is undefined or doesn't have type
+          if (!item?.type) {
+            continue
+          }
+
+          if (item.type.startsWith('image/')) {
+            // Handle image paste
+            const file = item.getAsFile()
+            if (file) {
+              markStart(PerformanceMarkers.PASTE_IMAGE)
+              const imageItem = processImage(file)
+              if (imageItem) {
+                newItems.push(imageItem)
+                hasImage = true
+              }
+              markEnd(PerformanceMarkers.PASTE_IMAGE)
+            }
+          } else if (item.type === 'text/plain') {
+            // Handle text paste
+            const text = clipboardData.getData('text/plain')
+            if (text) {
+              textContent = text
+              // Don't create item yet - we'll decide if it goes to draft
             }
           }
-        } else if (item.type === 'text/plain') {
-          // Handle text paste
-          const text = clipboardData.getData('text/plain')
-          if (text) {
-            textContent = text
-            // Don't create item yet - we'll decide if it goes to draft
+        }
+
+        // If we have text and no images, check if we should append to draft
+        if (textContent && !hasImage && draftItem) {
+          // Append to existing draft
+          markStart(PerformanceMarkers.DRAFT_APPEND)
+          appendToDraft(textContent)
+          markEnd(PerformanceMarkers.DRAFT_APPEND)
+        } else if (textContent) {
+          // Create new text/URL item
+          markStart(PerformanceMarkers.PASTE_TEXT)
+          const textItem = processText(textContent)
+          if (textItem) {
+            newItems.push(textItem)
           }
+          markEnd(PerformanceMarkers.PASTE_TEXT)
         }
-      }
 
-      // If we have text and no images, check if we should append to draft
-      if (textContent && !hasImage && draftItem) {
-        // Append to existing draft
-        appendToDraft(textContent)
-      } else if (textContent) {
-        // Create new text/URL item
-        const textItem = processText(textContent)
-        if (textItem) {
-          newItems.push(textItem)
+        // Create items from paste
+        if (newItems.length > 0) {
+          await addItems(newItems)
         }
+        // If no items were created, silently ignore
+      } finally {
+        markEnd(PerformanceMarkers.PASTE_MULTIPLE)
       }
-
-      // Create items from paste
-      if (newItems.length > 0) {
-        addItems(newItems)
-      }
-      // If no items were created, silently ignore
     }
 
     window.addEventListener('paste', handlePaste)
