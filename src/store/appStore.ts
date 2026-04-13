@@ -12,6 +12,12 @@ import { markStart, markEnd, PerformanceMarkers } from '@/utils/performance'
 const LARGE_FILE_THRESHOLD = 1_000_000
 
 /**
+ * Chunk size for bulk operations to prevent memory issues
+ * Processing 1000 items at a time balances speed and memory
+ */
+const BULK_CHUNK_SIZE = 1000
+
+/**
  * Check if an item exceeds the large file threshold
  */
 function isLargeFile(item: RawItem): boolean {
@@ -119,16 +125,24 @@ export const useAppStore = create<AppStore>((set, get) => ({
 
   /**
    * Add items to state and persist to database
+   * Uses chunked bulkAdd for optimal performance with large batches
    */
   addItems: async (newItems: RawItem[]) => {
     if (newItems.length === 0) return
 
     markStart(PerformanceMarkers.STORE_ADD_ITEMS)
     try {
-      // Persist to database
+      // Persist to database using bulkAdd with chunking for large batches
       markStart(PerformanceMarkers.DB_ADD)
-      for (const item of newItems) {
-        await db.items.add(item)
+      if (newItems.length <= BULK_CHUNK_SIZE) {
+        // Small batch: single bulkAdd operation
+        await db.items.bulkAdd(newItems)
+      } else {
+        // Large batch: process in chunks to prevent memory issues
+        for (let i = 0; i < newItems.length; i += BULK_CHUNK_SIZE) {
+          const chunk = newItems.slice(i, i + BULK_CHUNK_SIZE)
+          await db.items.bulkAdd(chunk)
+        }
       }
       markEnd(PerformanceMarkers.DB_ADD)
 

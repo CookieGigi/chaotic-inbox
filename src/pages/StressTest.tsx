@@ -35,7 +35,6 @@ export function StressTest() {
   const [isRunning, setIsRunning] = useState(false)
   const [results, setResults] = useState<TestResult[]>([])
   const [currentMemory, setCurrentMemory] = useState(0)
-  const [itemStoreCount, setItemStoreCount] = useState(0)
   const [browserInfo, setBrowserInfo] = useState('')
 
   const resultsEndRef = useRef<HTMLDivElement>(null)
@@ -43,6 +42,8 @@ export function StressTest() {
   const loadItems = useAppStore((state) => state.loadItems)
   const addItems = useAppStore((state) => state.addItems)
   const reset = useAppStore((state) => state.reset)
+  const items = useAppStore((state) => state.items)
+  const itemStoreCount = items.length
 
   // Detect browser on mount
   useEffect(() => {
@@ -55,12 +56,11 @@ export function StressTest() {
     setBrowserInfo(`${browser} - ${navigator.platform}`)
   }, [])
 
-  // Update memory and item count periodically
+  // Update memory periodically
   useEffect(() => {
     const interval = setInterval(() => {
       const mem = measureMemory()
       setCurrentMemory(mem.usedMB)
-      setItemStoreCount(useAppStore.getState().items.length)
     }, 1000)
     return () => clearInterval(interval)
   }, [])
