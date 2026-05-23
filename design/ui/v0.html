@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chaotic Inbox — Design System v0</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    /* ============================================
+       CSS CUSTOM PROPERTIES (Design Tokens)
+       Catppuccin Macchiato — Dark-first
+       ============================================ */
+    :root {
+      color-scheme: dark;
+
+      /* Background layers */
+      --color-bg: #181926;
+      --color-surface: #1e2030;
+      --color-overlay: #24273a;
+
+      /* Borders */
+      --color-border: #363a4f;
+      --color-border-subtle: #494d64;
+
+      /* Text */
+      --color-text: #cad3f5;
+      --color-text-muted: #a5adcb;
+      --color-text-faint: #939ab7;
+
+      /* Semantic / Status */
+      --color-error: #ed8796;
+      --color-success: #a6da95;
+      --color-warning: #eed49f;
+      --color-accent: #8bd5ca;
+
+      /* Accent options (reference only; components use --color-accent) */
+      --color-accent-peach: #f5a97f;
+      --color-accent-lavender: #b7bdf8;
+      --color-accent-sapphire: #7dc4e4;
+      --color-accent-green: #a6da95;
+      --color-accent-mauve: #c6a0f6;
+      --color-accent-pink: #f5bde6;
+      --color-accent-teal: #8bd5ca;
+      --color-accent-sky: #91d7e3;
+
+      /* Typography */
+      --font-sans: 'Geist', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
+
+      /* Type scale */
+      --text-xs: 0.6875rem;      /* 11px */
+      --text-xs-lh: 1.4;
+      --text-sm: 0.8125rem;      /* 13px */
+      --text-sm-lh: 1.5;
+      --text-base: 0.9375rem;    /* 15px */
+      --text-base-lh: 1.625;
+      --text-label: 0.75rem;     /* 12px */
+      --text-label-lh: 1.4;
+
+      /* Spacing (4px base unit) */
+      --space-1: 0.25rem;   /* 4px */
+      --space-2: 0.5rem;    /* 8px */
+      --space-3: 0.75rem;   /* 12px */
+      --space-4: 1rem;      /* 16px */
+      --space-5: 1.25rem;   /* 20px */
+      --space-6: 1.5rem;    /* 24px */
+      --space-8: 2rem;      /* 32px */
+
+      /* Layout */
+      --container-feed: 45rem; /* 720px */
+      --radius-sm: 0.25rem;    /* 4px */
+      --z-overlay: 50;
+    }
+
+    /* ============================================
+       GLOBAL STYLES
+       ============================================ */
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: var(--font-sans);
+      background-color: var(--color-bg);
+      color: var(--color-text);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--color-accent);
+      outline-offset: 2px;
+    }
+
+    [disabled] {
+      color: var(--color-text-faint);
+      cursor: not-allowed;
+    }
+
+    /* ============================================
+       SHOWCASE LAYOUT
+       ============================================ */
+    .showcase {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: var(--space-6) var(--space-4);
+    }
+
+    .showcase-title {
+      font-size: 1.75rem;
+      font-weight: 600;
+      color: var(--color-text);
+      margin: 0 0 var(--space-1) 0;
+    }
+
+    .showcase-subtitle {
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+      margin: 0 0 var(--space-8) 0;
+    }
+
+    .section {
+      margin-bottom: var(--space-8);
+    }
+
+    .section-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--color-text);
+      margin: 0 0 var(--space-4) 0;
+      padding-bottom: var(--space-2);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .group-title {
+      font-size: var(--text-sm);
+      font-weight: 500;
+      color: var(--color-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin: var(--space-5) 0 var(--space-3) 0;
+    }
+
+    /* ============================================
+       COLOR SWATCHES
+       ============================================ */
+    .color-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: var(--space-3);
+    }
+
+    .color-swatch {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      background: var(--color-surface);
+      border-radius: var(--radius-sm);
+      padding: var(--space-3);
+    }
+
+    .swatch-preview {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-sm);
+      flex-shrink: 0;
+      border: 1px solid var(--color-border);
+    }
+
+    .swatch-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .swatch-name {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      color: var(--color-text);
+    }
+
+    .swatch-value {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+    }
+
+    .swatch-usage {
+      font-size: var(--text-xs);
+      color: var(--color-text-faint);
+    }
+
+    /* ============================================
+       TYPOGRAPHY DEMOS
+       ============================================ */
+    .type-scale {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-4);
+    }
+
+    .type-sample {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+      padding: var(--space-3);
+      background: var(--color-surface);
+      border-radius: var(--radius-sm);
+    }
+
+    .type-info {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+
+    .type-name {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      color: var(--color-text);
+      background: var(--color-bg);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    .type-specs {
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+    }
+
+    .type-preview {
+      margin: 0;
+      color: var(--color-text);
+    }
+
+    .font-demo {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+      padding: var(--space-3);
+      background: var(--color-surface);
+      border-radius: var(--radius-sm);
+    }
+
+    .font-sans-demo {
+      font-family: var(--font-sans);
+      font-size: var(--text-base);
+      margin: 0;
+      color: var(--color-text);
+    }
+
+    .font-mono-demo {
+      font-family: var(--font-mono);
+      font-size: var(--text-base);
+      margin: 0;
+      color: var(--color-text-muted);
+    }
+
+    /* ============================================
+       SPACING DEMOS
+       ============================================ */
+    .spacing-samples {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+    }
+
+    .spacing-sample {
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+      padding: var(--space-2) var(--space-3);
+      background: var(--color-surface);
+      border-radius: var(--radius-sm);
+    }
+
+    .spacing-name {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      color: var(--color-text);
+      width: 80px;
+    }
+
+    .spacing-value {
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+      width: 50px;
+    }
+
+    .spacing-visual {
+      height: 20px;
+      background: var(--color-accent);
+      border-radius: 2px;
+      opacity: 0.6;
+    }
+
+    /* ============================================
+       INTERACTIVE STATES
+       ============================================ */
+    .state-samples {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-5);
+    }
+
+    .state-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-2);
+    }
+
+    .state-label {
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+    }
+
+    .btn-demo {
+      font-family: var(--font-sans);
+      font-size: var(--text-sm);
+      padding: var(--space-2) var(--space-4);
+      background: var(--color-surface);
+      color: var(--color-text);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+    }
+
+    .btn-demo.focus {
+      outline: 2px solid var(--color-accent);
+      outline-offset: 2px;
+    }
+
+    .btn-demo.disabled {
+      color: var(--color-text-faint);
+      cursor: not-allowed;
+    }
+
+    /* ============================================
+       FEED LAYOUT DEMO
+       ============================================ */
+    .layout-demo {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: var(--space-6);
+      align-items: start;
+    }
+
+    .feed-mock {
+      max-width: var(--container-feed);
+      background: var(--color-bg);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      padding: var(--space-4);
+    }
+
+    .feed-block {
+      padding: var(--space-3) var(--space-4);
+    }
+
+    .block-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: var(--space-2);
+    }
+
+    .block-type {
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+      display: flex;
+      align-items: center;
+      gap: var(--space-1);
+    }
+
+    .block-timestamp {
+      font-family: var(--font-mono);
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+    }
+
+    .block-content {
+      font-size: var(--text-base);
+      line-height: var(--text-base-lh);
+      color: var(--color-text);
+      margin: 0;
+    }
+
+    .url-link {
+      color: var(--color-accent);
+      text-decoration: none;
+      word-break: break-all;
+    }
+
+    .url-link:hover {
+      text-decoration: underline;
+    }
+
+    .file-size {
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+    }
+
+    .feed-divider {
+      height: 1px;
+      background: var(--color-border);
+      margin: 0 var(--space-4);
+    }
+
+    .layout-specs {
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+      line-height: 1.8;
+      white-space: nowrap;
+    }
+
+    .layout-specs p {
+      margin: 0;
+    }
+
+    /* ============================================
+       ACCENT OPTIONS DEMO
+       ============================================ */
+    .accent-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-3);
+      margin-top: var(--space-3);
+    }
+
+    .accent-chip {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: var(--space-2) var(--space-3);
+      background: var(--color-surface);
+      border-radius: var(--radius-sm);
+      font-size: var(--text-sm);
+      color: var(--color-text);
+      border: 1px solid var(--color-border);
+      cursor: pointer;
+    }
+
+    .accent-chip:hover {
+      border-color: var(--color-border-subtle);
+    }
+
+    .accent-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+    }
+
+    /* ============================================
+       DRAG OVERLAY DEMO
+       ============================================ */
+    .overlay-demo {
+      position: relative;
+      height: 120px;
+      background: var(--color-overlay);
+      border: 2px dashed var(--color-accent);
+      border-radius: var(--radius-sm);
+      margin: var(--space-4) 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0.8;
+    }
+
+    .overlay-label {
+      font-size: var(--text-base);
+      color: var(--color-text-muted);
+    }
+
+    /* ============================================
+       RESPONSIVE
+       ============================================ */
+    @media (max-width: 640px) {
+      .layout-demo {
+        grid-template-columns: 1fr;
+      }
+      .color-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="showcase">
+    <!-- Header -->
+    <header>
+      <h1 class="showcase-title">Design System</h1>
+      <p class="showcase-subtitle">Chaotic Inbox — Catppuccin Macchiato</p>
+    </header>
+
+    <!-- Color Palette -->
+    <section class="section">
+      <h2 class="section-title">Color Palette</h2>
+
+      <h3 class="group-title">Background Layers</h3>
+      <div class="color-grid">
+        <div class="color-swatch">
+          <div class="swatch-preview" style="background-color: #181926;"></div>
+          <div class="swatch-info">
+            <code class="swatch-name">--color-bg</code>
+            <span class="swatch-value">#181926</span>
+            <span class="swatch-usage">App background</span>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-preview" style="background-color: #1e2030;"></div>
+          <div class="swatch-info">
+            <code class="swatch-name">--color-surface</code>
+            <span class="swatch-value">#1e2030</span>
+            <span class="swatch-usage">Elevated surfaces</span>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-preview" style="background-color: #24273a;"></div>
+          <div class="swatch-info">
+            <code class="swatch-name">--color-overlay</code>
+            <span class="swatch-value">#24273a</span>
+            <span class="swatch-usage">Drag overlay, modal</span>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="group-title">Borders</h3>
+      <div class="color-grid">
+        <div class="color-swatch">
+          <div class="swatch-preview" style="background-color: #363a4f;"></div>
+          <div class="swatch-info">
+            <code class="swatch-name">--color-border</code>
+            <span class="swatch-value">#363a4f</span>
+            <span class="swatch-usage">Dividers, borders</span>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-preview" style="background-color: #494d64;"></div>
+          <div class="swatch-info">
+            <code class="swatch-name">--color-border-subtle</code>
+            <span class="swatch-value">#494d64</span>
+            <span class="swatch-usage">De-emphasized</span>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="group-title">Text</h3>
+      <div class="color-grid">
+        <div class="color-swatch">
+          <div class="swatch-preview" style="background-color: #cad3f5;"></div>
+          <div class="swatch-info">
+            <code class="swatch-name">--color-text</code>
+            <span class="swatch-value">#cad3f5</span>
+            <span class="swatch-usage">Primary text</span>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-preview" style="background-color: #a5adcb;"></div>
+          <div class="swatch-info">
+            <code class="swatch-name">--color-text-muted</code>
+            <span class="swatch-value">#a5adcb</span>
+            <span class="swatch-usage">Timestamps, labels</span>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-preview" style="background-color: #939ab7;"></div>
+          <div class="swatch-info">
+            <code class="swatch-name">--color-text-faint</code>
+            <span class="swatch-value">#939ab7</span>
+            <span class="swatch-usage">Placeholder text</span>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="group-title">Semantic / Status</h3>
+      <div class="color-grid">
+        <div class="color-swatch">
+          <div class="swatch-preview" style="background-color: #ed8796;"></div>
+          <div class="swatch-info">
+            <code class="swatch-name">--color-error</code>
+            <span class="swatch-value">#ed8796</span>
+            <span class="swatch-usage">Errors</span>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-preview" style="background-color: #a6da95;"></div>
+          <div class="swatch-info">
+            <code class="swatch-name">--color-success</code>
+            <span class="swatch-value">#a6da95</span>
+            <span class="swatch-usage">Success</span>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-preview" style="background-color: #eed49f;"></div>
+          <div class="swatch-info">
+            <code class="swatch-name">--color-warning</code>
+            <span class="swatch-value">#eed49f</span>
+            <span class="swatch-usage">Warnings</span>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-preview" style="background-color: #8bd5ca;"></div>
+          <div class="swatch-info">
+            <code class="swatch-name">--color-accent</code>
+            <span class="swatch-value">#8bd5ca</span>
+            <span class="swatch-usage">Interactive, focus (default: teal)</span>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="group-title">Accent Options (User-configurable)</h3>
+      <div class="accent-options">
+        <div class="accent-chip">
+          <div class="accent-dot" style="background-color: #8bd5ca;"></div>
+          <span>Teal (default)</span>
+        </div>
+        <div class="accent-chip">
+          <div class="accent-dot" style="background-color: #b7bdf8;"></div>
+          <span>Lavender</span>
+        </div>
+        <div class="accent-chip">
+          <div class="accent-dot" style="background-color: #7dc4e4;"></div>
+          <span>Sapphire</span>
+        </div>
+        <div class="accent-chip">
+          <div class="accent-dot" style="background-color: #c6a0f6;"></div>
+          <span>Mauve</span>
+        </div>
+        <div class="accent-chip">
+          <div class="accent-dot" style="background-color: #f5bde6;"></div>
+          <span>Pink</span>
+        </div>
+        <div class="accent-chip">
+          <div class="accent-dot" style="background-color: #91d7e3;"></div>
+          <span>Sky</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Typography -->
+    <section class="section">
+      <h2 class="section-title">Typography</h2>
+
+      <h3 class="group-title">Font Families</h3>
+      <div class="font-demo">
+        <p class="font-sans-demo">Geist (Sans) — The quick brown fox jumps over the lazy dog</p>
+        <p class="font-mono-demo">System Mono — The quick brown fox jumps over the lazy dog</p>
+      </div>
+
+      <h3 class="group-title">Type Scale</h3>
+      <div class="type-scale">
+        <div class="type-sample">
+          <div class="type-info">
+            <code class="type-name">text-xs</code>
+            <span class="type-specs">11px / 400 / 1.4</span>
+          </div>
+          <p class="type-preview" style="font-size: 11px; font-weight: 400; line-height: 1.4;">Fine print, file size</p>
+        </div>
+        <div class="type-sample">
+          <div class="type-info">
+            <code class="type-name">text-sm</code>
+            <span class="type-specs">13px / 400 / 1.5</span>
+          </div>
+          <p class="type-preview" style="font-size: 13px; font-weight: 400; line-height: 1.5;">Timestamps, labels, hostname</p>
+        </div>
+        <div class="type-sample">
+          <div class="type-info">
+            <code class="type-name">text-base</code>
+            <span class="type-specs">15px / 400 / 1.625</span>
+          </div>
+          <p class="type-preview" style="font-size: 15px; font-weight: 400; line-height: 1.625;">Block body text, URL body</p>
+        </div>
+        <div class="type-sample">
+          <div class="type-info">
+            <code class="type-name">text-base-medium</code>
+            <span class="type-specs">15px / 500 / 1.625</span>
+          </div>
+          <p class="type-preview" style="font-size: 15px; font-weight: 500; line-height: 1.625;">Emphasis, filenames in headers</p>
+        </div>
+        <div class="type-sample">
+          <div class="type-info">
+            <code class="type-name">text-label</code>
+            <span class="type-specs">12px / 500 / 1.4</span>
+          </div>
+          <p class="type-preview" style="font-size: 12px; font-weight: 500; line-height: 1.4;">Block type labels, icon labels</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Spacing -->
+    <section class="section">
+      <h2 class="section-title">Spacing</h2>
+      <p style="font-size: var(--text-sm); color: var(--color-text-muted); margin: 0 0 var(--space-3) 0;">Base unit: 4px</p>
+      <div class="spacing-samples">
+        <div class="spacing-sample">
+          <code class="spacing-name">space-1</code>
+          <span class="spacing-value">4px</span>
+          <div class="spacing-visual" style="width: 16px;"></div>
+        </div>
+        <div class="spacing-sample">
+          <code class="spacing-name">space-2</code>
+          <span class="spacing-value">8px</span>
+          <div class="spacing-visual" style="width: 32px;"></div>
+        </div>
+        <div class="spacing-sample">
+          <code class="spacing-name">space-3</code>
+          <span class="spacing-value">12px</span>
+          <div class="spacing-visual" style="width: 48px;"></div>
+        </div>
+        <div class="spacing-sample">
+          <code class="spacing-name">space-4</code>
+          <span class="spacing-value">16px</span>
+          <div class="spacing-visual" style="width: 64px;"></div>
+        </div>
+        <div class="spacing-sample">
+          <code class="spacing-name">space-5</code>
+          <span class="spacing-value">20px</span>
+          <div class="spacing-visual" style="width: 80px;"></div>
+        </div>
+        <div class="spacing-sample">
+          <code class="spacing-name">space-6</code>
+          <span class="spacing-value">24px</span>
+          <div class="spacing-visual" style="width: 96px;"></div>
+        </div>
+        <div class="spacing-sample">
+          <code class="spacing-name">space-8</code>
+          <span class="spacing-value">32px</span>
+          <div class="spacing-visual" style="width: 128px;"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive States -->
+    <section class="section">
+      <h2 class="section-title">Interactive States</h2>
+      <div class="state-samples">
+        <div class="state-item">
+          <button class="btn-demo" type="button">Default Button</button>
+          <span class="state-label">Default</span>
+        </div>
+        <div class="state-item">
+          <button class="btn-demo focus" type="button">Focused Button</button>
+          <span class="state-label">Focus (2px accent ring)</span>
+        </div>
+        <div class="state-item">
+          <button class="btn-demo disabled" disabled type="button">Disabled Button</button>
+          <span class="state-label">Disabled (--color-text-faint)</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Feed Layout -->
+    <section class="section">
+      <h2 class="section-title">Feed Layout</h2>
+      <div class="layout-demo">
+        <div class="feed-mock">
+          <div class="feed-block">
+            <header class="block-header">
+              <span class="block-type">
+                <svg width="16" height="16" viewBox="0 0 256 256" fill="currentColor" style="color: var(--color-text-muted);">
+                  <path d="M216 40H40a16 16 0 0 0-16 16v144a16 16 0 0 0 16 16h176a16 16 0 0 0 16-16V56a16 16 0 0 0-16-16Zm0 160H40V56h176v144ZM176 88a12 12 0 1 1-12 12 12 12 0 0 1 12-12Zm-96 80V120l24-24 38.7 38.7a8 8 0 0 0 11.3 0l10-10a8 8 0 0 0 0-11.3L120 76.7l4.7-4.7a8 8 0 0 0-5.7-13.7H72a16 16 0 0 0-16 16v64a8 8 0 0 0 16 0Z"/>
+                </svg>
+                Article
+              </span>
+              <span class="block-timestamp">2 min ago</span>
+            </header>
+            <p class="block-content">This is how a text block looks in the feed. It uses the body font at 15px with relaxed line height for readability.</p>
+          </div>
+          <div class="feed-divider"></div>
+          <div class="feed-block">
+            <header class="block-header">
+              <span class="block-type">
+                <svg width="16" height="16" viewBox="0 0 256 256" fill="currentColor" style="color: var(--color-text-muted);">
+                  <path d="M240 120h-32.4l7.66-35.13a8 8 0 0 0-15.52-3.38L190.56 120h-30.32l7.66-35.13a8 8 0 0 0-15.52-3.38L141.56 120h-30.32l7.66-35.13a8 8 0 0 0-15.52-3.38L92.56 120H62.24l7.66-35.13a8 8 0 0 0-15.52-3.38L43.56 120H16a8 8 0 0 0 0 16h24.24l-12.8 58.67a8 8 0 0 0 15.52 3.38L46.44 136h30.32l-12.8 58.67a8 8 0 0 0 15.52 3.38L95.44 136h30.32l-12.8 58.67a8 8 0 0 0 15.52 3.38L144.44 136h30.32l-12.8 58.67a8 8 0 0 0 15.52 3.38L193.44 136H224a8 8 0 0 0 0-16Z"/>
+                </svg>
+                example.com
+              </span>
+              <span class="block-timestamp">5 min ago</span>
+            </header>
+            <p class="block-content">
+              <a href="#" class="url-link">https://example.com/article-about-design-systems</a>
+            </p>
+          </div>
+          <div class="feed-divider"></div>
+          <div class="feed-block">
+            <header class="block-header">
+              <span class="block-type">
+                <svg width="16" height="16" viewBox="0 0 256 256" fill="currentColor" style="color: var(--color-text-muted);">
+                  <path d="M220.7 68.6l-36-36a16.1 16.1 0 0 0-22.6 0l-36 36a16.1 16.1 0 0 0 0 22.6l36 36a16.1 16.1 0 0 0 22.6 0l36-36a16.1 16.1 0 0 0 0-22.6ZM140 120l-36 36a16.1 16.1 0 0 0 0 22.6l36 36a16.1 16.1 0 0 0 22.6 0l36-36a16.1 16.1 0 0 0 0-22.6l-36-36a16.1 16.1 0 0 0-22.6 0ZM40 176h48v-16H40Z"/>
+                </svg>
+                notes.md
+              </span>
+              <span class="block-timestamp">10 min ago</span>
+            </header>
+            <p class="block-content">
+              <span class="file-size">Size: 24.5 KB</span>
+            </p>
+          </div>
+        </div>
+        <div class="layout-specs">
+          <p>Max-width: 720px</p>
+          <p>Horizontal padding: 16px</p>
+          <p>Block padding: 12px v, 16px h</p>
+          <p>Divider: 1px solid (--color-border)</p>
+          <p>Border radius: 4px</p>
+          <p>Motion: instant (no animations)</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Drag Overlay -->
+    <section class="section">
+      <h2 class="section-title">Drag-and-Drop Overlay</h2>
+      <div class="overlay-demo">
+        <span class="overlay-label">Drop files here to capture</span>
+      </div>
+      <div class="layout-specs">
+        <p>Background: --color-overlay at 80% opacity</p>
+        <p>Border: 2px dashed --color-accent</p>
+        <p>Inset: 16px from viewport edge</p>
+        <p>Border radius: 4px</p>
+        <p>Z-index: above all feed content</p>
+      </div>
+    </section>
+
+    <!-- Decisions Log -->
+    <section class="section">
+      <h2 class="section-title">Design Decisions</h2>
+      <table style="width: 100%; border-collapse: collapse; font-size: var(--text-sm);">
+        <thead>
+          <tr style="border-bottom: 1px solid var(--color-border); text-align: left;">
+            <th style="padding: var(--space-2); color: var(--color-text-muted);">#</th>
+            <th style="padding: var(--space-2); color: var(--color-text-muted);">Question</th>
+            <th style="padding: var(--space-2); color: var(--color-text-muted);">Decision</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom: 1px solid var(--color-border);">
+            <td style="padding: var(--space-2); color: var(--color-text-muted);">1</td>
+            <td style="padding: var(--space-2);">Colour base</td>
+            <td style="padding: var(--space-2);">Catppuccin Macchiato</td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--color-border);">
+            <td style="padding: var(--space-2); color: var(--color-text-muted);">2</td>
+            <td style="padding: var(--space-2);">Default accent</td>
+            <td style="padding: var(--space-2);">Teal (#8bd5ca)</td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--color-border);">
+            <td style="padding: var(--space-2); color: var(--color-text-muted);">3</td>
+            <td style="padding: var(--space-2);">Accent customisable</td>
+            <td style="padding: var(--space-2);">Yes — --color-accent token only</td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--color-border);">
+            <td style="padding: var(--space-2); color: var(--color-text-muted);">4</td>
+            <td style="padding: var(--space-2);">Dark/light</td>
+            <td style="padding: var(--space-2);">Dark-first; light mode deferred</td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--color-border);">
+            <td style="padding: var(--space-2); color: var(--color-text-muted);">5</td>
+            <td style="padding: var(--space-2);">Body font</td>
+            <td style="padding: var(--space-2);">Geist</td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--color-border);">
+            <td style="padding: var(--space-2); color: var(--color-text-muted);">6</td>
+            <td style="padding: var(--space-2);">Feed width</td>
+            <td style="padding: var(--space-2);">Max 720px, centred</td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--color-border);">
+            <td style="padding: var(--space-2); color: var(--color-text-muted);">7</td>
+            <td style="padding: var(--space-2);">Block separation</td>
+            <td style="padding: var(--space-2);">1px divider line, no cards</td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--color-border);">
+            <td style="padding: var(--space-2); color: var(--color-text-muted);">8</td>
+            <td style="padding: var(--space-2);">Motion</td>
+            <td style="padding: var(--space-2);">Minimal — no decorative animation</td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--color-border);">
+            <td style="padding: var(--space-2); color: var(--color-text-muted);">9</td>
+            <td style="padding: var(--space-2);">Icon colour</td>
+            <td style="padding: var(--space-2);">--color-text-muted always</td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--color-border);">
+            <td style="padding: var(--space-2); color: var(--color-text-muted);">10</td>
+            <td style="padding: var(--space-2);">Body line height</td>
+            <td style="padding: var(--space-2);">1.625 (leading-relaxed)</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </div>
+</body>
+</html>
