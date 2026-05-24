@@ -11,6 +11,7 @@ from sqlmodel import select
 
 from inbox.database import get_session
 from inbox.models import Category, Item, Tag
+from inbox.server.exceptions import ValidationError
 from inbox.server.schemas import ItemCreate, ItemResponse, ItemUpdate
 
 router = APIRouter()
@@ -53,14 +54,22 @@ async def _resolve_tags(session: AsyncSession, names: list[str] | None) -> list[
     if not names:
         return []
     result = await session.execute(select(Tag).where(Tag.name.in_(names)))
-    return list(result.scalars().all())
+    found = {t.name: t for t in result.scalars().all()}
+    missing = set(names) - set(found)
+    if missing:
+        raise ValidationError(f"Tag(s) not found: {sorted(missing)}")
+    return [found[name] for name in names]
 
 
 async def _resolve_categories(session: AsyncSession, names: list[str] | None) -> list[Category]:
     if not names:
         return []
     result = await session.execute(select(Category).where(Category.name.in_(names)))
-    return list(result.scalars().all())
+    found = {c.name: c for c in result.scalars().all()}
+    missing = set(names) - set(found)
+    if missing:
+        raise ValidationError(f"Category(s) not found: {sorted(missing)}")
+    return [found[name] for name in names]
 
 
 @router.post("", status_code=status.HTTP_201_CREATED)

@@ -55,9 +55,10 @@ async def search_items(
     limit: int = Query(default=20, ge=1, le=100),
 ) -> SearchResponse:
     """Full-text search across items."""
-    # SQLite fallback: ILIKE on raw_text
+    # SQLite fallback: ILIKE on raw_text (escape wildcards so user input is literal)
     stmt = select(Item).where(Item.deleted_at.is_(None))
-    stmt = stmt.where(Item.raw_text.ilike(f"%{q}%"))
+    safe_q = q.replace("%", r"\%").replace("_", r"\_")
+    stmt = stmt.where(Item.raw_text.ilike(f"%{safe_q}%", escape="\\"))
     if type:
         stmt = stmt.where(Item.type == type)
     stmt = stmt.order_by(Item.captured_at.desc()).limit(limit)

@@ -3,7 +3,7 @@
 from datetime import datetime
 
 from pydantic import ConfigDict, model_validator
-from sqlmodel import SQLModel
+from sqlmodel import Field, SQLModel
 
 
 class ItemCreate(SQLModel):
@@ -22,6 +22,16 @@ class ItemCreate(SQLModel):
     def _require_content(self):
         if not self.raw_text and not self.blob_path:
             raise ValueError("Either raw_text or blob_path must be provided")
+        return self
+
+    @model_validator(mode="after")
+    def _no_empty_names(self):
+        for field in ("tag_names", "category_names"):
+            names = getattr(self, field)
+            if names is not None:
+                for name in names:
+                    if not name or not name.strip():
+                        raise ValueError(f"{field} must not contain empty strings")
         return self
 
 
@@ -96,13 +106,13 @@ class SimilarRequest(SQLModel):
 class TagCreate(SQLModel):
     """Fields required to create a tag."""
 
-    name: str
+    name: str = Field(min_length=1)
 
 
 class CategoryCreate(SQLModel):
     """Fields required to create a category."""
 
-    name: str
+    name: str = Field(min_length=1)
     description: str | None = None
 
 
