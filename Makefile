@@ -40,7 +40,7 @@ setup-db:
 	psql postgres -c "CREATE USER inbox WITH PASSWORD 'inbox' SUPERUSER;" 2>/dev/null || true
 	psql postgres -c "CREATE DATABASE inbox OWNER inbox;" 2>/dev/null || true
 	psql postgres -c "GRANT ALL PRIVILEGES ON DATABASE inbox TO inbox;" 2>/dev/null || true
-	psql inbox -c "CREATE EXTENSION IF NOT EXISTS pgvector;" 2>/dev/null || true
+	psql inbox -c "CREATE EXTENSION IF NOT EXISTS vector;" 2>/dev/null || true
 	psql inbox -c "CREATE EXTENSION IF NOT EXISTS pg_trgm;" 2>/dev/null || true
 	$(MAKE) migrate
 	@echo "Database ready. Run 'make run-server' to start the API."
@@ -59,9 +59,11 @@ run-server:
 web-dev:
 	cd web && pnpm dev
 
-# Run the CLI
+# Run the CLI — pass extra args via ARGS variable
+#   make run-cli ARGS="capture text hello world"
+#   make run-cli ARGS="--help"
 run-cli:
-	uv run inbox
+	uv run inbox $(ARGS)
 
 # ---------------------------------------------------------------------------
 # Build & Test

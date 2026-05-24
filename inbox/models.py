@@ -6,6 +6,7 @@ from typing import Optional
 
 from pgvector.sqlalchemy import Vector
 from sqlalchemy import Column, Index, text
+from sqlalchemy.dialects.postgresql import JSONB, TSVECTOR
 from sqlmodel import Field, Relationship, SQLModel
 
 # ---------------------------------------------------------------------------
@@ -75,9 +76,7 @@ class Category(SQLModel, table=True):
         sa_column_kwargs={"server_default": text("now()")},
     )
 
-    items: list["Item"] = Relationship(
-        back_populates="categories", link_model=ItemCategory
-    )
+    items: list["Item"] = Relationship(back_populates="categories", link_model=ItemCategory)
 
 
 class Item(SQLModel, table=True):
@@ -101,15 +100,13 @@ class Item(SQLModel, table=True):
     blob_path: Optional[str] = Field(default=None)
 
     # Capture metadata
-    metadata: dict = Field(default_factory=dict, sa_column_kwargs={"type_": "JSONB"})
+    capture_meta: dict = Field(default_factory=dict, sa_column=Column("metadata", JSONB))
 
     # Background enrichment
-    enrichment: dict = Field(
-        default_factory=dict, sa_column_kwargs={"type_": "JSONB"}
-    )
+    enrichment: dict = Field(default_factory=dict, sa_column=Column("enrichment", JSONB))
 
     # Search indexing
-    search_vector: Optional[str] = Field(default=None, sa_column_kwargs={"type_": "TSVECTOR"})
+    search_vector: Optional[str] = Field(default=None, sa_column=Column(TSVECTOR))
     embedding: Optional[list[float]] = EmbeddingColumn
 
     # Soft delete
@@ -117,9 +114,7 @@ class Item(SQLModel, table=True):
 
     # Relationships
     tags: list[Tag] = Relationship(back_populates="items", link_model=ItemTag)
-    categories: list[Category] = Relationship(
-        back_populates="items", link_model=ItemCategory
-    )
+    categories: list[Category] = Relationship(back_populates="items", link_model=ItemCategory)
 
     class Config:
         arbitrary_types_allowed = True
