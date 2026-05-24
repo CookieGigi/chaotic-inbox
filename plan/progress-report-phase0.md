@@ -100,6 +100,36 @@ Phase 1 focuses on **Domain Model & API Contract**:
 
 ---
 
+## Commit Reference
+
+- **Merge Commit:** `4ab1a7c` — `refactor: migrate backend from Rust to Python stack`
+- **Files Changed:** 54 (+6,622 / −1,572)
+
+---
+
+## Operational Notes
+
+### Podman as Docker Alternative
+Since Docker is not available on this NixOS machine, the dev environment uses **Podman** + **podman-compose**:
+- Added `podman` and `podman-compose` to `flake.nix`
+- Created `.config/containers/policy.json` with `docker.io` as the default registry
+- Updated `docker-compose.yml` to use fully-qualified image names (`docker.io/...`)
+- The Nix shellHook auto-installs the Podman policy file to `~/.config/containers/`
+
+**Resolved issues:**
+1. `policy.json` not found → Fixed via shellHook auto-install
+2. Short-name resolution failure → Fixed by prefixing all images with `docker.io/`
+
+---
+
+## Known Gaps (Phase 1 TODOs)
+
+Minor TODOs carried into Phase 1:
+- CLI config file loading (`inbox/cli/main.py:22`)
+- CLI multipart upload support (`inbox/cli/main.py:42`)
+
+---
+
 ## Metrics
 
 | Metric | Target | Actual |
