@@ -22,12 +22,71 @@
       src = ./.;
       excludes = [".direnv/"];
       hooks = {
-        alejandra.enable = true;
-        deadnix = {
+        # ─── Python ───
+        ruff-check = {
           enable = true;
-          excludes = ["hardware-configuration"];
+          entry = "ruff check inbox/ tests/";
+          language = "system";
+          pass_filenames = false;
+          types = ["python"];
         };
-        flake-checker.enable = true;
+        ruff-format-check = {
+          enable = true;
+          entry = "ruff format --check inbox/ tests/";
+          language = "system";
+          pass_filenames = false;
+          types = ["python"];
+        };
+        python-tests = {
+          enable = true;
+          entry = "uv run pytest";
+          language = "system";
+          pass_filenames = false;
+          types = ["python"];
+          stages = ["pre-push"];
+        };
+
+        # ─── Web ───
+        web-lint = {
+          enable = true;
+          entry = "bash -c 'cd web && pnpm lint'";
+          language = "system";
+          pass_filenames = false;
+          types_or = ["javascript" "jsx" "ts" "tsx" "json"];
+        };
+        web-fmt-check = {
+          enable = true;
+          entry = "bash -c 'cd web && pnpm fmt:check'";
+          language = "system";
+          pass_filenames = false;
+          types_or = ["javascript" "jsx" "ts" "tsx" "json" "css" "scss" "html"];
+        };
+        web-type-check = {
+          enable = true;
+          entry = "bash -c 'cd web && pnpm type-check'";
+          language = "system";
+          pass_filenames = false;
+          types_or = ["javascript" "jsx" "ts" "tsx"];
+          stages = ["pre-push"];
+        };
+        web-tests = {
+          enable = true;
+          entry = "bash -c 'cd web && pnpm test'";
+          language = "system";
+          pass_filenames = false;
+          types_or = ["javascript" "jsx" "ts" "tsx"];
+          stages = ["pre-push"];
+        };
+        web-build = {
+          enable = true;
+          entry = "bash -c 'cd web && pnpm build'";
+          language = "system";
+          pass_filenames = false;
+          types_or = ["javascript" "jsx" "ts" "tsx"];
+          stages = ["pre-push"];
+        };
+
+        # ─── Generic ───
         end-of-file-fixer.enable = true;
         trim-trailing-whitespace.enable = true;
         check-merge-conflicts.enable = true;
