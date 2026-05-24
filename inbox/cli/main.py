@@ -2,7 +2,6 @@
 
 import sys
 from pathlib import Path
-from typing import Optional
 
 import httpx
 import typer
@@ -25,8 +24,8 @@ def _client() -> httpx.Client:
 
 @app.command()
 def add(
-    content: Optional[str] = typer.Argument(default=None, help="Text or URL to capture"),
-    file: Optional[Path] = typer.Option(None, "--file", "-f", help="File to upload"),
+    content: str | None = typer.Argument(default=None, help="Text or URL to capture"),
+    file: Path | None = typer.Option(None, "--file", "-f", help="File to upload"),
     stdin: bool = typer.Option(False, "--stdin", help="Read from stdin"),
     json_output: bool = typer.Option(False, "--json", help="Output raw JSON"),
 ) -> None:
@@ -40,7 +39,7 @@ def add(
             console.print(f"[red]File not found:[/red] {file}")
             raise typer.Exit(code=1)
         # TODO: multipart upload
-        console.print(f"[yellow]File upload not yet implemented[/yellow]")
+        console.print("[yellow]File upload not yet implemented[/yellow]")
         raise typer.Exit(code=1)
 
     if not content:
@@ -64,7 +63,7 @@ def add(
 @app.command()
 def list(
     limit: int = typer.Option(20, "--limit", "-n", min=1, max=100),
-    item_type: Optional[str] = typer.Option(None, "--type", "-t"),
+    item_type: str | None = typer.Option(None, "--type", "-t"),
     json_output: bool = typer.Option(False, "--json", help="Output raw JSON"),
 ) -> None:
     """Browse the chronological feed."""
@@ -134,7 +133,7 @@ def delete(
         console.print("[red]Item not found[/red]")
         raise typer.Exit(code=3)
     resp.raise_for_status()
-    console.print(f"Deleted [green]✓[/green]")
+    console.print("Deleted [green]✓[/green]")
 
 
 def main() -> None:

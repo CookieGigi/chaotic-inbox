@@ -1,5 +1,6 @@
 """Item CRUD and search endpoints."""
 
+from datetime import UTC, datetime
 from typing import Annotated
 from uuid import UUID
 
@@ -74,5 +75,5 @@ async def delete_item(session: SessionDep, item_id: UUID) -> None:
     item = await session.get(Item, item_id)
     if not item or item.deleted_at is not None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Item not found")
-    item.deleted_at = __import__("datetime").datetime.now(__import__("datetime").timezone.utc)
+    item.deleted_at = datetime.now(UTC)
     await session.commit()

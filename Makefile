@@ -1,4 +1,4 @@
-.PHONY: dev build test lint fmt migrate clean run-server run-cli web-dev setup-db
+.PHONY: dev build test tests lint fmt migrate clean run-server run-cli web-dev setup-db
 
 # ---------------------------------------------------------------------------
 # Development (choose one based on your setup)
@@ -76,6 +76,8 @@ build:
 test:
 	uv run pytest
 	cd web && pnpm test
+
+tests: test
 
 lint:
 	uv run ruff check inbox/ tests/

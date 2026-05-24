@@ -1,6 +1,6 @@
 # Phase 0 — Foundation
 
-**Status:** 🔄 In Progress
+**Status:** ✅ COMPLETED
 **Duration:** 1-2 days
 **Goal:** Set up development environment and project skeleton
 
@@ -8,27 +8,27 @@
 
 ## Deliverables
 
-- [ ] Nix flake with Python (uv, Python 3.12+, ruff) + Node.js + PostgreSQL client + Docker Compose
-- [ ] `pyproject.toml` with FastAPI, SQLModel, Alembic, asyncpg, Typer, Rich, sentence-transformers, pytest, ruff
-- [ ] Python project skeleton (`inbox/` package with server, CLI, models, database, config)
-- [ ] Alembic configured with initial migration (`0001_init.py`)
-- [ ] FastAPI server skeleton (health endpoint, CORS middleware)
-- [ ] Typer CLI skeleton (add, list, info, delete commands)
-- [ ] CI/CD pipeline (GitHub Actions for Python + Web)
-- [ ] `docker-compose.yml` with PostgreSQL (pgvector) + server service
-- [ ] Makefile with `dev`, `test`, `lint`, `migrate`, `run-server`
+- [x] Nix flake with Python (uv, Python 3.12+, ruff) + Node.js + PostgreSQL client + Docker Compose
+- [x] `pyproject.toml` with FastAPI, SQLModel, Alembic, asyncpg, Typer, Rich, sentence-transformers, pytest, ruff
+- [x] Python project skeleton (`inbox/` package with server, CLI, models, database, config)
+- [x] Alembic configured with initial migration (`0001_init.py`)
+- [x] FastAPI server skeleton (health endpoint, CORS middleware)
+- [x] Typer CLI skeleton (add, list, info, delete commands)
+- [x] CI/CD pipeline (GitHub Actions for Python + Web)
+- [x] `docker-compose.yml` with PostgreSQL (pgvector) + server service
+- [x] Makefile with `dev`, `test`, `lint`, `migrate`, `run-server`
 
 ---
 
 ## Tasks
 
-### T-01: Development Environment
+### T-01: Development Environment ✅
 - Configure Nix flake with Python toolchain (uv, python3, ruff, postgresql)
 - Keep Node.js + pnpm for web UI
 - Add Docker Compose for PostgreSQL
 - Create `make dev` command
 
-### T-02: Python Project Structure
+### T-02: Python Project Structure ✅
 - Create `pyproject.toml` with dependencies and dev dependencies
 - Create `inbox/` package with `__init__.py`
 - Create `inbox/config.py` (Pydantic Settings)
@@ -38,34 +38,34 @@
 - Create `inbox/cli/` with `main.py`
 - Create `tests/` with `test_health.py`
 
-### T-03: Database Migrations
+### T-03: Database Migrations ✅
 - Install Alembic (`uv run alembic init alembic`)
 - Configure `alembic.ini` with async URL
 - Configure `alembic/env.py` to use SQLModel metadata
 - Write `0001_init.py` migration (items, tags, categories, job_queue, FTS trigger, pgvector)
 - Test migration: `make migrate`
 
-### T-04: Server Skeleton
+### T-04: Server Skeleton ✅
 - FastAPI app with lifespan events
 - CORS middleware configuration
 - Health check router (`GET /health`)
 - Items router with CRUD stubs
 - Uvicorn entrypoint (`inbox.server.main:main`)
 
-### T-05: CLI Skeleton
+### T-05: CLI Skeleton ✅
 - Typer app with commands: add, list, info, delete
 - httpx client with configurable base URL
 - Rich formatting for tables and JSON output
 - `--json` flag for all commands
 - `--stdin` and `--file` options for `add`
 
-### T-06: Documentation
+### T-06: Documentation ✅
 - Update `design/architecture/v0.md` for Python stack
 - Update `design/spec/v0.md` with Python decisions
 - Update `plan/progress-report-phase0.md`
 - Update all phase files (00-06) for Python
 
-### T-07: CI/CD
+### T-07: CI/CD ✅
 - GitHub Actions workflow for Python (pytest, ruff, alembic migrate)
 - GitHub Actions workflow for Web (pnpm test, build, lint)
 - PostgreSQL service container in CI

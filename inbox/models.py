@@ -1,11 +1,11 @@
 """SQLModel models for the Inbox database schema."""
 
 import uuid
-from datetime import datetime, timezone
-from typing import Optional
+from datetime import UTC, datetime
 
 from pgvector.sqlalchemy import Vector
-from sqlalchemy import Column, Index, text
+from pydantic import ConfigDict
+from sqlalchemy import Column, text
 from sqlalchemy.dialects.postgresql import JSONB, TSVECTOR
 from sqlmodel import Field, Relationship, SQLModel
 
@@ -52,11 +52,11 @@ class Tag(SQLModel, table=True):
 
     __tablename__ = "tags"
 
-    id: Optional[int] = Field(default=None, primary_key=True)
+    id: int | None = Field(default=None, primary_key=True)
     name: str = Field(index=True, unique=True)
     auto_generated: bool = Field(default=False)
     created_at: datetime = Field(
-        default_factory=lambda: datetime.now(timezone.utc),
+        default_factory=lambda: datetime.now(UTC),
         sa_column_kwargs={"server_default": text("now()")},
     )
 
@@ -68,11 +68,11 @@ class Category(SQLModel, table=True):
 
     __tablename__ = "categories"
 
-    id: Optional[int] = Field(default=None, primary_key=True)
+    id: int | None = Field(default=None, primary_key=True)
     name: str = Field(index=True, unique=True)
-    description: Optional[str] = Field(default=None)
+    description: str | None = Field(default=None)
     created_at: datetime = Field(
-        default_factory=lambda: datetime.now(timezone.utc),
+        default_factory=lambda: datetime.now(UTC),
         sa_column_kwargs={"server_default": text("now()")},
     )
 
@@ -87,17 +87,17 @@ class Item(SQLModel, table=True):
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
     type: str = Field(index=True)  # text | url | image | file
     captured_at: datetime = Field(
-        default_factory=lambda: datetime.now(timezone.utc),
+        default_factory=lambda: datetime.now(UTC),
         sa_column_kwargs={"server_default": text("now()")},
     )
     updated_at: datetime = Field(
-        default_factory=lambda: datetime.now(timezone.utc),
+        default_factory=lambda: datetime.now(UTC),
         sa_column_kwargs={"server_default": text("now()")},
     )
 
     # Raw data (immutable)
-    raw_text: Optional[str] = Field(default=None)
-    blob_path: Optional[str] = Field(default=None)
+    raw_text: str | None = Field(default=None)
+    blob_path: str | None = Field(default=None)
 
     # Capture metadata
     capture_meta: dict = Field(default_factory=dict, sa_column=Column("metadata", JSONB))
@@ -106,18 +106,17 @@ class Item(SQLModel, table=True):
     enrichment: dict = Field(default_factory=dict, sa_column=Column("enrichment", JSONB))
 
     # Search indexing
-    search_vector: Optional[str] = Field(default=None, sa_column=Column(TSVECTOR))
-    embedding: Optional[list[float]] = EmbeddingColumn
+    search_vector: str | None = Field(default=None, sa_column=Column(TSVECTOR))
+    embedding: list[float] | None = EmbeddingColumn
 
     # Soft delete
-    deleted_at: Optional[datetime] = Field(default=None)
+    deleted_at: datetime | None = Field(default=None)
 
     # Relationships
     tags: list[Tag] = Relationship(back_populates="items", link_model=ItemTag)
     categories: list[Category] = Relationship(back_populates="items", link_model=ItemCategory)
 
-    class Config:
-        arbitrary_types_allowed = True
+    model_config = ConfigDict(arbitrary_types_allowed=True)
 
 
 class JobQueue(SQLModel, table=True):
@@ -125,22 +124,22 @@ class JobQueue(SQLModel, table=True):
 
     __tablename__ = "job_queue"
 
-    id: Optional[int] = Field(default=None, primary_key=True)
+    id: int | None = Field(default=None, primary_key=True)
     item_id: uuid.UUID = Field(foreign_key="items.id", index=True)
     job_type: str = Field(index=True)
     status: str = Field(default="pending", index=True)  # pending | running | done | failed
     attempts: int = Field(default=0)
     max_attempts: int = Field(default=3)
     run_at: datetime = Field(
-        default_factory=lambda: datetime.now(timezone.utc),
+        default_factory=lambda: datetime.now(UTC),
         sa_column_kwargs={"server_default": text("now()")},
     )
     created_at: datetime = Field(
-        default_factory=lambda: datetime.now(timezone.utc),
+        default_factory=lambda: datetime.now(UTC),
         sa_column_kwargs={"server_default": text("now()")},
     )
-    completed_at: Optional[datetime] = Field(default=None)
-    error_message: Optional[str] = Field(default=None)
+    completed_at: datetime | None = Field(default=None)
+    error_message: str | None = Field(default=None)
 
 
 # ---------------------------------------------------------------------------
