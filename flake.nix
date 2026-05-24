@@ -1,5 +1,5 @@
 {
-  description = "Development environment with Node.js, Python, and Playwright MCP";
+  description = "Inbox - Python + Node.js development environment";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -12,50 +12,61 @@
     in
     {
       devShells.${system}.default = pkgs.mkShell {
-        name = "playwright-mcp-dev";
+        name = "inbox-dev";
 
         packages = with pkgs; [
+          # Python toolchain
+          uv
+          python3
+          ruff
+
           # Node.js toolchain
-          nodejs_22
+          nodejs
           pnpm
 
-          # Python toolchain
-          python313
-          uv
+          # PostgreSQL client tools
+          postgresql
 
-          # Playwright (core + browsers)
+          # Playwright (for future e2e testing)
           playwright-driver
           playwright.browsers
 
+          # Container tools (rootless, no daemon needed)
+          podman
+          podman-compose
+
           # Useful extras
           git
+          gnumake
         ];
 
         shellHook = ''
+          # Ensure Podman policy.json is in place (copied from project on first entry)
+          mkdir -p ~/.config/containers
+          if [ ! -f ~/.config/containers/policy.json ]; then
+              cp "$PWD/.config/containers/policy.json" ~/.config/containers/policy.json 2>/dev/null || true
+          fi
+
           echo "========================================"
-          echo "  Playwright MCP Development Shell"
+          echo "  Inbox Development Shell"
           echo "========================================"
           echo ""
-          echo "  Node.js:    $(node --version)"
-          echo "  pnpm:       $(pnpm --version)"
           echo "  Python:     $(python3 --version)"
           echo "  uv:         $(uv --version)"
-          echo ""
-          echo "  Playwright browsers are managed by Nix."
+          echo "  Node.js:    $(node --version)"
+          echo "  pnpm:       $(pnpm --version)"
+          echo "  Postgres:   $(psql --version)"
+          echo "  Podman:     $(podman --version)"
           echo ""
           echo "  Quick start:"
-          echo "    pnpm init                    # Initialize Node.js project"
-          echo "    uv init                      # Initialize Python project"
-          echo "    npx @playwright/mcp@latest  # Run Playwright MCP server"
+          echo "    make dev    # Start everything"
+          echo "    make test   # Run all tests"
           echo ""
           echo "========================================"
         '';
 
-        # Tell Playwright where to find the Nix-managed browser binaries.
-        # This avoids downloading browsers into ~/.cache/ms-playwright.
+        # Playwright environment variables
         PLAYWRIGHT_BROWSERS_PATH = "${pkgs.playwright.browsers}";
-
-        # Also set the driver path so Playwright can find its core tools.
         PLAYWRIGHT_DRIVER_PATH = "${pkgs.playwright-driver}";
       };
     };

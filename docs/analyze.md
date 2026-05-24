@@ -267,7 +267,7 @@ These are **impossible** to implement well in a browser-only architecture:
 |-------|----------------------|
 | Design tokens & palette | Port CSS custom properties to shared design tokens |
 | Block rendering rules | Reuse as server-side rendering templates + client hydration |
-| Type detection logic | Extract to shared library used by CLI, server, and web |
+| Type detection logic | Extract to shared module used by CLI and server |
 | Factory functions | Evolve into server-side entity constructors |
 | Write-before-render guarantee | Evolve into "ack before response" API contract |
 | "Send and forget" UX | Preserve in all frontends (CLI, Web, future mobile) |
@@ -297,6 +297,8 @@ The new full-stack architecture should:
 2. **Move the brain**: all NLP, embedding, search, and categorization to the server
 3. **Free the data**: Postgres + pgvector for persistent, queryable storage
 4. **Multiply the interfaces**: CLI first (fastest to build), then web UI (richest experience)
-5. **Share the logic**: extract type detection, factories, and formatting into a shared domain library
+5. **Share the logic**: extract type detection, factories, and formatting into a shared Python module
+
+**Backend Language Decision:** Python was chosen for the backend and CLI over Rust. While Rust offers memory safety and zero-cost abstractions, Python provides a dramatically simpler development experience and direct access to the entire ML/AI ecosystem (HuggingFace, Sentence Transformers, scikit-learn, Ollama). For a project where embeddings, categorization, and summarization are core features, Python eliminates the need for ONNX bindings, FFI bridges, or separate Python sidecars. The trade-off is acceptable for a self-hosted single-user application.
 
 The old project's documentation, design system, and component patterns are **high-quality assets** that should be ported, not discarded.

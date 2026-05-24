@@ -1,66 +1,194 @@
-# Phase 6: Management & Export
+# Phase 6 — Management & Polish
 
-**Goal**: Tag/category CRUD, backup/export/import, stats, and settings. The polishing and administration layer.
+**Status:** 📋 Planned
+**Depends on:** Phase 3 (web UI), Phase 5 (enrichment)
+**Duration:** 2-3 days
+**Goal:** Settings, export/import, performance optimization, and packaging
 
-## Dependencies
+---
 
-- Phase 1 (Domain Model + Database + Core API) — tags/categories tables and API foundation
-- Phase 2 (CLI — Capture & Browse) — for management CLI commands
-- Phase 3 (Web UI — Capture & Feed) — for settings UI
-- Phase 4 (Search) — for filtering by tags/categories
-- Phase 5 (Enrichment) — for stats endpoint data
+## Deliverables
+
+- [ ] Web UI settings (server URL, theme, keyboard shortcuts)
+- [ ] Data export (JSON with blobs)
+- [ ] Data import (JSON with blob restoration)
+- [ ] Performance optimization (query tuning, caching)
+- [ ] Docker image for server
+- [ ] Python package publishing (optional)
+- [ ] Complete documentation (README, API docs, CLI help)
+- [ ] Final testing and bug fixes
+
+---
 
 ## Tasks
 
-| # | Feature | Detail |
-|---------|---------|--------|
-| 6.1 | Tags API | `GET /v1/tags` → list all tags with usage count. `POST /v1/tags` → create tag `{ "name": "rust" }`. `DELETE /v1/tags/:id` → delete tag (cascade unlink from items). `POST /v1/items/:id/tags` → link tag to item `{ "tag_id": "..." }` or `{ "tag_name": "rust" }` (auto-create if missing). `DELETE /v1/items/:id/tags/:tag_id` → unlink. `GET /v1/items?tag=rust` → filter items by tag (already works via list endpoint). |
-| 6.2 | Categories API | Same pattern as tags: `GET /v1/categories`, `POST /v1/categories`, `DELETE /v1/categories/:id`, `POST /v1/items/:id/categories`, `DELETE /v1/items/:id/categories/:category_id`, `GET /v1/items?category=devops`. |
-| 6.3 | Export endpoint | `GET /v1/export?format=json` → streaming JSON response. Array of items with all fields (including metadata, enrichment_status, tags, categories). `format=markdown` → each item as Markdown section: `# Item {short_id}
+### T-01: Web UI Settings
 
-**Type:** {type}
-**Captured:** {date}
-**Content:** {raw}
-**Tags:** {tags}
-**Categories:** {categories}`. `format=csv` → CSV with columns: id, captured_at, type, raw, metadata_json, tags, categories. Query param `tag=true` and `category=true` include tags/categories in export (default true). Response header `Content-Disposition: attachment; filename="inbox-export-YYYY-MM-DD.{ext}"`. |
-| 6.4 | Import endpoint | `POST /v1/import` accepts JSON body (matching export format). Transaction: bulk insert items, upsert tags/categories, link junctions. Deduplication: skip items where `id` already exists (or update if `?strategy=upsert`). Returns `{ "created": N, "skipped": M, "errors": [...] }`. Validates each item: required fields (id, captured_at, type, raw). Invalid items collected in errors array, don't fail the whole import. Max import size: 10MB body. |
-| 6.5 | Stats endpoint | `GET /v1/stats` returns: `{ "total_items": N, "items_by_type": { "text": N1, "url": N2, "image": N3, "file": N4 }, "storage_bytes": N, "enrichment_coverage": { "url": 0.85, "embedding": 0.92, "categorization": 0.88, "summarization": 0.45 }, "oldest_item": "ISO8601", "newest_item": "ISO8601", "total_tags": N, "total_categories": N }`. Storage bytes: sum of blob sizes (query filesystem or track in DB). Enrichment coverage: ratio of `done` status / total items for each track. |
-| 6.6 | CLI management | `inbox tag list` → all tags with counts. `inbox tag add <item_id> <tag_name>` → link or create. `inbox tag remove <item_id> <tag_name>` → unlink. `inbox category list/add/remove` → same pattern. `inbox export --format json > backup.json` → download export. `inbox export --format markdown` → stdout. `inbox import backup.json` → upload, show summary. `inbox stats` → print formatted stats table. |
-| 6.7 | Web UI settings | `<SettingsMenu>` floating gear icon (top-right of feed, or bottom bar). `<SettingsModal>`: sections — **Appearance**: accent color picker (8 Catppuccin accent chips: Teal, Lavender, Sapphire, Mauve, Pink, Sky, Peach, Green). Click chip → `--color-accent` CSS variable updates on `<html>` element, persisted in `localStorage`. **Backup**: "Export" button triggers download (GET /v1/export?format=json). "Import" button → file picker → POST /v1/import → shows progress toast with results. **Storage**: usage bar (used / total), item count by type (mini bar chart). **Enrichment**: coverage percentages per track (mini progress bars). **About**: version, API URL, links to docs. |
-| 6.8 | Web UI tag/category bar | Each block shows its tags as small chips (`<span>` with rounded corners, `--color-border` border, `--color-text-muted` text). Click tag chip → feed filters to only items with that tag (navigate to `?tag=rust`). Category shown as subtle label above tags. Inline tag management: in block action menu, "Add tag" → input with autocomplete (existing tags). "Remove tag" → click X on chip. |
-| 6.9 | Migration bridge | Utility script or endpoint to import from old browser-only app. Accepts Dexie export JSON format (from old app's backup). Maps old schema to new schema. Run once during migration. Documented in `docs/migration.md`. |
+**File:** `web/src/components/SettingsModal.tsx`
 
-## Human Test Checklist
+- Server URL configuration (default: localhost:8080)
+- Theme selection (Catppuccin variants: Latte, Frappe, Macchiato, Mocha)
+- Accent color picker
+- Keyboard shortcuts reference
+- Font size toggle
+- Export/Import buttons
+- About section with version info
 
-- [ ] `inbox tag list` → shows all tags with counts.
-- [ ] `inbox tag add {item_id} rust` → tag appears on item. `inbox info {item_id}` → shows tag "rust".
-- [ ] `inbox tag remove {item_id} rust` → tag gone.
-- [ ] `inbox category add {item_id} Programming` → category appears.
-- [ ] `inbox export --format json > export.json` → file contains all items, valid JSON.
-- [ ] `inbox export --format markdown` → readable Markdown output.
-- [ ] Delete all items (or use fresh DB). `inbox import export.json` → shows summary: `{created: N, skipped: 0}`. `inbox list` → all items restored.
-- [ ] Run import again on same DB → `{skipped: N, created: 0}` (deduplication works).
-- [ ] `inbox stats` → table shows correct counts, enrichment coverage percentages.
-- [ ] Web UI: open settings (gear icon). Click "Lavender" accent → all accent-colored elements change to lavender.
-- [ ] Web UI: export button → downloads `inbox-export-YYYY-MM-DD.json`.
-- [ ] Web UI: import button → select file → upload → toast shows "Import complete: 25 created, 0 skipped".
-- [ ] Web UI: click a tag chip on a block → feed filters to only items with that tag. URL updates to `?tag=rust`. Refresh → filter persists.
-- [ ] Web UI: add tag to item via action menu → type "newtag" → tag created and linked.
-- [ ] Old app migration: take old Dexie export JSON, run migration script → all items appear in new system with correct types and metadata.
+### T-02: Data Export
 
-## Auto Test Checklist
+**File:** `inbox/server/routers/export.py`
 
-- [ ] Tag CRUD API test: create tag → list → assert present. Delete tag → list → assert gone. Link tag to item → GET item → assert tag in response. Unlink → assert gone.
-- [ ] Category CRUD API test: same pattern as tags.
-- [ ] Filter by tag test: `GET /v1/items?tag=rust` → assert only items with "rust" tag.
-- [ ] Filter by category test: `GET /v1/items?category=devops` → assert correct subset.
-- [ ] Export roundtrip: seed 50 items with tags/categories → export JSON → import to blank DB → assert all items identical (fields match). Export Markdown → assert readable format. Export CSV → assert columns correct.
-- [ ] Import deduplication: import same file twice → second import: `{created: 0, skipped: N}`.
-- [ ] Import error handling: malformed JSON item → assert error in response.errors, valid items still imported.
-- [ ] Stats accuracy: create known counts → `GET /v1/stats` → assert all numbers match.
-- [ ] CLI test: `inbox export` → assert GET /v1/export with correct format param. `inbox import file.json` → assert POST /v1/import with file body.
-- [ ] Web UI test: settings modal opens/closes. Accent color change → assert CSS variable update. Import file picker → assert file uploaded. Tag chip click → assert URL query param update.
+```python
+@router.get("/export")
+async def export_data(session: SessionDep) -> StreamingResponse:
+    """Export all items as JSON with blob references."""
+    items = await fetch_all_items(session)
+    export = {
+        "version": "1.0",
+        "exported_at": datetime.now(timezone.utc).isoformat(),
+        "items": [item.model_dump() for item in items],
+    }
+    return StreamingResponse(
+        io.BytesIO(json.dumps(export, indent=2).encode()),
+        media_type="application/json",
+        headers={"Content-Disposition": "attachment; filename=inbox-export.json"},
+    )
+```
 
-## Deliverable
+- Include all item data (raw_text, metadata, enrichment, tags, categories)
+- Include blob references (not actual blob data)
+- Separate blob export option (tar.gz of blob directory)
 
-Full management layer across all interfaces. Users can organize items with tags and categories. Export backups in multiple formats. Import restores data. Stats show system health. Settings personalize the experience. The app is feature-complete for v0.
+### T-03: Data Import
+
+**File:** `inbox/server/routers/import.py`
+
+```python
+@router.post("/import")
+async def import_data(
+    session: SessionDep,
+    file: UploadFile,
+) -> dict:
+    """Import items from JSON export."""
+    data = json.loads(await file.read())
+    for item_data in data["items"]:
+        await create_item_from_import(session, item_data)
+    return {"imported": len(data["items"])}
+```
+
+- Validate import format version
+- Merge or replace existing items (configurable)
+- Restore blob references (warn if blobs missing)
+- Progress indicator for large imports
+
+### T-04: Performance Optimization
+
+**Server:**
+- Add database connection pool tuning (asyncpg pool_size, max_overflow)
+- Add HTTP response caching for static queries (stats, tag list)
+- Add query result caching with cachetools or functools.lru_cache
+- Optimize slow queries with EXPLAIN ANALYZE
+
+**Web UI:**
+- Virtual scrolling for large feeds (react-window or @tanstack/react-virtual)
+- Image lazy loading
+- Debounced search input
+- Memoized selectors in Zustand store
+
+**CLI:**
+- Add `--cache` flag for `list` command (cache results locally)
+- Parallel requests for bulk operations
+
+### T-05: Docker Image
+
+**File:** `Dockerfile.server`
+
+```dockerfile
+FROM python:3.13-slim
+
+WORKDIR /app
+
+# Install uv
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
+
+# Copy project files
+COPY pyproject.toml .
+COPY inbox/ ./inbox/
+COPY alembic.ini .
+COPY alembic/ ./alembic/
+
+# Install dependencies
+RUN uv sync --no-dev
+
+# Run migrations and start server
+CMD ["sh", "-c", "uv run alembic upgrade head && uv run uvicorn inbox.server.main:app --host 0.0.0.0 --port 8080"]
+```
+
+- Multi-stage build for smaller image
+- Health check endpoint
+- Non-root user
+- Volume mount for blob storage
+
+### T-06: Documentation
+
+**README.md:**
+- Project overview and philosophy
+- Quick start (docker-compose up)
+- Installation (from source, Nix)
+- CLI usage guide with examples
+- API documentation (link to `/docs`)
+- Web UI features
+- Configuration reference
+- Development guide (make commands)
+- Troubleshooting
+
+**API Documentation:**
+- Auto-generated by FastAPI at `/docs` (Swagger UI) and `/openapi.json`
+- Additional markdown docs in `docs/api.md`
+
+**CLI Help:**
+- `inbox --help` with all commands
+- `inbox <command> --help` for each command
+- Man page generation (optional)
+
+### T-07: Final Testing
+
+- End-to-end test: capture → enrich → search → export → import → delete
+- Performance benchmark: 1000 items, search latency, feed rendering
+- Cross-platform test: Linux, macOS (CLI)
+- Browser compatibility: Chrome, Firefox, Safari, Edge
+- Accessibility audit (axe-core)
+- Security review (input validation, SQL injection, XSS)
+
+### T-08: Release Checklist
+
+- [ ] Version bump in `pyproject.toml`
+- [ ] CHANGELOG.md updated
+- [ ] Git tag: `v0.1.0`
+- [ ] GitHub release with release notes
+- [ ] Docker image published (optional)
+- [ ] PyPI package published (optional)
+
+---
+
+## Stack
+
+| Layer | Technology |
+|-------|-----------|
+| Export/Import | FastAPI StreamingResponse + JSON |
+| Docker | Python 3.13-slim + uv |
+| Docs | FastAPI auto-docs + Markdown |
+| Testing | pytest + Playwright + manual QA |
+
+---
+
+## Success Criteria
+
+| Criterion | Target |
+|-----------|--------|
+| Export/Import | Round-trip preserves all data |
+| Docker image | < 200MB, starts in < 10s |
+| Performance | < 100ms feed, < 200ms search for 1000 items |
+| Documentation | Complete README, API docs, CLI help |
+| Test coverage | > 80% |
+| Release | Tagged, documented, ready for use |

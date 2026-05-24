@@ -1,0 +1,105 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+env:
+  DATABASE_URL: postgresql+asyncpg://inbox:inbox@localhost:5432/inbox
+
+jobs:
+  python:
+    name: Python
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: pgvector/pgvector:pg17
+        env:
+          POSTGRES_USER: inbox
+          POSTGRES_PASSWORD: inbox
+          POSTGRES_DB: inbox
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          version: "0.6.0"
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version-file: "pyproject.toml"
+
+      - name: Install dependencies
+        run: uv sync --all-extras --dev
+
+      - name: Run migrations
+        run: uv run alembic upgrade head
+
+      - name: Lint with ruff
+        run: uv run ruff check inbox/ tests/
+
+      - name: Format check
+        run: uv run ruff format --check inbox/ tests/
+
+      - name: Run tests
+        run: uv run pytest
+
+  web:
+    name: Web
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '23'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install dependencies
+        run: cd web && pnpm install
+
+      - name: Lint
+        run: cd web && pnpm lint
+
+      - name: Check formatting
+        run: cd web && pnpm fmt:check
+
+      - name: Type check
+        run: cd web && pnpm type-check
+
+      - name: Run tests
+        run: cd web && pnpm test
+
+      - name: Build
+        run: cd web && pnpm build

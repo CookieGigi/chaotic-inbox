@@ -1,42 +1,84 @@
-# Phase 0: Technical Stack Foundation
+# Phase 0 — Foundation
 
-**Goal**: Bootstrap every runtime and tool so the entire team can `make dev` and have everything running.
+**Status:** 🔄 In Progress
+**Duration:** 1-2 days
+**Goal:** Set up development environment and project skeleton
 
-## Dependencies
-None. This is the first phase.
+---
+
+## Deliverables
+
+- [ ] Nix flake with Python (uv, Python 3.12+, ruff) + Node.js + PostgreSQL client + Docker Compose
+- [ ] `pyproject.toml` with FastAPI, SQLModel, Alembic, asyncpg, Typer, Rich, sentence-transformers, pytest, ruff
+- [ ] Python project skeleton (`inbox/` package with server, CLI, models, database, config)
+- [ ] Alembic configured with initial migration (`0001_init.py`)
+- [ ] FastAPI server skeleton (health endpoint, CORS middleware)
+- [ ] Typer CLI skeleton (add, list, info, delete commands)
+- [ ] CI/CD pipeline (GitHub Actions for Python + Web)
+- [ ] `docker-compose.yml` with PostgreSQL (pgvector) + server service
+- [ ] Makefile with `dev`, `test`, `lint`, `migrate`, `run-server`
+
+---
 
 ## Tasks
 
-| # | Task | Detail |
-|---|------|--------|
-| 0.1 | Update `flake.nix` | Add Rust toolchain: `cargo`, `rustc`, `rust-analyzer`, `rustfmt`, `clippy`, `pkg-config`, `openssl`, `sqlx-cli`. Keep existing Node/Python tooling. The flake must provide a single `nix develop` shell with Rust + Node + Python + Postgres client tools. |
-| 0.2 | Cargo workspace | Root `Cargo.toml` with `[workspace]` members: `crates/domain/`, `server/`, `cmd/inbox/`. Each crate has its own `Cargo.toml` with shared dependencies at workspace level: `tokio`, `serde`, `axum`, `sqlx`, `clap`, `reqwest`, `uuid`, `chrono`, `tracing`. Use `resolver = "2"`. |
-| 0.3 | pnpm workspace | `web/` directory with Vite + React 19 + TypeScript. Dependencies: `@tanstack/react-query`, `zustand`, `@tanstack/react-virtual`, `tailwindcss` (v4), `phosphor-react`. Root `pnpm-workspace.yaml`, shared `tsconfig.json` in `web/tsconfig.json`. |
-| 0.4 | Docker Compose | `docker-compose.yml` with `pgvector/pgvector:pg16` image. Service: `postgres`. Expose port `5432`. Named volume `postgres_data` for persistence. Healthcheck: `pg_isready -U inbox -d inbox`. Environment: `POSTGRES_USER=inbox`, `POSTGRES_PASSWORD=inbox`, `POSTGRES_DB=inbox`. |
-| 0.5 | SQLx migrations scaffold | `server/migrations/` directory. Migration tool: `sqlx-cli`. First migration: `0001_init.sql` creating `items`, `tags`, `item_tags`, `categories`, `item_categories`, `job_queue` tables with all indexes. The migration must include `CREATE EXTENSION IF NOT EXISTS pgvector; CREATE EXTENSION IF NOT EXISTS pg_trgm;`. |
-| 0.6 | Lint & Format configs | `rustfmt.toml` at root (spaces over tabs, max_width 100, reorder_imports). ESLint + Prettier configs in `web/` (flat config, TypeScript-aware). `.editorconfig` at root. Pre-commit hooks optional via `.githooks/` or `lefthook`. |
-| 0.7 | Makefile | Targets: `make dev` (docker up + sqlx migrate + cargo watch + pnpm dev), `make build` (cargo build --release + pnpm build), `make test` (cargo test + pnpm test), `make lint` (cargo clippy + pnpm lint), `make fmt` (cargo fmt + pnpm fmt), `make migrate` (sqlx migrate run), `make clean` (docker down + rm target + rm node_modules). |
-| 0.8 | CI skeleton | `.github/workflows/ci.yml`: lint, test (cargo test + pnpm test), build on push/PR. Matrix: stable Rust on ubuntu-latest. Cache `target/` and `~/.cargo`. Cache `pnpm` store. |
+### T-01: Development Environment
+- Configure Nix flake with Python toolchain (uv, python3, ruff, postgresql)
+- Keep Node.js + pnpm for web UI
+- Add Docker Compose for PostgreSQL
+- Create `make dev` command
 
-## Human Test Checklist
+### T-02: Python Project Structure
+- Create `pyproject.toml` with dependencies and dev dependencies
+- Create `inbox/` package with `__init__.py`
+- Create `inbox/config.py` (Pydantic Settings)
+- Create `inbox/models.py` (SQLModel entities)
+- Create `inbox/database.py` (async engine + session)
+- Create `inbox/server/` with `app.py`, `main.py`, routers
+- Create `inbox/cli/` with `main.py`
+- Create `tests/` with `test_health.py`
 
-- [ ] Run `nix develop` → shell has `cargo --version`, `node --version`, `pnpm --version`, `sqlx --version`
-- [ ] Run `make dev` → Docker Compose starts Postgres, `docker ps` shows healthy `postgres` container
-- [ ] `make migrate` → `sqlx migrate run` completes with no errors
-- [ ] `cargo build` in workspace root → compiles all crates with zero errors
-- [ ] `pnpm install && pnpm build` in `web/` → builds successfully
-- [ ] `make test` → cargo test passes (placeholder tests OK), pnpm test passes (placeholder tests OK)
-- [ ] `make lint` → clippy clean, eslint clean
-- [ ] `make fmt` → no changes (already formatted)
-- [ ] `curl localhost:8080/health` → returns `{"status":"ok"}` (placeholder health endpoint)
+### T-03: Database Migrations
+- Install Alembic (`uv run alembic init alembic`)
+- Configure `alembic.ini` with async URL
+- Configure `alembic/env.py` to use SQLModel metadata
+- Write `0001_init.py` migration (items, tags, categories, job_queue, FTS trigger, pgvector)
+- Test migration: `make migrate`
 
-## Auto Test Checklist
+### T-04: Server Skeleton
+- FastAPI app with lifespan events
+- CORS middleware configuration
+- Health check router (`GET /health`)
+- Items router with CRUD stubs
+- Uvicorn entrypoint (`inbox.server.main:main`)
 
-- [ ] CI pipeline green on PR — all jobs pass
-- [ ] Cargo workspace compiles in CI
-- [ ] `sqlx migrate run` succeeds in CI (uses service container or test DB)
-- [ ] pnpm workspace installs and builds in CI
+### T-05: CLI Skeleton
+- Typer app with commands: add, list, info, delete
+- httpx client with configurable base URL
+- Rich formatting for tables and JSON output
+- `--json` flag for all commands
+- `--stdin` and `--file` options for `add`
 
-## Deliverable
+### T-06: Documentation
+- Update `design/architecture/v0.md` for Python stack
+- Update `design/spec/v0.md` with Python decisions
+- Update `plan/progress-report-phase0.md`
+- Update all phase files (00-06) for Python
 
-A single-command development environment. `make dev` starts everything. All tools compile and pass trivial tests. The foundation is solid for Phase 1.
+### T-07: CI/CD
+- GitHub Actions workflow for Python (pytest, ruff, alembic migrate)
+- GitHub Actions workflow for Web (pnpm test, build, lint)
+- PostgreSQL service container in CI
+
+---
+
+## Stack
+
+| Layer | Technology |
+|-------|-----------|
+| Backend | Python 3.12+, FastAPI, SQLModel, asyncpg |
+| Frontend | React 19, Vite, Tailwind CSS v4, Zustand |
+| Database | PostgreSQL 17 + pgvector + pg_trgm |
+| Dev Tools | uv, ruff, pytest, alembic |
+| Infra | Docker Compose, Nix flake |
+| CI/CD | GitHub Actions |

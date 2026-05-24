@@ -1,31 +1,54 @@
 # Chaotic Inbox — Implementation Plan
 
-This directory contains the phased implementation plan for Chaotic Inbox v0.
+## Goal
+Build the v0 Chaotic Inbox: a personal knowledge capture tool with Python/FastAPI backend, Python/Typer CLI, and React web UI.
 
-## Phases
+---
 
-| Phase | Name | Goal | Depends On |
-|-------|------|------|------------|
-| [00](00-stack.md) | Technical Stack Foundation | Bootstrap all runtimes and tools | — |
-| [01](01-domain-api.md) | Domain Model + Database + Core API | Shared types, schema, CRUD API | 00 |
-| [02](02-cli.md) | CLI — Capture & Browse | Terminal capture and feed | 00, 01 |
-| [03](03-web-ui.md) | Web UI — Capture & Feed | React SPA feed and capture | 00, 01 |
-| [04](04-search.md) | Search | FTS + vector search | 01, 02, 03 |
-| [05](05-enrichment.md) | Background Enrichment Pipeline | URL metadata, embeddings, categories, summarization | 01, 04 |
-| [06](06-management.md) | Management & Export | Tags, categories, backup, settings | 01–05 |
+## Phase Overview
 
-## Execution Rules
+| Phase | Name | Status | Duration | Key Deliverable |
+|-------|------|--------|----------|----------------|
+| 0 | Foundation | 🔄 In Progress | 1-2 days | Dev env, project skeleton, CI |
+| 1 | Domain Model & API | 📋 Planned | 2-3 days | Complete models, REST API, tests |
+| 2 | CLI Implementation | 📋 Planned | 2-3 days | Full terminal capture tool |
+| 3 | Web UI Implementation | 📋 Planned | 3-4 days | React SPA consuming API |
+| 4 | Search Implementation | 📋 Planned | 2-3 days | FTS + vector search |
+| 5 | Content Enrichment | 📋 Planned | 2-3 days | Background AI enrichment |
+| 6 | Management & Polish | 📋 Planned | 2-3 days | Settings, export, Docker, docs |
 
-1. **One phase at a time**. Complete all tasks, human tests, and auto tests for a phase before moving to the next.
-2. **Human testable**. Every phase must be manually verifiable by a human using `curl`, `inbox` CLI, or browser.
-3. **Auto testable**. Every phase must have automated tests that pass in CI.
-4. **Stack: Rust (axum) + React + PostgreSQL + pgvector**.
+---
 
-## Quick Start
+## Tech Stack
 
-```bash
-# Phase 0 only
-make dev          # Start everything
-curl localhost:8080/health  # Verify API
-open localhost:5173        # Verify Web UI
-```
+| Layer | Technology |
+|-------|-----------|
+| **Backend** | Python 3.12+, FastAPI, SQLModel, asyncpg |
+| **CLI** | Typer, httpx, Rich |
+| **Frontend** | React 19, Vite, Tailwind CSS v4, Zustand |
+| **Database** | PostgreSQL 17 + pgvector + pg_trgm |
+| **Dev Tools** | uv, ruff, pytest, alembic |
+| **Infra** | Docker Compose, Nix flake |
+| **CI/CD** | GitHub Actions |
+
+---
+
+## Philosophy
+- **Zero-friction capture:** Paste, drop, or type — it is saved immediately
+- **Chronological feed:** Everything in time order, no folders
+- **Background enrichment:** AI processes items after capture (no waiting)
+- **Search-first retrieval:** Find by meaning, not by memory
+- **CLI + Web:** Terminal for speed, browser for browsing
+
+---
+
+## Phase Details
+
+See individual phase documents:
+- [Phase 0 — Foundation](00-stack.md)
+- [Phase 1 — Domain Model & API](01-domain-api.md)
+- [Phase 2 — CLI Implementation](02-cli.md)
+- [Phase 3 — Web UI Implementation](03-web-ui.md)
+- [Phase 4 — Search Implementation](04-search.md)
+- [Phase 5 — Content Enrichment](05-enrichment.md)
+- [Phase 6 — Management & Polish](06-management.md)
