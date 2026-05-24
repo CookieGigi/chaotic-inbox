@@ -65,6 +65,9 @@
           echo "========================================"
         '';
 
+        # Ensure compiled Python wheels (e.g. numpy) can find libstdc++.so.6
+        LD_LIBRARY_PATH = "${pkgs.stdenv.cc.cc.lib}/lib";
+
         # Playwright environment variables
         PLAYWRIGHT_BROWSERS_PATH = "${pkgs.playwright.browsers}";
         PLAYWRIGHT_DRIVER_PATH = "${pkgs.playwright-driver}";
