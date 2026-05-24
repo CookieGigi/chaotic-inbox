@@ -1,23 +1,22 @@
 """SQLModel models for the Inbox database schema."""
 
+import re
 import uuid
 from datetime import UTC, datetime
+from typing import Literal
 
-from pgvector.sqlalchemy import Vector
 from pydantic import ConfigDict
-from sqlalchemy import Column, text
-from sqlalchemy.dialects.postgresql import JSONB, TSVECTOR
+from sqlalchemy import JSON, Column, DateTime
 from sqlmodel import Field, Relationship, SQLModel
 
 # ---------------------------------------------------------------------------
-# Custom types
+# Types
 # ---------------------------------------------------------------------------
 
-# pgvector embedding column — 384 dimensions (all-MiniLM-L6-v2)
-EmbeddingColumn = Field(
-    default=None,
-    sa_column=Column(Vector(384)),
-)
+ItemType = Literal["text", "url", "image", "file"]
+
+URL_RE = re.compile(r"^https?://")
+
 
 # ---------------------------------------------------------------------------
 # Junction tables
@@ -57,7 +56,7 @@ class Tag(SQLModel, table=True):
     auto_generated: bool = Field(default=False)
     created_at: datetime = Field(
         default_factory=lambda: datetime.now(UTC),
-        sa_column_kwargs={"server_default": text("now()")},
+        sa_column=Column(DateTime(timezone=True)),
     )
 
     items: list["Item"] = Relationship(back_populates="tags", link_model=ItemTag)
@@ -73,7 +72,7 @@ class Category(SQLModel, table=True):
     description: str | None = Field(default=None)
     created_at: datetime = Field(
         default_factory=lambda: datetime.now(UTC),
-        sa_column_kwargs={"server_default": text("now()")},
+        sa_column=Column(DateTime(timezone=True)),
     )
 
     items: list["Item"] = Relationship(back_populates="categories", link_model=ItemCategory)
@@ -88,11 +87,11 @@ class Item(SQLModel, table=True):
     type: str = Field(index=True)  # text | url | image | file
     captured_at: datetime = Field(
         default_factory=lambda: datetime.now(UTC),
-        sa_column_kwargs={"server_default": text("now()")},
+        sa_column=Column(DateTime(timezone=True)),
     )
     updated_at: datetime = Field(
         default_factory=lambda: datetime.now(UTC),
-        sa_column_kwargs={"server_default": text("now()")},
+        sa_column=Column(DateTime(timezone=True)),
     )
 
     # Raw data (immutable)
@@ -100,23 +99,35 @@ class Item(SQLModel, table=True):
     blob_path: str | None = Field(default=None)
 
     # Capture metadata
-    capture_meta: dict = Field(default_factory=dict, sa_column=Column("metadata", JSONB))
+    capture_meta: dict = Field(default_factory=dict, sa_column=Column("metadata", JSON))
 
     # Background enrichment
-    enrichment: dict = Field(default_factory=dict, sa_column=Column("enrichment", JSONB))
-
-    # Search indexing
-    search_vector: str | None = Field(default=None, sa_column=Column(TSVECTOR))
-    embedding: list[float] | None = EmbeddingColumn
+    enrichment: dict = Field(default_factory=dict, sa_column=Column("enrichment", JSON))
 
     # Soft delete
-    deleted_at: datetime | None = Field(default=None)
+    deleted_at: datetime | None = Field(
+        default=None,
+        sa_column=Column(DateTime(timezone=True)),
+    )
 
     # Relationships
     tags: list[Tag] = Relationship(back_populates="items", link_model=ItemTag)
     categories: list[Category] = Relationship(back_populates="items", link_model=ItemCategory)
 
     model_config = ConfigDict(arbitrary_types_allowed=True)
+
+    # ------------------------------------------------------------------
+    # Custom init for type detection + validation
+    # ------------------------------------------------------------------
+
+    def __init__(self, **data):
+        if data.get("type") is None:
+            raw_text = data.get("raw_text")
+            if raw_text and URL_RE.match(raw_text):
+                data["type"] = "url"
+            else:
+                data["type"] = "text"
+        super().__init__(**data)
 
 
 class JobQueue(SQLModel, table=True):
@@ -132,13 +143,16 @@ class JobQueue(SQLModel, table=True):
     max_attempts: int = Field(default=3)
     run_at: datetime = Field(
         default_factory=lambda: datetime.now(UTC),
-        sa_column_kwargs={"server_default": text("now()")},
+        sa_column=Column(DateTime(timezone=True)),
     )
     created_at: datetime = Field(
         default_factory=lambda: datetime.now(UTC),
-        sa_column_kwargs={"server_default": text("now()")},
+        sa_column=Column(DateTime(timezone=True)),
     )
-    completed_at: datetime | None = Field(default=None)
+    completed_at: datetime | None = Field(
+        default=None,
+        sa_column=Column(DateTime(timezone=True)),
+    )
     error_message: str | None = Field(default=None)
 
 
@@ -146,7 +160,5 @@ class JobQueue(SQLModel, table=True):
 # Table-level indexes (declared separately for clarity)
 # ---------------------------------------------------------------------------
 
-# Note: SQLModel does not yet support native index declarations on search_vector
-# or embedding columns via Field(), so we rely on Alembic / raw DDL for:
-#   - GIN index on items.search_vector
-#   - IVFFlat index on items.embedding
+# Note: SQLModel does not yet support native index declarations via Field().
+# Alembic migrations handle all indexes and special column types (TSVECTOR, vector).

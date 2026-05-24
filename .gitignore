@@ -41,3 +41,6 @@ uv.lock
 
 # Nix / pre-commit
 .pre-commit-config.yaml
+
+# SQLite databases
+*.db

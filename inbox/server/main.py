@@ -3,6 +3,7 @@
 import uvicorn
 
 from inbox.config import settings
+from inbox.server.app import app  # noqa: F401 — re-exported for `uvicorn inbox.server.main:app`
 
 
 def main() -> None:

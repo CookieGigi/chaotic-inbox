@@ -1,57 +1,33 @@
-.PHONY: dev build test tests lint fmt migrate clean run-server run-cli web-dev setup-db
+.PHONY: dev start stop build test tests lint fmt migrate migrate-add clean run-server run-cli web-dev setup-db
 
 # ---------------------------------------------------------------------------
-# Development (choose one based on your setup)
+# One-command development
 # ---------------------------------------------------------------------------
 
-# Option 1: You already have PostgreSQL running (e.g. NixOS service)
-#    Set DATABASE_URL in .env and just run: make run-server
-#
-# Option 2: Use Podman (rootless, no daemon) — included in the dev shell
-#    make dev-podman
-#
-# Option 3: Manual local PostgreSQL (see docs for NixOS setup)
-#    make setup-db  # one-time init
-#    make run-server
-
-# Default dev target — shows help if nothing is configured
-dev:
-	@echo "Choose a dev target based on your PostgreSQL setup:"
-	@echo ""
-	@echo "  make dev-podman     # Start PostgreSQL via Podman (rootless)"
-	@echo "  make run-server     # If PostgreSQL is already running"
-	@echo "  make setup-db       # One-time local PostgreSQL init"
-	@echo ""
-	@echo "Then in another terminal: make web-dev"
-
-# Podman-based development (rootless, no daemon needed)
-dev-podman:
-	@echo "Starting PostgreSQL via Podman..."
+## Start the full development stack (PostgreSQL + API server)
+start:
+	@echo "=== Starting PostgreSQL via Podman ==="
 	podman-compose up -d postgres
-	@echo "Waiting for postgres to be healthy..."
-	@sleep 3
-	$(MAKE) migrate
-	@echo "Run 'make run-server' and 'make web-dev' in separate terminals"
+	@echo "=== Waiting for PostgreSQL to be healthy ==="
+	@for i in $$(seq 1 30); do \
+		podman ps --filter "name=inbox-postgres" --filter "health=healthy" --format "{{.Names}}" | grep -q inbox-postgres && break; \
+		echo "  ...waiting ($$i/30)"; \
+		sleep 1; \
+	done
+	@echo "=== Running database migrations ==="
+	uv run alembic upgrade head
+	@echo "=== Starting FastAPI server (Ctrl+C to stop) ==="
+	uv run uvicorn inbox.server.main:app --reload --port 8080 --host 0.0.0.0
 
-# One-time local PostgreSQL database setup
-# Assumes psql can connect to a running PostgreSQL server
-setup-db:
-	@echo "Creating inbox database and user..."
-	psql postgres -c "CREATE USER inbox WITH PASSWORD 'inbox' SUPERUSER;" 2>/dev/null || true
-	psql postgres -c "CREATE DATABASE inbox OWNER inbox;" 2>/dev/null || true
-	psql postgres -c "GRANT ALL PRIVILEGES ON DATABASE inbox TO inbox;" 2>/dev/null || true
-	psql inbox -c "CREATE EXTENSION IF NOT EXISTS vector;" 2>/dev/null || true
-	psql inbox -c "CREATE EXTENSION IF NOT EXISTS pg_trgm;" 2>/dev/null || true
-	$(MAKE) migrate
-	@echo "Database ready. Run 'make run-server' to start the API."
+## Stop all development containers
+stop:
+	podman-compose down
 
 # ---------------------------------------------------------------------------
-# Running services
+# Running services (manual / already-running DB)
 # ---------------------------------------------------------------------------
 
-# Run the FastAPI server with hot reload
-# Hot reload works the same with or without Docker — it's uvicorn watching
-# your Python files and restarting automatically on change.
+# Run the FastAPI server with hot reload (assumes DB is already running)
 run-server:
 	uv run uvicorn inbox.server.main:app --reload --port 8080 --host 0.0.0.0
 
@@ -101,6 +77,17 @@ migrate:
 
 migrate-add:
 	uv run alembic revision --autogenerate -m "$(msg)"
+
+# One-time local PostgreSQL database setup (assumes psql can connect)
+setup-db:
+	@echo "Creating inbox database and user..."
+	psql postgres -c "CREATE USER inbox WITH PASSWORD 'inbox' SUPERUSER;" 2>/dev/null || true
+	psql postgres -c "CREATE DATABASE inbox OWNER inbox;" 2>/dev/null || true
+	psql postgres -c "GRANT ALL PRIVILEGES ON DATABASE inbox TO inbox;" 2>/dev/null || true
+	psql inbox -c "CREATE EXTENSION IF NOT EXISTS vector;" 2>/dev/null || true
+	psql inbox -c "CREATE EXTENSION IF NOT EXISTS pg_trgm;" 2>/dev/null || true
+	$(MAKE) migrate
+	@echo "Database ready. Run 'make run-server' to start the API."
 
 # ---------------------------------------------------------------------------
 # Cleanup
