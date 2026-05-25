@@ -56,6 +56,9 @@ jobs:
       - name: Run tests
         run: uv run pytest
 
+      - name: Run e2e tests
+        run: uv run pytest tests/test_e2e.py -v
+
   web:
     name: Web
     runs-on: ubuntu-latest

@@ -1,4 +1,4 @@
-.PHONY: dev start stop build test tests lint fmt migrate migrate-add clean run-server run-cli web-dev setup-db
+.PHONY: dev start stop build test tests test-e2e lint fmt migrate migrate-add clean run-server run-cli web-dev setup-db
 
 # ---------------------------------------------------------------------------
 # One-command development
@@ -53,7 +53,8 @@ test:
 	uv run pytest
 	cd web && pnpm test
 
-tests: test
+test-e2e:
+	uv run pytest tests/test_e2e.py -v
 
 lint:
 	uv run ruff check inbox/ tests/
