@@ -42,5 +42,11 @@ uv.lock
 # Nix / pre-commit
 .pre-commit-config.yaml
 
+# Coverage / pytest
+.coverage
+.coverage.*
+htmlcov/
+.pytest_cache/
+
 # SQLite databases
 *.db
